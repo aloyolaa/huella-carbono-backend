@@ -26,11 +26,10 @@ public class DetalleMapper {
                         detalleDto.meses().noviembre(),
                         detalleDto.meses().diciembre()
                 ));
-        detalle.setTipoCombustible(detalleDto.tipoCombustible() != null ? new TipoCombustible(detalleDto.tipoCombustible(), null) : null);
-        detalle.setUnidad(detalleDto.unidad() != null ? new Unidad(detalleDto.unidad(), null) : null);
+        detalle.setTipoCombustible(detalleDto.tipoCombustible() != null ? new TipoCombustible(detalleDto.tipoCombustible()) : null);
         //detalle.setAccion(detalleDto.accion() != null ? new Accion(detalleDto.accion(), null) : null);
         //detalle.setActividad(detalleDto.actividad() != null ? new Actividad(detalleDto.actividad(), null) : null);
-        detalle.setCategoriaInstitucion(detalleDto.categoriaInstitucion() != null ? new CategoriaInstitucion(detalleDto.categoriaInstitucion(), null) : null);
+        detalle.setCategoriaInstitucion(detalleDto.categoriaInstitucion() != null ? new CategoriaInstitucion(detalleDto.categoriaInstitucion()) : null);
         //detalle.setProduccion(detalleDto.produccion() != null ? new Produccion(detalleDto.produccion(), null) : null);
         return detalle;
     }
