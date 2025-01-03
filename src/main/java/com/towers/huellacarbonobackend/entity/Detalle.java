@@ -26,22 +26,22 @@ public class Detalle {
     private TipoCombustible tipoCombustible;
 
     @ManyToOne
-    @JoinColumn(name = "unidad_id")
-    private Unidad unidad;
-
-    /*@ManyToOne
-    @JoinColumn(name = "accion_id")
-    private Accion accion;*7
-
-    /*@ManyToOne
-    @JoinColumn(name = "actividad_id")
-    private Actividad actividad;*/
-
-    @ManyToOne
     @JoinColumn(name = "categoria_institucion_id")
     private CategoriaInstitucion categoriaInstitucion;
 
     /*@ManyToOne
+    @JoinColumn(name = "accion_id")
+    private Accion accion;
+
+    @ManyToOne
+    @JoinColumn(name = "actividad_id")
+    private Actividad actividad;
+
+    @ManyToOne
     @JoinColumn(name = "produccion_id")
-    private Produccion produccion;*/
+    private Produccion produccion;
+
+    @ManyToOne
+    @JoinColumn(name = "clinker_id")
+    private Clinker clinker;*/
 }

@@ -1,6 +1,7 @@
 package com.towers.huellacarbonobackend.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,9 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "tipo_equipo")
+@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tipo_combustible")
-public class TipoCombustible {
+public class TipoEquipo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -18,16 +20,4 @@ public class TipoCombustible {
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "unidad_id", nullable = false)
-    private Unidad unidad;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "archivo_id", nullable = false)
-    private Archivo archivo;
-
-    public TipoCombustible(Long id) {
-        this.id = id;
-    }
 }

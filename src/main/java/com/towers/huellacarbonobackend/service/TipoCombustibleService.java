@@ -1,9 +1,9 @@
 package com.towers.huellacarbonobackend.service;
 
-import com.towers.huellacarbonobackend.entity.TipoCombustible;
+import com.towers.huellacarbonobackend.dto.TipoCombustibleDto;
 
 import java.util.List;
 
 public interface TipoCombustibleService {
-    List<TipoCombustible> getAll();
+    List<TipoCombustibleDto> getAllByArchivo(Long archivoId);
 }
