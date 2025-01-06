@@ -29,19 +29,19 @@ public class Detalle {
     @JoinColumn(name = "categoria_institucion_id")
     private CategoriaInstitucion categoriaInstitucion;
 
-    /*@ManyToOne
-    @JoinColumn(name = "accion_id")
-    private Accion accion;
-
     @ManyToOne
     @JoinColumn(name = "actividad_id")
     private Actividad actividad;
 
-    @ManyToOne
-    @JoinColumn(name = "produccion_id")
-    private Produccion produccion;
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private Clinker clinker;
 
-    @ManyToOne
-    @JoinColumn(name = "clinker_id")
-    private Clinker clinker;*/
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private RefrigeranteInstalacion refrigeranteInstalacion;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private RefrigeranteOperacion refrigeranteOperacion;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private RefrigeranteDisposicion refrigeranteDisposicion;
 }

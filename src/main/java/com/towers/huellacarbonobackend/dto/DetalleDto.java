@@ -4,9 +4,9 @@ public record DetalleDto(
         Long id,
         Long tipoCombustible,
         MesesDto meses,
-        Long categoriaInstitucion
-        //Long accion,
-        //Long actividad,
-        //Long produccion
+        Long categoriaInstitucion,
+        Long actividad,
+        ClinkerDto clinker,
+        RefrigeranteDto refrigerante
 ) {
 }

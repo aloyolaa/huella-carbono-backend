@@ -1,7 +1,6 @@
 package com.towers.huellacarbonobackend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,7 +9,6 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "actividad")
-@AllArgsConstructor
 @NoArgsConstructor
 public class Actividad {
     @Id
@@ -20,4 +18,20 @@ public class Actividad {
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "produccion_id", nullable = false)
+    private Produccion produccion;
+
+    @ManyToOne
+    @JoinColumn(name = "accion_id")
+    private Accion accion;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "archivo_id", nullable = false)
+    private Archivo archivo;
+
+    public Actividad(Long id) {
+        this.id = id;
+    }
 }

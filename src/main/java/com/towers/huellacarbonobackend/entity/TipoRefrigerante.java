@@ -9,13 +9,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "refrigerantes")
+@Table(name = "tipo_refrigerante")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Refrigerantes {
+public class TipoRefrigerante {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
+
+    public TipoRefrigerante(Long id) {
+        this.id = id;
+    }
 }

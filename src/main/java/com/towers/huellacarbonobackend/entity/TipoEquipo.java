@@ -1,7 +1,6 @@
 package com.towers.huellacarbonobackend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,7 +9,6 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "tipo_equipo")
-@AllArgsConstructor
 @NoArgsConstructor
 public class TipoEquipo {
     @Id
@@ -20,4 +18,8 @@ public class TipoEquipo {
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
+
+    public TipoEquipo(Long id) {
+        this.id = id;
+    }
 }
