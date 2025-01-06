@@ -6,6 +6,7 @@ import com.towers.huellacarbonobackend.service.TipoCombustibleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ public class TipoCombustibleController {
     private final TipoCombustibleService tipoCombustibleService;
 
     @GetMapping("/{archivo}")
+    @PreAuthorize("hasAuthority('REGISTER')")
     public ResponseEntity<ResponseDto> getAll(@PathVariable Long archivo) {
         List<TipoCombustibleDto> all = tipoCombustibleService.getAllByArchivo(archivo);
         return new ResponseEntity<>(
