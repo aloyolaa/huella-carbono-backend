@@ -1,9 +1,9 @@
-package com.towers.huellacarbonobackend.service.impl;
+package com.towers.huellacarbonobackend.service.data.impl;
 
 import com.towers.huellacarbonobackend.dto.ActividadDto;
 import com.towers.huellacarbonobackend.mapper.ActividadMapper;
 import com.towers.huellacarbonobackend.repository.ActividadRepository;
-import com.towers.huellacarbonobackend.service.ActividadService;
+import com.towers.huellacarbonobackend.service.data.ActividadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

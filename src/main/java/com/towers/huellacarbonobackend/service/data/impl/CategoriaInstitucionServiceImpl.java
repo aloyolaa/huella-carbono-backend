@@ -1,8 +1,8 @@
-package com.towers.huellacarbonobackend.service.impl;
+package com.towers.huellacarbonobackend.service.data.impl;
 
 import com.towers.huellacarbonobackend.entity.CategoriaInstitucion;
 import com.towers.huellacarbonobackend.repository.CategoriaInstitucionRepository;
-import com.towers.huellacarbonobackend.service.CategoriaInstitucionService;
+import com.towers.huellacarbonobackend.service.data.CategoriaInstitucionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

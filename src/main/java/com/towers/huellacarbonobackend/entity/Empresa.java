@@ -1,16 +1,17 @@
 package com.towers.huellacarbonobackend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "empresa")
-@AllArgsConstructor
 @NoArgsConstructor
 public class Empresa {
     @Id
@@ -20,4 +21,14 @@ public class Empresa {
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
+
+    @ManyToMany
+    @JoinTable(name = "empresa_archivo",
+            joinColumns = @JoinColumn(name = "empresa_id"),
+            inverseJoinColumns = @JoinColumn(name = "archivo_id"))
+    private Set<Archivo> archivos = new LinkedHashSet<>();
+
+    public Empresa(Long id) {
+        this.id = id;
+    }
 }

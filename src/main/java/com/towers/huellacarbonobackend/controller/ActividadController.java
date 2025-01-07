@@ -2,7 +2,7 @@ package com.towers.huellacarbonobackend.controller;
 
 import com.towers.huellacarbonobackend.dto.ActividadDto;
 import com.towers.huellacarbonobackend.dto.ResponseDto;
-import com.towers.huellacarbonobackend.service.ActividadService;
+import com.towers.huellacarbonobackend.service.data.ActividadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +25,7 @@ public class ActividadController {
     public ResponseEntity<ResponseDto> getAll(@PathVariable Long archivo) {
         List<ActividadDto> all = actividadService.getAllByArchivo(archivo);
         return new ResponseEntity<>(
-                new ResponseDto(
-                        all,
-                        true)
+                new ResponseDto(all, true)
                 , HttpStatus.OK
         );
     }

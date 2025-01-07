@@ -2,7 +2,7 @@ package com.towers.huellacarbonobackend.controller;
 
 import com.towers.huellacarbonobackend.dto.DataDto;
 import com.towers.huellacarbonobackend.dto.ResponseDto;
-import com.towers.huellacarbonobackend.service.DataService;
+import com.towers.huellacarbonobackend.service.data.DataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +20,7 @@ public class DataController {
     public ResponseEntity<ResponseDto> getAll(@RequestBody DataDto dataDto, @PathVariable Long empresa, @PathVariable Long archivo) {
         dataService.save(dataDto, empresa, archivo);
         return new ResponseEntity<>(
-                new ResponseDto(
-                        "Datos guardados correctamente.",
-                        true)
+                new ResponseDto("Datos guardados correctamente.", true)
                 , HttpStatus.OK
         );
     }

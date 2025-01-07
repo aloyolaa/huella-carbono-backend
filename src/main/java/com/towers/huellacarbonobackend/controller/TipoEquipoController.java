@@ -2,7 +2,7 @@ package com.towers.huellacarbonobackend.controller;
 
 import com.towers.huellacarbonobackend.dto.ResponseDto;
 import com.towers.huellacarbonobackend.entity.TipoEquipo;
-import com.towers.huellacarbonobackend.service.TipoEquipoService;
+import com.towers.huellacarbonobackend.service.data.TipoEquipoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +24,7 @@ public class TipoEquipoController {
     public ResponseEntity<ResponseDto> getAll() {
         List<TipoEquipo> all = tipoEquipoService.getAll();
         return new ResponseEntity<>(
-                new ResponseDto(
-                        all,
-                        true)
+                new ResponseDto(all, true)
                 , HttpStatus.OK
         );
     }

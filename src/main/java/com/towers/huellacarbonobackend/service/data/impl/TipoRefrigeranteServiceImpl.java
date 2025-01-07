@@ -1,8 +1,8 @@
-package com.towers.huellacarbonobackend.service.impl;
+package com.towers.huellacarbonobackend.service.data.impl;
 
 import com.towers.huellacarbonobackend.entity.TipoRefrigerante;
 import com.towers.huellacarbonobackend.repository.TipoRefrigeranteRepository;
-import com.towers.huellacarbonobackend.service.TipoRefrigeranteService;
+import com.towers.huellacarbonobackend.service.data.TipoRefrigeranteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

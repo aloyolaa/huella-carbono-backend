@@ -20,8 +20,8 @@ public class DataMapper {
         datosGenerales.setCorreo(dataDto.correo());
         datosGenerales.setLocacion(dataDto.locacion());
         datosGenerales.setComentarios(dataDto.comentarios());
-        datosGenerales.setArchivo(new Archivo(archivo, null, null));
-        datosGenerales.setEmpresa(new Empresa(empresa, null));
+        datosGenerales.setArchivo(new Archivo(archivo));
+        datosGenerales.setEmpresa(new Empresa(empresa));
         datosGenerales.setDetalles(dataDto.detalles().stream().map(d -> detalleMapper.toDetalle(d, datosGenerales)).toList());
 
         return datosGenerales;
