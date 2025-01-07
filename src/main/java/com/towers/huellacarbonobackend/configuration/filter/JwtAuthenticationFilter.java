@@ -63,6 +63,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Claims claims = Jwts.claims()
                 .add("firstName", usuario.getNombre())
                 .add("lastName", usuario.getApellido())
+                .add("company_id", usuario.getEmpresa().getId())
                 .add("company", usuario.getEmpresa().getNombre())
                 .add("authorities", new ObjectMapper().writeValueAsString(principal.getAuthorities()))
                 .build();
@@ -70,7 +71,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .subject(usuario.getUsername())
                 .claims(claims)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hora
+                .expiration(new Date(System.currentTimeMillis() + 7200000)) // 2 horas
                 .signWith(SECRET_KEY)
                 .compact();
         response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + token);
