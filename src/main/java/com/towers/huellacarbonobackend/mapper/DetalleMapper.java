@@ -164,6 +164,57 @@ public class DetalleMapper {
                                 detalleDto.fertilizante().cantidadEmpleada()
                         ) : null
         );
+        detalle.setEncalado(
+                detalleDto.encalado() != null ?
+                        new Encalado(
+                                detalleDto.encalado().id(),
+                                new TipoCal(detalleDto.encalado().tipoCal()),
+                                detalleDto.encalado().cantidadAplicada()
+                        ) : null
+        );
+        detalle.setSueloGestionado(
+                detalleDto.sueloGestionado() != null ?
+                        new SueloGestionado(
+                                detalleDto.sueloGestionado().id(),
+                                new TipoSuelo(detalleDto.sueloGestionado().tipoSuelo()),
+                                detalleDto.sueloGestionado().areaGestionada()
+                        ) : null
+        );
+        detalle.setCultivoArroz(
+                detalleDto.cultivoArroz() != null ?
+                        new CultivoArroz(
+                                detalleDto.cultivoArroz().id(),
+                                new TipoCultivo(detalleDto.cultivoArroz().tipoCultivo()),
+                                detalleDto.cultivoArroz().periodoCultivo(),
+                                detalleDto.cultivoArroz().areaCultivo(),
+                                new TipoFertilizante(detalleDto.cultivoArroz().tipoFertilizante()),
+                                new Residuo(detalleDto.cultivoArroz().residuo()),
+                                detalleDto.cultivoArroz().contenidoNitrogeno(),
+                                detalleDto.cultivoArroz().cantidadEmpleada()
+                        ) : null
+        );
+        detalle.setQuemaBiomasa(
+                detalleDto.quemaBiomasa() != null ?
+                        new QuemaBiomasa(
+                                detalleDto.quemaBiomasa().id(),
+                                new ResiduoAgricola(detalleDto.quemaBiomasa().residuoAgricola()),
+                                detalleDto.quemaBiomasa().areaCultiva(),
+                                detalleDto.quemaBiomasa().areaQuemada(),
+                                detalleDto.quemaBiomasa().produccion()
+                        ) : null
+        );
+        detalle.setEmbalse(
+                detalleDto.embalse() != null ?
+                        new Embalse(
+                                detalleDto.embalse().id(),
+                                detalleDto.embalse().nombre(),
+                                detalleDto.embalse().ubicacion(),
+                                new Zona(detalleDto.embalse().zona()),
+                                detalleDto.embalse().area(),
+                                detalleDto.embalse().periodoLibreHielo(),
+                                detalleDto.embalse().fraccionAreaInundada()
+                        ) : null
+        );
         return detalle;
     }
 }

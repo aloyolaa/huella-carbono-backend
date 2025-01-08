@@ -11,6 +11,11 @@ public record DetalleDto(
         FugaDto fuga,
         PFCDto pfc,
         GanadoDto ganado,
-        FertilizanteDto fertilizante
+        FertilizanteDto fertilizante,
+        EncaladoDto encalado,
+        SueloGestionadoDto sueloGestionado,
+        CultivoArrozDto cultivoArroz,
+        QuemaBiomadaDto quemaBiomasa,
+        EmbalseDto embalse
 ) {
 }

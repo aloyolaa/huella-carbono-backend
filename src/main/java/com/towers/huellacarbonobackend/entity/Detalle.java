@@ -68,4 +68,19 @@ public class Detalle {
 
     @ManyToOne(cascade = {CascadeType.ALL})
     private Fertilizante fertilizante;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private Encalado encalado;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private SueloGestionado sueloGestionado;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private CultivoArroz cultivoArroz;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private QuemaBiomasa quemaBiomasa;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private Embalse embalse;
 }
