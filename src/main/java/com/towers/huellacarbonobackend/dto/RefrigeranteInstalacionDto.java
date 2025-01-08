@@ -1,12 +1,11 @@
 package com.towers.huellacarbonobackend.dto;
 
-public record OperacionDto(
+public record RefrigeranteInstalacionDto(
         Long id,
         Long tipoEquipo,
         Long tipoRefrigerante,
-        Double numeroEquipos,
+        Integer numeroEquipos,
         Double capacidadCarga,
-        Double anio,
-        Double fugaUso
+        Double fugaInstalacion
 ) {
 }

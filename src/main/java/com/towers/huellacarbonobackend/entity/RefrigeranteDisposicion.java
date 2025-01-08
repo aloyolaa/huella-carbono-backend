@@ -19,7 +19,7 @@ public class RefrigeranteDisposicion extends Refrigerante {
     @Column(name = "fraccion_refrigerante_recuperado", nullable = false)
     private Double fraccionRefrigeranteRecuperado;
 
-    public RefrigeranteDisposicion(Long id, TipoEquipo tipoEquipo, TipoRefrigerante tipoRefrigerante, Double numeroEquipos, Double capacidadCarga, Double fraccionRefrigeranteDisposicion, Double fraccionRefrigeranteRecuperado) {
+    public RefrigeranteDisposicion(Long id, TipoEquipo tipoEquipo, TipoRefrigerante tipoRefrigerante, Integer numeroEquipos, Double capacidadCarga, Double fraccionRefrigeranteDisposicion, Double fraccionRefrigeranteRecuperado) {
         super(id, tipoEquipo, tipoRefrigerante, numeroEquipos, capacidadCarga);
         this.fraccionRefrigeranteDisposicion = fraccionRefrigeranteDisposicion;
         this.fraccionRefrigeranteRecuperado = fraccionRefrigeranteRecuperado;

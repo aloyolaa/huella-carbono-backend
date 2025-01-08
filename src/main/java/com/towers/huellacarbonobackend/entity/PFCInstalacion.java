@@ -10,14 +10,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "refrigerante_instalacion")
+@Table(name = "pfc_instalacion")
 @NoArgsConstructor
-public class RefrigeranteInstalacion extends Refrigerante {
+public class PFCInstalacion extends PFC {
     @Column(name = "fuga_instalacion", nullable = false)
     private Double fugaInstalacion;
 
-    public RefrigeranteInstalacion(Long id, TipoEquipo tipoEquipo, TipoRefrigerante tipoRefrigerante, Integer numeroEquipos, Double capacidadCarga, Double fugaInstalacion) {
-        super(id, tipoEquipo, tipoRefrigerante, numeroEquipos, capacidadCarga);
+    public PFCInstalacion(Long id, String descripcionEquipo, TipoPFC tipoPFC, Integer numeroEquipos, Double capacidadCarga, Double fugaInstalacion) {
+        super(id, descripcionEquipo, tipoPFC, numeroEquipos, capacidadCarga);
         this.fugaInstalacion = fugaInstalacion;
     }
 }

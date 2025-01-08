@@ -44,4 +44,28 @@ public class Detalle {
 
     @ManyToOne(cascade = {CascadeType.ALL})
     private RefrigeranteDisposicion refrigeranteDisposicion;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private FugaInstalacion fugaInstalacion;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private FugaOperacion fugaOperacion;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private FugaDisposicion fugaDisposicion;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private PFCInstalacion pfcInstalacion;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private PFCOperacion pfcOperacion;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private PFCDisposicion pfcDisposicion;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private Ganado ganado;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private Fertilizante fertilizante;
 }

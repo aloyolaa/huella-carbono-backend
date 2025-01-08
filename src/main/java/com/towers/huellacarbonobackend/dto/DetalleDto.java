@@ -7,6 +7,10 @@ public record DetalleDto(
         Long categoriaInstitucion,
         Long actividad,
         ClinkerDto clinker,
-        RefrigeranteDto refrigerante
+        RefrigeranteDto refrigerante,
+        FugaDto fuga,
+        PFCDto pfc,
+        GanadoDto ganado,
+        FertilizanteDto fertilizante
 ) {
 }

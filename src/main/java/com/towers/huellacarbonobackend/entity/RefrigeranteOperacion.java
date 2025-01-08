@@ -19,7 +19,7 @@ public class RefrigeranteOperacion extends Refrigerante {
     @Column(name = "fuga_uso", nullable = false)
     private Double fugaUso;
 
-    public RefrigeranteOperacion(Long id, TipoEquipo tipoEquipo, TipoRefrigerante tipoRefrigerante, Double numeroEquipos, Double capacidadCarga, Double anio, Double fugaUso) {
+    public RefrigeranteOperacion(Long id, TipoEquipo tipoEquipo, TipoRefrigerante tipoRefrigerante, Integer numeroEquipos, Double capacidadCarga, Double anio, Double fugaUso) {
         super(id, tipoEquipo, tipoRefrigerante, numeroEquipos, capacidadCarga);
         this.anio = anio;
         this.fugaUso = fugaUso;

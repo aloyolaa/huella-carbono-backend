@@ -77,6 +77,93 @@ public class DetalleMapper {
                                 detalleDto.refrigerante().disposicion().fraccionRefrigeranteRecuperacion()
                         ) : null
         );
+        detalle.setFugaInstalacion(
+                detalleDto.fuga() != null && detalleDto.fuga().instalacion() != null ?
+                        new FugaInstalacion(
+                                detalleDto.fuga().instalacion().id(),
+                                detalleDto.fuga().instalacion().descripcionEquipo(),
+                                detalleDto.fuga().instalacion().numeroEquipos(),
+                                detalleDto.fuga().instalacion().capacidadCarga(),
+                                detalleDto.fuga().instalacion().fugaInstalacion()
+                        ) : null
+        );
+        detalle.setFugaOperacion(
+                detalleDto.fuga() != null && detalleDto.fuga().operacion() != null ?
+                        new FugaOperacion(
+                                detalleDto.fuga().operacion().id(),
+                                detalleDto.fuga().operacion().descripcionEquipo(),
+                                detalleDto.fuga().operacion().numeroEquipos(),
+                                detalleDto.fuga().operacion().capacidadCarga(),
+                                detalleDto.fuga().operacion().tiempoUso(),
+                                detalleDto.fuga().operacion().fugaUso()
+                        ) : null
+        );
+        detalle.setFugaDisposicion(
+                detalleDto.fuga() != null && detalleDto.fuga().disposicion() != null ?
+                        new FugaDisposicion(
+                                detalleDto.fuga().disposicion().id(),
+                                detalleDto.fuga().disposicion().descripcionEquipo(),
+                                detalleDto.fuga().disposicion().numeroEquipos(),
+                                detalleDto.fuga().disposicion().capacidadCarga(),
+                                detalleDto.fuga().disposicion().fraccionSF6Disposicion(),
+                                detalleDto.fuga().disposicion().fraccionSF6Recuperado()
+                        ) : null
+        );
+        detalle.setPfcInstalacion(
+                detalleDto.pfc() != null && detalleDto.pfc().instalacion() != null ?
+                        new PFCInstalacion(
+                                detalleDto.pfc().instalacion().id(),
+                                detalleDto.pfc().instalacion().descripcionEquipo(),
+                                new TipoPFC(detalleDto.pfc().instalacion().tipoPFC()),
+                                detalleDto.pfc().instalacion().numeroEquipos(),
+                                detalleDto.pfc().instalacion().capacidadCarga(),
+                                detalleDto.pfc().instalacion().fugaInstalacion()
+                        ) : null
+        );
+        detalle.setPfcOperacion(
+                detalleDto.pfc() != null && detalleDto.pfc().operacion() != null ?
+                        new PFCOperacion(
+                                detalleDto.pfc().operacion().id(),
+                                detalleDto.pfc().operacion().descripcionEquipo(),
+                                new TipoPFC(detalleDto.pfc().operacion().tipoPFC()),
+                                detalleDto.pfc().operacion().numeroEquipos(),
+                                detalleDto.pfc().operacion().capacidadCarga(),
+                                detalleDto.pfc().operacion().tiempoUso(),
+                                detalleDto.pfc().operacion().fugaUso()
+                        ) : null
+        );
+        detalle.setPfcDisposicion(
+                detalleDto.pfc() != null && detalleDto.pfc().disposicion() != null ?
+                        new PFCDisposicion(
+                                detalleDto.pfc().disposicion().id(),
+                                detalleDto.pfc().disposicion().descripcionEquipo(),
+                                new TipoPFC(detalleDto.pfc().disposicion().tipoPFC()),
+                                detalleDto.pfc().disposicion().numeroEquipos(),
+                                detalleDto.pfc().disposicion().capacidadCarga(),
+                                detalleDto.pfc().disposicion().fraccionGasPFCDisposicion(),
+                                detalleDto.pfc().disposicion().fraccionGasPFCRecuperado()
+                        ) : null
+        );
+        detalle.setGanado(
+                detalleDto.ganado() != null ?
+                        new Ganado(
+                                detalleDto.ganado().id(),
+                                new TipoAnimal(detalleDto.ganado().tipoAnimal()),
+                                new TipoTratamiento(detalleDto.ganado().tipoTratamiento()),
+                                detalleDto.ganado().pesoPromedioAnimal(),
+                                detalleDto.ganado().cantidadAnualAnimales()
+                        ) : null
+        );
+        detalle.setFertilizante(
+                detalleDto.fertilizante() != null ?
+                        new Fertilizante(
+                                detalleDto.fertilizante().id(),
+                                new TipoFertilizante(detalleDto.fertilizante().tipoFertilizante()),
+                                new Residuo(detalleDto.fertilizante().residuo()),
+                                detalleDto.fertilizante().contenidoNitrogeno(),
+                                detalleDto.fertilizante().cantidadEmpleada()
+                        ) : null
+        );
         return detalle;
     }
 }
