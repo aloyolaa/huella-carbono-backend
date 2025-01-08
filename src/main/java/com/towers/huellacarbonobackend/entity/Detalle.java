@@ -83,4 +83,13 @@ public class Detalle {
 
     @ManyToOne(cascade = {CascadeType.ALL})
     private Embalse embalse;
+
+    @Column(name = "area")
+    private String area;
+
+    @Column(name = "suministro")
+    private String suministro;
+
+    @Column(name = "descripcion")
+    private String descripcion;
 }

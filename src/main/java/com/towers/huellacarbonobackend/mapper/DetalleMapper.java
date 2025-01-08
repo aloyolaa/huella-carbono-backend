@@ -215,6 +215,9 @@ public class DetalleMapper {
                                 detalleDto.embalse().fraccionAreaInundada()
                         ) : null
         );
+        detalle.setArea(detalleDto.area() != null ? detalleDto.area() : null);
+        detalle.setSuministro(detalleDto.suministro() != null ? detalleDto.suministro() : null);
+        detalle.setDescripcion(detalleDto.descripcion() != null ? detalleDto.descripcion() : null);
         return detalle;
     }
 }

@@ -19,7 +19,7 @@ public class TipoCombustibleServiceImpl implements TipoCombustibleService {
     @Override
     @Transactional(readOnly = true)
     public List<TipoCombustibleDto> getAllByArchivo(Long archivoId) {
-        archivoId = archivoId == 2 ? 1 : archivoId;
+        archivoId = archivoId == 2 || archivoId == 21 ? 1 : archivoId;
         return tipoCombustibleRepository.findByArchivo(archivoId).stream().map(tipoCombustibleMapper::toTipoCombustibleDto).toList();
     }
 }

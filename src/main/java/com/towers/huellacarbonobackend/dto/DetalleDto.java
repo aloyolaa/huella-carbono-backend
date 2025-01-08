@@ -16,6 +16,9 @@ public record DetalleDto(
         SueloGestionadoDto sueloGestionado,
         CultivoArrozDto cultivoArroz,
         QuemaBiomadaDto quemaBiomasa,
-        EmbalseDto embalse
+        EmbalseDto embalse,
+        String area,
+        String suministro,
+        String descripcion
 ) {
 }
