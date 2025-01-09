@@ -9,6 +9,9 @@ public class DetalleMapper {
     public Detalle toDetalle(DetalleDto detalleDto, DatosGenerales datosGenerales) {
         Detalle detalle = new Detalle();
         detalle.setId(detalleDto.id());
+        detalle.setArea(detalleDto.area() != null ? detalleDto.area() : null);
+        detalle.setSuministro(detalleDto.suministro() != null ? detalleDto.suministro() : null);
+        detalle.setDescripcion(detalleDto.descripcion() != null ? detalleDto.descripcion() : null);
         detalle.setDatosGenerales(datosGenerales);
         detalle.setMeses(
                 detalleDto.meses() != null ?
@@ -215,9 +218,29 @@ public class DetalleMapper {
                                 detalleDto.embalse().fraccionAreaInundada()
                         ) : null
         );
-        detalle.setArea(detalleDto.area() != null ? detalleDto.area() : null);
-        detalle.setSuministro(detalleDto.suministro() != null ? detalleDto.suministro() : null);
-        detalle.setDescripcion(detalleDto.descripcion() != null ? detalleDto.descripcion() : null);
+        detalle.setTransporteMaterial(
+                detalleDto.transporteMaterial() != null ?
+                        new TransporteMaterial(
+                                detalleDto.transporteMaterial().id(),
+                                detalleDto.transporteMaterial().descripcion(),
+                                detalleDto.transporteMaterial().viajes(),
+                                detalleDto.transporteMaterial().tramo(),
+                                detalleDto.transporteMaterial().pesoTransportado(),
+                                detalleDto.transporteMaterial().distanciaRecorrida(),
+                                new TipoVehiculo(detalleDto.transporteMaterial().tipoVehiculo())
+                        ) : null
+        );
+        detalle.setTransporteVehiculo(
+                detalleDto.transporteVehiculo() != null ?
+                        new TransporteVehiculo(
+                                detalleDto.transporteVehiculo().id(),
+                                detalleDto.transporteVehiculo().tramo(),
+                                detalleDto.transporteVehiculo().distanciaRecorrida(),
+                                detalleDto.transporteVehiculo().personasViajando(),
+                                detalleDto.transporteVehiculo().vecesRecorrido(),
+                                detalleDto.transporteVehiculo().tipoTransporte() != null ? new TipoTransporte(detalleDto.transporteVehiculo().tipoTransporte()) : null
+                        ) : null
+        );
         return detalle;
     }
 }

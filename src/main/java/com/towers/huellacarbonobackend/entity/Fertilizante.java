@@ -1,6 +1,7 @@
 package com.towers.huellacarbonobackend.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "fertilizante")
+@AllArgsConstructor
 @NoArgsConstructor
 public class Fertilizante {
     @Id
@@ -29,12 +31,4 @@ public class Fertilizante {
 
     @Column(name = "cantidad_empleada", nullable = false)
     private Double cantidadEmpleada;
-
-    public Fertilizante(Long id, TipoFertilizante tipoFertilizante, Residuo residuo, Double contenidoNitrogeno, Double cantidadEmpleada) {
-        this.id = id;
-        this.tipoFertilizante = tipoFertilizante;
-        this.residuo = residuo;
-        this.contenidoNitrogeno = contenidoNitrogeno;
-        this.cantidadEmpleada = cantidadEmpleada;
-    }
 }

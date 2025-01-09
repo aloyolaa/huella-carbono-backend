@@ -1,6 +1,7 @@
 package com.towers.huellacarbonobackend.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "quema_biomasa")
+@AllArgsConstructor
 @NoArgsConstructor
 public class QuemaBiomasa {
     @Id
@@ -28,12 +30,4 @@ public class QuemaBiomasa {
 
     @Column(name = "produccion", nullable = false)
     private Double produccion;
-
-    public QuemaBiomasa(Long id, ResiduoAgricola residuoAgricola, Double areaCultiva, Double areaQuemada, Double produccion) {
-        this.id = id;
-        this.residuoAgricola = residuoAgricola;
-        this.areaCultiva = areaCultiva;
-        this.areaQuemada = areaQuemada;
-        this.produccion = produccion;
-    }
 }

@@ -1,6 +1,7 @@
 package com.towers.huellacarbonobackend.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "ganado")
+@AllArgsConstructor
 @NoArgsConstructor
 public class Ganado {
     @Id
@@ -29,12 +31,4 @@ public class Ganado {
 
     @Column(name = "cantidad_anual_animales", nullable = false)
     private Integer cantidadAnualAnimales;
-
-    public Ganado(Long id, TipoAnimal tipoAnimal, TipoTratamiento tipoTratamiento, Double pesoPromedioAnimal, Integer cantidadAnualAnimales) {
-        this.id = id;
-        this.tipoAnimal = tipoAnimal;
-        this.tipoTratamiento = tipoTratamiento;
-        this.pesoPromedioAnimal = pesoPromedioAnimal;
-        this.cantidadAnualAnimales = cantidadAnualAnimales;
-    }
 }

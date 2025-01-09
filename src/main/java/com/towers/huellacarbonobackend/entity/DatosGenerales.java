@@ -42,5 +42,4 @@ public class DatosGenerales {
 
     @OneToMany(mappedBy = "datosGenerales", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Detalle> detalles = new ArrayList<>();
-
 }

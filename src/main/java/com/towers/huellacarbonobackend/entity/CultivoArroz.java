@@ -1,6 +1,7 @@
 package com.towers.huellacarbonobackend.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "cultivo_arroz")
+@AllArgsConstructor
 @NoArgsConstructor
 public class CultivoArroz {
     @Id
@@ -39,15 +41,4 @@ public class CultivoArroz {
 
     @Column(name = "cantidad_empleada", nullable = false)
     private Double cantidadEmpleada;
-
-    public CultivoArroz(Long id, TipoCultivo tipoCultivo, Integer periodoCultivo, Double areaCultivo, TipoFertilizante tipoFertilizante, Residuo residuo, Double contenidoNitrogeno, Double cantidadEmpleada) {
-        this.id = id;
-        this.tipoCultivo = tipoCultivo;
-        this.periodoCultivo = periodoCultivo;
-        this.areaCultivo = areaCultivo;
-        this.tipoFertilizante = tipoFertilizante;
-        this.residuo = residuo;
-        this.contenidoNitrogeno = contenidoNitrogeno;
-        this.cantidadEmpleada = cantidadEmpleada;
-    }
 }

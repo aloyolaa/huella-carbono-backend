@@ -2,6 +2,9 @@ package com.towers.huellacarbonobackend.dto;
 
 public record DetalleDto(
         Long id,
+        String area,
+        String suministro,
+        String descripcion,
         Long tipoCombustible,
         MesesDto meses,
         Long categoriaInstitucion,
@@ -17,8 +20,7 @@ public record DetalleDto(
         CultivoArrozDto cultivoArroz,
         QuemaBiomadaDto quemaBiomasa,
         EmbalseDto embalse,
-        String area,
-        String suministro,
-        String descripcion
+        TransporteMaterialDto transporteMaterial,
+        TransporteVehiculoDto transporteVehiculo
 ) {
 }

@@ -1,6 +1,7 @@
 package com.towers.huellacarbonobackend.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "embalse")
+@AllArgsConstructor
 @NoArgsConstructor
 public class Embalse {
     @Id
@@ -34,14 +36,4 @@ public class Embalse {
 
     @Column(name = "fraccion_area_inundada", nullable = false)
     private Double fraccionAreaInundada;
-
-    public Embalse(Long id, String nombre, String ubicacion, Zona zona, Double area, Integer periodoLibreHielo, Double fraccionAreaInundada) {
-        this.id = id;
-        this.nombre = nombre;
-        this.ubicacion = ubicacion;
-        this.zona = zona;
-        this.area = area;
-        this.periodoLibreHielo = periodoLibreHielo;
-        this.fraccionAreaInundada = fraccionAreaInundada;
-    }
 }

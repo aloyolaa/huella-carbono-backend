@@ -1,6 +1,7 @@
 package com.towers.huellacarbonobackend.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "suelo_gestionado")
+@AllArgsConstructor
 @NoArgsConstructor
 public class SueloGestionado {
     @Id
@@ -22,10 +24,4 @@ public class SueloGestionado {
 
     @Column(name = "area_gestionada", nullable = false)
     private Double areaGestionada;
-
-    public SueloGestionado(Long id, TipoSuelo tipoSuelo, Double areaGestionada) {
-        this.id = id;
-        this.tipoSuelo = tipoSuelo;
-        this.areaGestionada = areaGestionada;
-    }
 }

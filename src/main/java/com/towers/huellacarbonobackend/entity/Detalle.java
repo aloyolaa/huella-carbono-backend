@@ -14,6 +14,15 @@ public class Detalle {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "area")
+    private String area;
+
+    @Column(name = "suministro")
+    private String suministro;
+
+    @Column(name = "descripcion")
+    private String descripcion;
+
     @ManyToOne
     @JoinColumn(name = "datos_generales_id")
     private DatosGenerales datosGenerales;
@@ -84,12 +93,9 @@ public class Detalle {
     @ManyToOne(cascade = {CascadeType.ALL})
     private Embalse embalse;
 
-    @Column(name = "area")
-    private String area;
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private TransporteMaterial transporteMaterial;
 
-    @Column(name = "suministro")
-    private String suministro;
-
-    @Column(name = "descripcion")
-    private String descripcion;
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private TransporteVehiculo transporteVehiculo;
 }
