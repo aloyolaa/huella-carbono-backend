@@ -1,9 +1,13 @@
 package com.towers.huellacarbonobackend.dto;
 
+import java.util.List;
+
 public record DetalleDto(
         Long id,
         String area,
         String suministro,
+        Double superficie,
+        String medidor,
         String descripcion,
         Long tipoCombustible,
         MesesDto meses,
@@ -21,6 +25,10 @@ public record DetalleDto(
         QuemaBiomadaDto quemaBiomasa,
         EmbalseDto embalse,
         TransporteMaterialDto transporteMaterial,
-        TransporteVehiculoDto transporteVehiculo
+        TransporteVehiculoDto transporteVehiculo,
+        ConsumoPapelDto consumoPapel,
+        GeneracionIndirectaNF3Dto generacionIndirectaNF3,
+        GeneracionResiduosDto generacionResiduos,
+        List<TransporteCasaTrabajoDto> transporteCasaTrabajos
 ) {
 }

@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -19,6 +22,12 @@ public class Detalle {
 
     @Column(name = "suministro")
     private String suministro;
+
+    @Column(name = "superficie")
+    private Double superficie;
+
+    @Column(name = "medidor")
+    private String medidor;
 
     @Column(name = "descripcion")
     private String descripcion;
@@ -98,4 +107,16 @@ public class Detalle {
 
     @ManyToOne(cascade = {CascadeType.ALL})
     private TransporteVehiculo transporteVehiculo;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private ConsumoPapel consumoPapel;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private GeneracionIndirectaNF3 generacionIndirectaNF3;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private GeneracionResiduos generacionResiduos;
+
+    @OneToMany(mappedBy = "detalle", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TransporteCasaTrabajo> transporteCasaTrabajos = new ArrayList<>();
 }

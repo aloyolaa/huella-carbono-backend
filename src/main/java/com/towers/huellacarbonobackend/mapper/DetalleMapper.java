@@ -2,15 +2,21 @@ package com.towers.huellacarbonobackend.mapper;
 
 import com.towers.huellacarbonobackend.dto.DetalleDto;
 import com.towers.huellacarbonobackend.entity.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class DetalleMapper {
+    private final GeneracionResiduosMapper generacionResiduosMapper;
+
     public Detalle toDetalle(DetalleDto detalleDto, DatosGenerales datosGenerales) {
         Detalle detalle = new Detalle();
         detalle.setId(detalleDto.id());
         detalle.setArea(detalleDto.area() != null ? detalleDto.area() : null);
         detalle.setSuministro(detalleDto.suministro() != null ? detalleDto.suministro() : null);
+        detalle.setSuperficie(detalleDto.superficie() != null ? detalleDto.superficie() : null);
+        detalle.setMedidor(detalleDto.medidor() != null ? detalleDto.medidor() : null);
         detalle.setDescripcion(detalleDto.descripcion() != null ? detalleDto.descripcion() : null);
         detalle.setDatosGenerales(datosGenerales);
         detalle.setMeses(
@@ -240,6 +246,46 @@ public class DetalleMapper {
                                 detalleDto.transporteVehiculo().vecesRecorrido(),
                                 detalleDto.transporteVehiculo().tipoTransporte() != null ? new TipoTransporte(detalleDto.transporteVehiculo().tipoTransporte()) : null
                         ) : null
+        );
+        detalle.setConsumoPapel(
+                detalleDto.consumoPapel() != null ?
+                        new ConsumoPapel(
+                                detalleDto.consumoPapel().id(),
+                                new TipoHoja(detalleDto.consumoPapel().tipoHoja()),
+                                detalleDto.consumoPapel().comprasAnuales(),
+                                detalleDto.consumoPapel().unidad(),
+                                detalleDto.consumoPapel().reciclado(),
+                                detalleDto.consumoPapel().certificado(),
+                                detalleDto.consumoPapel().densidad()
+                        ) : null
+        );
+        detalle.setGeneracionIndirectaNF3(
+                detalleDto.generacionIndirectaNF3() != null ?
+                        new GeneracionIndirectaNF3(
+                                detalleDto.generacionIndirectaNF3().id(),
+                                detalleDto.generacionIndirectaNF3().numeroPantallas(),
+                                detalleDto.generacionIndirectaNF3().alto(),
+                                detalleDto.generacionIndirectaNF3().ancho()
+                        ) : null
+        );
+        detalle.setTransporteCasaTrabajos(
+                detalleDto.transporteCasaTrabajos() != null ?
+                        detalleDto.transporteCasaTrabajos().stream().map(transporteCasaTrabajoDto -> {
+                            TransporteCasaTrabajo transporteCasaTrabajo = new TransporteCasaTrabajo();
+                            transporteCasaTrabajo.setId(transporteCasaTrabajoDto.id());
+                            transporteCasaTrabajo.setDescripcionPersonal(transporteCasaTrabajoDto.descripcionPersonal());
+                            transporteCasaTrabajo.setTrabajadores(transporteCasaTrabajoDto.trabajadores());
+                            transporteCasaTrabajo.setViajesSemanales(transporteCasaTrabajoDto.viajesSemanales());
+                            transporteCasaTrabajo.setDiasLaborales(transporteCasaTrabajoDto.diasLaborales());
+                            transporteCasaTrabajo.setDistanciaViaje(transporteCasaTrabajoDto.distanciaViaje());
+                            transporteCasaTrabajo.setTipoMovilidad(new TipoMovilidad(transporteCasaTrabajoDto.tipoMovilidad()));
+                            transporteCasaTrabajo.setDetalle(detalle);
+                            return transporteCasaTrabajo;
+                        }).toList() : null
+        );
+        detalle.setGeneracionResiduos(
+                detalleDto.generacionResiduos() != null ?
+                        generacionResiduosMapper.toGeneracionResiduos(detalleDto.generacionResiduos()) : null
         );
         return detalle;
     }
