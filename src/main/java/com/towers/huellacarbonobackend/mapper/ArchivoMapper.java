@@ -12,7 +12,8 @@ public class ArchivoMapper {
                 archivo.getId(),
                 archivo.getClave(),
                 archivo.getNombre(),
-                archivo.getAlcance().getId()
+                archivo.getAlcance().getId(),
+                archivo.getAlcance().getNombre()
         );
     }
 }
