@@ -18,15 +18,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExportService {
     private final DataService dataService;
-    private static final String BASE_DIRECTORY = "D:\\TOWERS CONSULTING\\HUELLA DE CARBONO\\Formatos Propios\\";
+    private final FtpFileStorageService ftpFileStorageService;
 
     public ExportDto handleExcelExport(Long id) {
         DatosGenerales datosGenerales = dataService.getById(id);
         Archivo archivo = datosGenerales.getArchivo();
-        String filePath = BASE_DIRECTORY + archivo.getFichero();
+        String fileName = archivo.getFichero();
 
-        try (FileInputStream fileInputStream = new FileInputStream(filePath);
-             Workbook workbook = new XSSFWorkbook(fileInputStream);
+        try (InputStream inputStream = new ByteArrayInputStream(ftpFileStorageService.loadFileAsResource(fileName));
+             Workbook workbook = new XSSFWorkbook(inputStream);
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.getSheetAt(0);
             writeCommonData(sheet, datosGenerales);
@@ -42,7 +42,7 @@ public class ExportService {
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivo.getId());
             }
             workbook.write(outputStream);
-            return new ExportDto(archivo.getFichero(), Base64.getEncoder().encodeToString(outputStream.toByteArray()));
+            return new ExportDto(fileName, Base64.getEncoder().encodeToString(outputStream.toByteArray()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
