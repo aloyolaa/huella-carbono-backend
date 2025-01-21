@@ -5,6 +5,7 @@ import com.towers.huellacarbonobackend.entity.DatosGenerales;
 import com.towers.huellacarbonobackend.mapper.DataMapper;
 import com.towers.huellacarbonobackend.repository.DatosGeneralesRepository;
 import com.towers.huellacarbonobackend.service.data.DataService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +48,7 @@ public class DataServiceImpl implements DataService {
     public DataDto getByEmpresaAndAnio(Long empresaId, Long archivo) {
         return getOptionalByEmpresaAndAnio(empresaId, archivo)
                 .map(dataMapper::toDataDto)
-                .orElse(null);
+                .orElseThrow(() -> new EntityNotFoundException("No hay datos registrados para el presente año."));
     }
 
     @Override
