@@ -26,4 +26,16 @@ public class DataMapper {
 
         return datosGenerales;
     }
+
+    public DataDto toDataDto(DatosGenerales datosGenerales) {
+        return new DataDto(
+                datosGenerales.getId(),
+                datosGenerales.getNombre(),
+                datosGenerales.getCargo(),
+                datosGenerales.getCorreo(),
+                datosGenerales.getLocacion(),
+                datosGenerales.getComentarios(),
+                datosGenerales.getDetalles().stream().map(detalleMapper::toDetalleDto).toList()
+        );
+    }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,9 @@ public class DatosGenerales {
     @Column(name = "comentarios")
     private String comentarios;
 
+    @Column(name = "anio")
+    private Integer anio;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;
@@ -42,4 +46,9 @@ public class DatosGenerales {
 
     @OneToMany(mappedBy = "datosGenerales", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Detalle> detalles = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        this.anio = Year.now().getValue();
+    }
 }

@@ -24,6 +24,9 @@ public class Archivo {
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
+    @Column(name = "fichero")
+    private String fichero;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "alcance_id", nullable = false)
     private Alcance alcance;

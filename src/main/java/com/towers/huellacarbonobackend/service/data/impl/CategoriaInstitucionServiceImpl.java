@@ -19,4 +19,10 @@ public class CategoriaInstitucionServiceImpl implements CategoriaInstitucionServ
     public List<CategoriaInstitucion> getAll() {
         return categoriaInstitucionRepository.findAll();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CategoriaInstitucion getByNombre(String nombre) {
+        return categoriaInstitucionRepository.findByNombre(nombre).orElseThrow();
+    }
 }

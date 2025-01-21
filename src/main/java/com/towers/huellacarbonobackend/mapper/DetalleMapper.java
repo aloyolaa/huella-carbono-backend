@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.mapper;
 
-import com.towers.huellacarbonobackend.dto.DetalleDto;
+import com.towers.huellacarbonobackend.dto.*;
 import com.towers.huellacarbonobackend.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -288,5 +288,215 @@ public class DetalleMapper {
                         generacionResiduosMapper.toGeneracionResiduos(detalleDto.generacionResiduos()) : null
         );
         return detalle;
+    }
+
+    public DetalleDto toDetalleDto(Detalle detalle) {
+        return new DetalleDto(
+                detalle.getId(),
+                detalle.getArea(),
+                detalle.getSuministro(),
+                detalle.getSuperficie(),
+                detalle.getMedidor(),
+                detalle.getDescripcion(),
+                detalle.getTipoCombustible() != null ? detalle.getTipoCombustible().getId() : null,
+                detalle.getMeses() != null ? new MesesDto(
+                        detalle.getMeses().getId(),
+                        detalle.getMeses().getEnero(),
+                        detalle.getMeses().getFebrero(),
+                        detalle.getMeses().getMarzo(),
+                        detalle.getMeses().getAbril(),
+                        detalle.getMeses().getMayo(),
+                        detalle.getMeses().getJunio(),
+                        detalle.getMeses().getJulio(),
+                        detalle.getMeses().getAgosto(),
+                        detalle.getMeses().getSeptiembre(),
+                        detalle.getMeses().getOctubre(),
+                        detalle.getMeses().getNoviembre(),
+                        detalle.getMeses().getDiciembre()
+                ) : null,
+                detalle.getCategoriaInstitucion() != null ? detalle.getCategoriaInstitucion().getId() : null,
+                detalle.getActividad() != null ? detalle.getActividad().getId() : null,
+                detalle.getClinker() != null ? new ClinkerDto(
+                        detalle.getClinker().getId(),
+                        detalle.getClinker().getCemento(),
+                        detalle.getClinker().getProduccionCemento(),
+                        detalle.getClinker().getProduccionClinker(),
+                        detalle.getClinker().getContenidoCaOClinker(),
+                        detalle.getClinker().getContenidoCaOCaCO3()
+                ) : null,
+                detalle.getRefrigeranteInstalacion() != null ? new RefrigeranteDto(
+                        new RefrigeranteInstalacionDto(
+                                detalle.getRefrigeranteInstalacion().getId(),
+                                detalle.getRefrigeranteInstalacion().getTipoEquipo().getId(),
+                                detalle.getRefrigeranteInstalacion().getTipoRefrigerante().getId(),
+                                detalle.getRefrigeranteInstalacion().getNumeroEquipos(),
+                                detalle.getRefrigeranteInstalacion().getCapacidadCarga(),
+                                detalle.getRefrigeranteInstalacion().getFugaInstalacion()
+                        ),
+                        detalle.getRefrigeranteOperacion() != null ? new RefrigeranteOperacionDto(
+                                detalle.getRefrigeranteOperacion().getId(),
+                                detalle.getRefrigeranteOperacion().getTipoEquipo().getId(),
+                                detalle.getRefrigeranteOperacion().getTipoRefrigerante().getId(),
+                                detalle.getRefrigeranteOperacion().getNumeroEquipos(),
+                                detalle.getRefrigeranteOperacion().getCapacidadCarga(),
+                                detalle.getRefrigeranteOperacion().getAnio(),
+                                detalle.getRefrigeranteOperacion().getFugaUso()
+                        ) : null,
+                        detalle.getRefrigeranteDisposicion() != null ? new RefrigeranteDisposicionDto(
+                                detalle.getRefrigeranteDisposicion().getId(),
+                                detalle.getRefrigeranteDisposicion().getTipoEquipo().getId(),
+                                detalle.getRefrigeranteDisposicion().getTipoRefrigerante().getId(),
+                                detalle.getRefrigeranteDisposicion().getNumeroEquipos(),
+                                detalle.getRefrigeranteDisposicion().getCapacidadCarga(),
+                                detalle.getRefrigeranteDisposicion().getFraccionRefrigeranteDisposicion(),
+                                detalle.getRefrigeranteDisposicion().getFraccionRefrigeranteRecuperado()
+                        ) : null
+                ) : null,
+                detalle.getFugaInstalacion() != null ? new FugaDto(
+                        new FugaInstalacionDto(
+                                detalle.getFugaInstalacion().getId(),
+                                detalle.getFugaInstalacion().getDescripcionEquipo(),
+                                detalle.getFugaInstalacion().getNumeroEquipos(),
+                                detalle.getFugaInstalacion().getCapacidadCarga(),
+                                detalle.getFugaInstalacion().getFugaInstalacion()
+                        ),
+                        detalle.getFugaOperacion() != null ? new FugaOperacionDto(
+                                detalle.getFugaOperacion().getId(),
+                                detalle.getFugaOperacion().getDescripcionEquipo(),
+                                detalle.getFugaOperacion().getNumeroEquipos(),
+                                detalle.getFugaOperacion().getCapacidadCarga(),
+                                detalle.getFugaOperacion().getTiempoUso(),
+                                detalle.getFugaOperacion().getFugaUso()
+                        ) : null,
+                        detalle.getFugaDisposicion() != null ? new FugaDisposicionDto(
+                                detalle.getFugaDisposicion().getId(),
+                                detalle.getFugaDisposicion().getDescripcionEquipo(),
+                                detalle.getFugaDisposicion().getNumeroEquipos(),
+                                detalle.getFugaDisposicion().getCapacidadCarga(),
+                                detalle.getFugaDisposicion().getFraccionSF6Disposicion(),
+                                detalle.getFugaDisposicion().getFraccionSF6Recuperado()
+                        ) : null
+                ) : null,
+                detalle.getPfcInstalacion() != null ? new PFCDto(
+                        new PFCInstalacionDto(
+                                detalle.getPfcInstalacion().getId(),
+                                detalle.getPfcInstalacion().getDescripcionEquipo(),
+                                detalle.getPfcInstalacion().getTipoPFC().getId(),
+                                detalle.getPfcInstalacion().getNumeroEquipos(),
+                                detalle.getPfcInstalacion().getCapacidadCarga(),
+                                detalle.getPfcInstalacion().getFugaInstalacion()
+                        ),
+                        detalle.getPfcOperacion() != null ? new PFCOperacionDto(
+                                detalle.getPfcOperacion().getId(),
+                                detalle.getPfcOperacion().getDescripcionEquipo(),
+                                detalle.getPfcOperacion().getTipoPFC().getId(),
+                                detalle.getPfcOperacion().getNumeroEquipos(),
+                                detalle.getPfcOperacion().getCapacidadCarga(),
+                                detalle.getPfcOperacion().getTiempoUso(),
+                                detalle.getPfcOperacion().getFugaUso()
+                        ) : null,
+                        detalle.getPfcDisposicion() != null ? new PFCDisposicionDto(
+                                detalle.getPfcDisposicion().getId(),
+                                detalle.getPfcDisposicion().getDescripcionEquipo(),
+                                detalle.getPfcDisposicion().getTipoPFC().getId(),
+                                detalle.getPfcDisposicion().getNumeroEquipos(),
+                                detalle.getPfcDisposicion().getCapacidadCarga(),
+                                detalle.getPfcDisposicion().getFraccionGasPFCDisposicion(),
+                                detalle.getPfcDisposicion().getFraccionGasPFCRecuperado()
+                        ) : null
+                ) : null,
+                detalle.getGanado() != null ? new GanadoDto(
+                        detalle.getGanado().getId(),
+                        detalle.getGanado().getTipoAnimal().getId(),
+                        detalle.getGanado().getTipoTratamiento().getId(),
+                        detalle.getGanado().getPesoPromedioAnimal(),
+                        detalle.getGanado().getCantidadAnualAnimales()
+                ) : null,
+                detalle.getFertilizante() != null ? new FertilizanteDto(
+                        detalle.getFertilizante().getId(),
+                        detalle.getFertilizante().getTipoFertilizante().getId(),
+                        detalle.getFertilizante().getResiduo().getId(),
+                        detalle.getFertilizante().getContenidoNitrogeno(),
+                        detalle.getFertilizante().getCantidadEmpleada()
+                ) : null,
+                detalle.getEncalado() != null ? new EncaladoDto(
+                        detalle.getEncalado().getId(),
+                        detalle.getEncalado().getTipoCal().getId(),
+                        detalle.getEncalado().getCantidadAplicada()
+                ) : null,
+                detalle.getSueloGestionado() != null ? new SueloGestionadoDto(
+                        detalle.getSueloGestionado().getId(),
+                        detalle.getSueloGestionado().getTipoSuelo().getId(),
+                        detalle.getSueloGestionado().getAreaGestionada()
+                ) : null,
+                detalle.getCultivoArroz() != null ? new CultivoArrozDto(
+                        detalle.getCultivoArroz().getId(),
+                        detalle.getCultivoArroz().getTipoCultivo().getId(),
+                        detalle.getCultivoArroz().getPeriodoCultivo(),
+                        detalle.getCultivoArroz().getAreaCultivo(),
+                        detalle.getCultivoArroz().getTipoFertilizante().getId(),
+                        detalle.getCultivoArroz().getResiduo().getId(),
+                        detalle.getCultivoArroz().getContenidoNitrogeno(),
+                        detalle.getCultivoArroz().getCantidadEmpleada()
+                ) : null,
+                detalle.getQuemaBiomasa() != null ? new QuemaBiomadaDto(
+                        detalle.getQuemaBiomasa().getId(),
+                        detalle.getQuemaBiomasa().getResiduoAgricola().getId(),
+                        detalle.getQuemaBiomasa().getAreaCultiva(),
+                        detalle.getQuemaBiomasa().getAreaQuemada(),
+                        detalle.getQuemaBiomasa().getProduccion()
+                ) : null,
+                detalle.getEmbalse() != null ? new EmbalseDto(
+                        detalle.getEmbalse().getId(),
+                        detalle.getEmbalse().getNombre(),
+                        detalle.getEmbalse().getUbicacion(),
+                        detalle.getEmbalse().getZona().getId(),
+                        detalle.getEmbalse().getArea(),
+                        detalle.getEmbalse().getPeriodoLibreHielo(),
+                        detalle.getEmbalse().getFraccionAreaInundada()
+                ) : null,
+                detalle.getTransporteMaterial() != null ? new TransporteMaterialDto(
+                        detalle.getTransporteMaterial().getId(),
+                        detalle.getTransporteMaterial().getDescripcion(),
+                        detalle.getTransporteMaterial().getViajes(),
+                        detalle.getTransporteMaterial().getTramo(),
+                        detalle.getTransporteMaterial().getPesoTransportado(),
+                        detalle.getTransporteMaterial().getDistanciaRecorrida(),
+                        detalle.getTransporteMaterial().getTipoVehiculo().getId()
+                ) : null,
+                detalle.getTransporteVehiculo() != null ? new TransporteVehiculoDto(
+                        detalle.getTransporteVehiculo().getId(),
+                        detalle.getTransporteVehiculo().getTramo(),
+                        detalle.getTransporteVehiculo().getDistanciaRecorrida(),
+                        detalle.getTransporteVehiculo().getPersonasViajando(),
+                        detalle.getTransporteVehiculo().getVecesRecorrido(),
+                        detalle.getTransporteVehiculo().getTipoTransporte() != null ? detalle.getTransporteVehiculo().getTipoTransporte().getId() : null
+                ) : null,
+                detalle.getConsumoPapel() != null ? new ConsumoPapelDto(
+                        detalle.getConsumoPapel().getId(),
+                        detalle.getConsumoPapel().getTipoHoja().getId(),
+                        detalle.getConsumoPapel().getComprasAnuales(),
+                        detalle.getConsumoPapel().getUnidad(),
+                        detalle.getConsumoPapel().getReciclado(),
+                        detalle.getConsumoPapel().getCertificado(),
+                        detalle.getConsumoPapel().getDensidad()
+                ) : null,
+                detalle.getGeneracionIndirectaNF3() != null ? new GeneracionIndirectaNF3Dto(
+                        detalle.getGeneracionIndirectaNF3().getId(),
+                        detalle.getGeneracionIndirectaNF3().getNumeroPantallas(),
+                        detalle.getGeneracionIndirectaNF3().getAlto(),
+                        detalle.getGeneracionIndirectaNF3().getAncho()
+                ) : null,
+                detalle.getGeneracionResiduos() != null ? generacionResiduosMapper.toGeneracionResiduosDto(detalle.getGeneracionResiduos()) : null,
+                detalle.getTransporteCasaTrabajos() != null ? detalle.getTransporteCasaTrabajos().stream().map(transporteCasaTrabajo -> new TransporteCasaTrabajoDto(
+                        transporteCasaTrabajo.getId(),
+                        transporteCasaTrabajo.getDescripcionPersonal(),
+                        transporteCasaTrabajo.getTrabajadores(),
+                        transporteCasaTrabajo.getViajesSemanales(),
+                        transporteCasaTrabajo.getDiasLaborales(),
+                        transporteCasaTrabajo.getDistanciaViaje(),
+                        transporteCasaTrabajo.getTipoMovilidad().getId()
+                )).toList() : null
+        );
     }
 }

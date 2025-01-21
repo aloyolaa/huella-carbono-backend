@@ -1,6 +1,7 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
 import com.towers.huellacarbonobackend.dto.TipoCombustibleDto;
+import com.towers.huellacarbonobackend.entity.TipoCombustible;
 import com.towers.huellacarbonobackend.mapper.TipoCombustibleMapper;
 import com.towers.huellacarbonobackend.repository.TipoCombustibleRepository;
 import com.towers.huellacarbonobackend.service.data.TipoCombustibleService;
@@ -21,5 +22,12 @@ public class TipoCombustibleServiceImpl implements TipoCombustibleService {
     public List<TipoCombustibleDto> getAllByArchivo(Long archivoId) {
         archivoId = archivoId == 2 || archivoId == 21 ? 1 : archivoId;
         return tipoCombustibleRepository.findByArchivo(archivoId).stream().map(tipoCombustibleMapper::toTipoCombustibleDto).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TipoCombustible getByNombreAndArchivo(String nombre, Long archivoId) {
+        archivoId = archivoId == 2 || archivoId == 21 ? 1 : archivoId;
+        return tipoCombustibleRepository.findByNombreAndArchivo(nombre, archivoId).orElseThrow();
     }
 }

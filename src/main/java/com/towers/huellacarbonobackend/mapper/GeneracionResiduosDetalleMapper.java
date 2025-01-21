@@ -22,4 +22,18 @@ public class GeneracionResiduosDetalleMapper {
 
         return generacionResiduosDetalle;
     }
+
+    public GeneracionResiduosDetalleDto toGeneracionResiduosDetalleDto(GeneracionResiduosDetalle generacionResiduosDetalle) {
+        return new GeneracionResiduosDetalleDto(
+                generacionResiduosDetalle.getId(),
+                generacionResiduosDetalle.getAnio(),
+                generacionResiduosDetalle.getProductosMadera(),
+                generacionResiduosDetalle.getProductosPapel(),
+                generacionResiduosDetalle.getResiduos(),
+                generacionResiduosDetalle.getTextiles(),
+                generacionResiduosDetalle.getJardines(),
+                generacionResiduosDetalle.getPaniales(),
+                generacionResiduosDetalle.getOtros()
+        );
+    }
 }

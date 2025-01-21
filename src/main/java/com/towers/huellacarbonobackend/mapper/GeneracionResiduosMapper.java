@@ -24,4 +24,18 @@ public class GeneracionResiduosMapper {
         generacionResiduos.setGeneracionResiduosDetalles(generacionResiduosDto.generacionResiduosDetalles().stream().map(d -> generacionResiduosDetalleMapper.toGeneracionResiduosDetalle(d, generacionResiduos)).toList());
         return generacionResiduos;
     }
+
+    public GeneracionResiduosDto toGeneracionResiduosDto(GeneracionResiduos generacionResiduos) {
+        return new GeneracionResiduosDto(
+                generacionResiduos.getId(),
+                generacionResiduos.getAnioHuella(),
+                generacionResiduos.getPrecipitacion(),
+                generacionResiduos.getAnioInicio(),
+                generacionResiduos.getTemperatura(),
+                generacionResiduos.getContenidoGrasas(),
+                generacionResiduos.getTasaCrecimiento(),
+                generacionResiduos.getCondicionSEDS().getId(),
+                generacionResiduos.getGeneracionResiduosDetalles().stream().map(generacionResiduosDetalleMapper::toGeneracionResiduosDetalleDto).toList()
+        );
+    }
 }
