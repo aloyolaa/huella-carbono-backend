@@ -1,6 +1,5 @@
 package com.towers.huellacarbonobackend.service.file;
 
-import com.towers.huellacarbonobackend.dto.DataDto;
 import com.towers.huellacarbonobackend.entity.*;
 import com.towers.huellacarbonobackend.mapper.DataMapper;
 import com.towers.huellacarbonobackend.service.data.CategoriaInstitucionService;
@@ -27,8 +26,8 @@ public class ImportService {
     private final CategoriaInstitucionService categoriaInstitucionService;
 
     @Transactional
-    public DataDto handleExcelImport(Long empresaId, Long archivoId, MultipartFile file) {
-        Optional<DatosGenerales> optionalDatosGenerales = dataService.getByEmpresaAndAnio(empresaId, archivoId);
+    public void handleExcelImport(Long empresaId, Long archivoId, MultipartFile file) {
+        Optional<DatosGenerales> optionalDatosGenerales = dataService.getOptionalByEmpresaAndAnio(empresaId, archivoId);
 
         if (optionalDatosGenerales.isPresent()) {
             dataService.deleteById(optionalDatosGenerales.orElseThrow().getId());
@@ -52,8 +51,7 @@ public class ImportService {
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivoId);
             }
-            DatosGenerales savedDatosGenerales = dataService.save(datosGenerales);
-            return dataMapper.toDataDto(savedDatosGenerales);
+            dataService.save(datosGenerales);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

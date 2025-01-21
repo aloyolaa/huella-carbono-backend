@@ -38,8 +38,16 @@ public class DataServiceImpl implements DataService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<DatosGenerales> getByEmpresaAndAnio(Long empresaId, Long archivo) {
+    public Optional<DatosGenerales> getOptionalByEmpresaAndAnio(Long empresaId, Long archivo) {
         return datosGeneralesRepository.findByEmpresaAndAnio(Year.now().getValue(), empresaId, archivo);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DataDto getByEmpresaAndAnio(Long empresaId, Long archivo) {
+        return getOptionalByEmpresaAndAnio(empresaId, archivo)
+                .map(dataMapper::toDataDto)
+                .orElse(null);
     }
 
     @Override

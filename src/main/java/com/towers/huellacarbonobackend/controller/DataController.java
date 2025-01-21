@@ -24,4 +24,14 @@ public class DataController {
                 , HttpStatus.OK
         );
     }
+
+    @GetMapping("/{empresa}/{archivo}")
+    @PreAuthorize("hasAuthority('REGISTER')")
+    public ResponseEntity<ResponseDto> get(@PathVariable Long empresa, @PathVariable Long archivo) {
+        DataDto byEmpresaAndAnio = dataService.getByEmpresaAndAnio(empresa, archivo);
+        return new ResponseEntity<>(
+                new ResponseDto(byEmpresaAndAnio, true)
+                , HttpStatus.OK
+        );
+    }
 }

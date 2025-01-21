@@ -1,6 +1,5 @@
 package com.towers.huellacarbonobackend.controller;
 
-import com.towers.huellacarbonobackend.dto.DataDto;
 import com.towers.huellacarbonobackend.dto.ExportDto;
 import com.towers.huellacarbonobackend.dto.ResponseDto;
 import com.towers.huellacarbonobackend.service.file.ExportService;
@@ -29,9 +28,9 @@ public class FileController {
 
     @PostMapping("/import/{empresa}/{archivo}")
     public ResponseEntity<ResponseDto> importExcel(@RequestParam MultipartFile file, @PathVariable Long empresa, @PathVariable Long archivo) {
-        DataDto dataDto = importService.handleExcelImport(empresa, archivo, file);
+        importService.handleExcelImport(empresa, archivo, file);
         return new ResponseEntity<>(
-                new ResponseDto(dataDto, true)
+                new ResponseDto("Datos importados y guardados correctamente.", true)
                 , HttpStatus.OK
         );
     }
