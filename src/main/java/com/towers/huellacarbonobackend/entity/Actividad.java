@@ -27,6 +27,10 @@ public class Actividad {
     @JoinColumn(name = "accion_id")
     private Accion accion;
 
+    @ManyToOne
+    @JoinColumn(name = "seccion_id")
+    private Seccion seccion;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "archivo_id", nullable = false)
     private Archivo archivo;

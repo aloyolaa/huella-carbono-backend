@@ -11,7 +11,9 @@ public class TipoCombustibleMapper {
         return new TipoCombustibleDto(
                 tipoCombustible.getId(),
                 tipoCombustible.getNombre(),
-                tipoCombustible.getUnidad().getNombre()
+                tipoCombustible.getUnidad().getNombre(),
+                tipoCombustible.getSeccion() != null ? tipoCombustible.getSeccion().getId() : null,
+                tipoCombustible.getSeccion() != null ? tipoCombustible.getSeccion().getNombre() : null
         );
     }
 }

@@ -23,6 +23,10 @@ public class TipoCombustible {
     @JoinColumn(name = "unidad_id", nullable = false)
     private Unidad unidad;
 
+    @ManyToOne
+    @JoinColumn(name = "seccion_id")
+    private Seccion seccion;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "archivo_id", nullable = false)
     private Archivo archivo;

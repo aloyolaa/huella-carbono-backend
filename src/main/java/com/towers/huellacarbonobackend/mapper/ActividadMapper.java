@@ -12,7 +12,9 @@ public class ActividadMapper {
                 actividad.getId(),
                 actividad.getNombre(),
                 actividad.getProduccion().getNombre(),
-                actividad.getAccion().getNombre()
+                actividad.getAccion().getNombre(),
+                actividad.getSeccion() != null ? actividad.getSeccion().getId() : null,
+                actividad.getSeccion() != null ? actividad.getSeccion().getNombre() : null
         );
     }
 }
