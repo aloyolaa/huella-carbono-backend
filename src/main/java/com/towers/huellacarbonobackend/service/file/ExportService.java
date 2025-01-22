@@ -4,6 +4,7 @@ import com.towers.huellacarbonobackend.dto.ExportDto;
 import com.towers.huellacarbonobackend.entity.Archivo;
 import com.towers.huellacarbonobackend.entity.DatosGenerales;
 import com.towers.huellacarbonobackend.entity.Detalle;
+import com.towers.huellacarbonobackend.entity.Meses;
 import com.towers.huellacarbonobackend.service.data.DataService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
@@ -31,11 +32,17 @@ public class ExportService {
             Sheet sheet = workbook.getSheetAt(0);
             writeCommonData(sheet, datosGenerales);
             switch (archivo.getId().intValue()) {
-                case 1, 3, 4:
-                    writeDetalleData(sheet, datosGenerales.getDetalles());
+                case 1:
+                    writeDetalleData(sheet, datosGenerales.getDetalles(), 23, 36, 3);
                     break;
                 case 2:
                     writeDetalleDataWithCategory(sheet, datosGenerales);
+                    break;
+                case 3:
+                    writeDetalleData(sheet, datosGenerales.getDetalles(), 22, 50, 3);
+                    break;
+                case 4:
+                    writeDetalleData(sheet, datosGenerales.getDetalles(), 22, 37, 3);
                     break;
                 // Add more cases as needed
                 default:
@@ -56,26 +63,15 @@ public class ExportService {
         writeCell(sheet, 13, 2, datosGenerales.getComentarios());
     }
 
-    private void writeDetalleData(Sheet sheet, List<Detalle> detalles) {
+    private void writeDetalleData(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
         for (Detalle detalle : detalles) {
-            for (int rowIndex = 23; rowIndex <= 36; rowIndex++) {
+            for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row != null) {
                     Cell cellB = row.getCell(1);
                     String tipoCombustibleNombre = cellB.getStringCellValue().replaceAll("\\(\\*\\)", "").trim();
                     if (cellB != null && detalle.getTipoCombustible().getNombre().equals(tipoCombustibleNombre)) {
-                        writeCell(sheet, rowIndex, 3, detalle.getMeses().getEnero());
-                        writeCell(sheet, rowIndex, 4, detalle.getMeses().getFebrero());
-                        writeCell(sheet, rowIndex, 5, detalle.getMeses().getMarzo());
-                        writeCell(sheet, rowIndex, 6, detalle.getMeses().getAbril());
-                        writeCell(sheet, rowIndex, 7, detalle.getMeses().getMayo());
-                        writeCell(sheet, rowIndex, 8, detalle.getMeses().getJunio());
-                        writeCell(sheet, rowIndex, 9, detalle.getMeses().getJulio());
-                        writeCell(sheet, rowIndex, 10, detalle.getMeses().getAgosto());
-                        writeCell(sheet, rowIndex, 11, detalle.getMeses().getSeptiembre());
-                        writeCell(sheet, rowIndex, 12, detalle.getMeses().getOctubre());
-                        writeCell(sheet, rowIndex, 13, detalle.getMeses().getNoviembre());
-                        writeCell(sheet, rowIndex, 14, detalle.getMeses().getDiciembre());
+                        writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
                         break;
                     }
                 }
@@ -91,25 +87,29 @@ public class ExportService {
                     Cell cellB = row.getCell(1);
                     String tipoCombustibleNombre = cellB.getStringCellValue().replaceAll("\\(\\*\\)", "").trim();
                     if (cellB != null && detalle.getTipoCombustible().getNombre().equals(tipoCombustibleNombre)) {
-                        writeCell(sheet, rowIndex, 4, detalle.getMeses().getEnero());
-                        writeCell(sheet, rowIndex, 5, detalle.getMeses().getFebrero());
-                        writeCell(sheet, rowIndex, 6, detalle.getMeses().getMarzo());
-                        writeCell(sheet, rowIndex, 7, detalle.getMeses().getAbril());
-                        writeCell(sheet, rowIndex, 8, detalle.getMeses().getMayo());
-                        writeCell(sheet, rowIndex, 9, detalle.getMeses().getJunio());
-                        writeCell(sheet, rowIndex, 10, detalle.getMeses().getJulio());
-                        writeCell(sheet, rowIndex, 11, detalle.getMeses().getAgosto());
-                        writeCell(sheet, rowIndex, 12, detalle.getMeses().getSeptiembre());
-                        writeCell(sheet, rowIndex, 13, detalle.getMeses().getOctubre());
-                        writeCell(sheet, rowIndex, 14, detalle.getMeses().getNoviembre());
-                        writeCell(sheet, rowIndex, 15, detalle.getMeses().getDiciembre());
-
+                        writeMesesData(sheet, rowIndex, 4, detalle.getMeses());
                         updateListCell(sheet, rowIndex, 3, detalle.getCategoriaInstitucion().getNombre());
                         break;
                     }
                 }
             }
         }
+    }
+
+    private void writeMesesData(Sheet sheet, int rowIndex, int startColIndex, Meses meses) {
+        int colIndex = startColIndex;
+        writeCell(sheet, rowIndex, colIndex++, meses.getEnero());
+        writeCell(sheet, rowIndex, colIndex++, meses.getFebrero());
+        writeCell(sheet, rowIndex, colIndex++, meses.getMarzo());
+        writeCell(sheet, rowIndex, colIndex++, meses.getAbril());
+        writeCell(sheet, rowIndex, colIndex++, meses.getMayo());
+        writeCell(sheet, rowIndex, colIndex++, meses.getJunio());
+        writeCell(sheet, rowIndex, colIndex++, meses.getJulio());
+        writeCell(sheet, rowIndex, colIndex++, meses.getAgosto());
+        writeCell(sheet, rowIndex, colIndex++, meses.getSeptiembre());
+        writeCell(sheet, rowIndex, colIndex++, meses.getOctubre());
+        writeCell(sheet, rowIndex, colIndex++, meses.getNoviembre());
+        writeCell(sheet, rowIndex, colIndex, meses.getDiciembre());
     }
 
     private void updateListCell(Sheet sheet, int rowIndex, int colIndex, String value) {

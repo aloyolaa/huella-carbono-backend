@@ -41,11 +41,17 @@ public class ImportService {
             Sheet sheet = workbook.getSheetAt(0);
             readCommonData(sheet, datosGenerales);
             switch (archivoId.intValue()) {
-                case 1, 3, 4:
-                    readDetalleData(sheet, datosGenerales);
+                case 1:
+                    readDetalleData(sheet, datosGenerales, 23, 36, 3);
                     break;
                 case 2:
                     readDetalleDataWithCategory(sheet, datosGenerales);
+                    break;
+                case 3:
+                    readDetalleData(sheet, datosGenerales, 22, 50, 3);
+                    break;
+                case 4:
+                    readDetalleData(sheet, datosGenerales, 22, 37, 3);
                     break;
                 // Add more cases as needed
                 default:
@@ -65,14 +71,14 @@ public class ImportService {
         datosGenerales.setComentarios(readCell(sheet, 13, 2));
     }
 
-    private void readDetalleData(Sheet sheet, DatosGenerales datosGenerales) {
+    private void readDetalleData(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
         List<Detalle> detalles = new ArrayList<>();
-        for (int rowIndex = 23; rowIndex <= 36; rowIndex++) {
+        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
                 Cell cellB = row.getCell(1);
                 if (cellB != null) {
-                    Meses meses = readMeses(row, 3);
+                    Meses meses = readMeses(row, startColIndex);
                     if (hasDataInAnyMonth(meses)) {
                         Detalle detalle = new Detalle();
                         String tipoCombustibleNombre = cellB.getStringCellValue().replaceAll("\\(\\*\\)", "").trim();
@@ -130,18 +136,19 @@ public class ImportService {
 
     private Meses readMeses(Row row, int startColIndex) {
         Meses meses = new Meses();
-        meses.setEnero(readDoubleCell(row, startColIndex));
-        meses.setFebrero(readDoubleCell(row, startColIndex + 1));
-        meses.setMarzo(readDoubleCell(row, startColIndex + 2));
-        meses.setAbril(readDoubleCell(row, startColIndex + 3));
-        meses.setMayo(readDoubleCell(row, startColIndex + 4));
-        meses.setJunio(readDoubleCell(row, startColIndex + 5));
-        meses.setJulio(readDoubleCell(row, startColIndex + 6));
-        meses.setAgosto(readDoubleCell(row, startColIndex + 7));
-        meses.setSeptiembre(readDoubleCell(row, startColIndex + 8));
-        meses.setOctubre(readDoubleCell(row, startColIndex + 9));
-        meses.setNoviembre(readDoubleCell(row, startColIndex + 10));
-        meses.setDiciembre(readDoubleCell(row, startColIndex + 11));
+        int colIndex = startColIndex;
+        meses.setEnero(readDoubleCell(row, colIndex++));
+        meses.setFebrero(readDoubleCell(row, colIndex++));
+        meses.setMarzo(readDoubleCell(row, colIndex++));
+        meses.setAbril(readDoubleCell(row, colIndex++));
+        meses.setMayo(readDoubleCell(row, colIndex++));
+        meses.setJunio(readDoubleCell(row, colIndex++));
+        meses.setJulio(readDoubleCell(row, colIndex++));
+        meses.setAgosto(readDoubleCell(row, colIndex++));
+        meses.setSeptiembre(readDoubleCell(row, colIndex++));
+        meses.setOctubre(readDoubleCell(row, colIndex++));
+        meses.setNoviembre(readDoubleCell(row, colIndex++));
+        meses.setDiciembre(readDoubleCell(row, colIndex));
         return meses;
     }
 
