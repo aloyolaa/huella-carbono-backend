@@ -9,4 +9,6 @@ public interface TipoCombustibleService {
     List<TipoCombustibleDto> getAllByArchivo(Long archivoId);
 
     TipoCombustible getByNombreAndArchivo(String nombre, Long archivoId);
+
+    TipoCombustible getByNombreAndArchivoAndSeccion(String nombre, Long archivoId, Long seccionId);
 }

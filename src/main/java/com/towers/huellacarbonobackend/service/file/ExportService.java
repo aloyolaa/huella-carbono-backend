@@ -1,11 +1,9 @@
 package com.towers.huellacarbonobackend.service.file;
 
 import com.towers.huellacarbonobackend.dto.ExportDto;
-import com.towers.huellacarbonobackend.entity.Archivo;
-import com.towers.huellacarbonobackend.entity.DatosGenerales;
-import com.towers.huellacarbonobackend.entity.Detalle;
-import com.towers.huellacarbonobackend.entity.Meses;
+import com.towers.huellacarbonobackend.entity.*;
 import com.towers.huellacarbonobackend.service.data.DataService;
+import com.towers.huellacarbonobackend.service.data.SeccionService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -14,11 +12,13 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ExportService {
     private final DataService dataService;
+    private final SeccionService seccionService;
     private final FtpFileStorageService ftpFileStorageService;
 
     public ExportDto handleExcelExport(Long id) {
@@ -39,10 +39,10 @@ public class ExportService {
                     writeDetalleDataWithCategory(sheet, datosGenerales);
                     break;
                 case 3:
-                    writeDetalleData(sheet, datosGenerales.getDetalles(), 22, 50, 3);
+                    writeDetalleDataWithSection(sheet, datosGenerales.getDetalles(), 22, 50, 3);
                     break;
                 case 4:
-                    writeDetalleData(sheet, datosGenerales.getDetalles(), 22, 37, 3);
+                    writeDetalleDataWithSection(sheet, datosGenerales.getDetalles(), 22, 37, 3);
                     break;
                 // Add more cases as needed
                 default:
@@ -90,6 +90,37 @@ public class ExportService {
                         writeMesesData(sheet, rowIndex, 4, detalle.getMeses());
                         updateListCell(sheet, rowIndex, 3, detalle.getCategoriaInstitucion().getNombre());
                         break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void writeDetalleDataWithSection(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
+        Seccion currentSeccion = null;
+        boolean lastCellWasSection = false;
+
+        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row != null) {
+                Cell cellB = row.getCell(1);
+                if (cellB != null) {
+                    String cellValue = cellB.getStringCellValue().trim();
+                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombre(cellValue);
+                    if (optionalSeccion.isPresent()) {
+                        if (!lastCellWasSection) {
+                            currentSeccion = optionalSeccion.get();
+                            lastCellWasSection = true;
+                        }
+                    } else {
+                        lastCellWasSection = false;
+                        for (Detalle detalle : detalles) {
+                            if (detalle.getTipoCombustible().getNombre().equals(cellValue) &&
+                                    detalle.getTipoCombustible().getSeccion().equals(currentSeccion)) {
+                                writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
+                                break;
+                            }
+                        }
                     }
                 }
             }
