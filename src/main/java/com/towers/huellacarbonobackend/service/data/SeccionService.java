@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface SeccionService {
     Optional<Seccion> getOptionalByNombre(String nombre);
+
+    Optional<Seccion> getOptionalByNombreContains(String nombre);
 }

@@ -1,10 +1,7 @@
 package com.towers.huellacarbonobackend.service.file;
 
 import com.towers.huellacarbonobackend.entity.*;
-import com.towers.huellacarbonobackend.service.data.CategoriaInstitucionService;
-import com.towers.huellacarbonobackend.service.data.DataService;
-import com.towers.huellacarbonobackend.service.data.SeccionService;
-import com.towers.huellacarbonobackend.service.data.TipoCombustibleService;
+import com.towers.huellacarbonobackend.service.data.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -24,6 +21,8 @@ public class ImportService {
     private final TipoCombustibleService tipoCombustibleService;
     private final CategoriaInstitucionService categoriaInstitucionService;
     private final SeccionService seccionService;
+    private final ActividadService actividadService;
+    private final AccionService accionService;
 
     @Transactional
     public void handleExcelImport(Long empresaId, Long archivoId, MultipartFile file) {
@@ -53,7 +52,12 @@ public class ImportService {
                 case 4:
                     readDetalleDataWithSection(sheet, datosGenerales, 22, 37, 3);
                     break;
-                // Add more cases as needed
+                case 5:
+                    readDetalleDataWithSectionAndAccion(sheet, datosGenerales, 22, 29, 4);
+                    break;
+                case 6:
+                    readDetalleDataWithSectionAndNumberCheck(sheet, datosGenerales, 23, 33, 3);
+                    break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivoId);
             }
@@ -140,6 +144,82 @@ public class ImportService {
                             Detalle detalle = new Detalle();
                             String tipoCombustibleNombre = cellB.getStringCellValue().replaceAll("\\(\\*\\)", "").trim();
                             detalle.setTipoCombustible(tipoCombustibleService.getByNombreAndArchivoAndSeccion(tipoCombustibleNombre, datosGenerales.getArchivo().getId(), currentSeccion.getId()));
+                            detalle.setMeses(meses);
+                            detalle.setDatosGenerales(datosGenerales);
+                            detalles.add(detalle);
+                        }
+                    }
+                }
+            }
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readDetalleDataWithSectionAndAccion(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
+        List<Detalle> detalles = new ArrayList<>();
+        Seccion currentSeccion = null;
+        boolean lastCellWasSection = false;
+
+        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row != null) {
+                Cell cellB = row.getCell(1);
+                Cell cellD = row.getCell(3);
+                if (cellB != null && cellD != null) {
+                    String cellValue = cellB.getStringCellValue().trim();
+                    String accionNombre = cellD.getStringCellValue().trim();
+                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombre(cellValue);
+                    if (optionalSeccion.isPresent()) {
+                        if (!lastCellWasSection) {
+                            currentSeccion = optionalSeccion.get();
+                            lastCellWasSection = true;
+                        }
+                    } else {
+                        lastCellWasSection = false;
+                        Meses meses = readMeses(row, startColIndex);
+                        if (hasDataInAnyMonth(meses)) {
+                            Detalle detalle = new Detalle();
+                            String actividadNombre = cellB.getStringCellValue().replaceAll("\\(\\*\\)", "").trim();
+                            Accion accion = accionService.getByNombre(accionNombre);
+                            detalle.setActividad(actividadService.getByNombreAndArchivoAndSeccionAndAccion(actividadNombre, datosGenerales.getArchivo().getId(), currentSeccion.getId(), accion.getId()));
+                            detalle.setMeses(meses);
+                            detalle.setDatosGenerales(datosGenerales);
+                            detalles.add(detalle);
+                        }
+                    }
+                }
+            }
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readDetalleDataWithSectionAndNumberCheck(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
+        List<Detalle> detalles = new ArrayList<>();
+        Seccion currentSeccion = null;
+        boolean lastCellWasSection = false;
+
+        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row != null) {
+                Cell cellB = row.getCell(1);
+                if (cellB != null) {
+                    String cellValue = cellB.getStringCellValue().trim();
+                    if (cellValue.matches("^\\d.*")) {
+                        cellValue = cellValue.substring(4).trim();
+                    }
+                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombreContains(cellValue);
+                    if (optionalSeccion.isPresent()) {
+                        if (!lastCellWasSection) {
+                            currentSeccion = optionalSeccion.get();
+                            lastCellWasSection = true;
+                        }
+                    } else {
+                        lastCellWasSection = false;
+                        Meses meses = readMeses(row, startColIndex);
+                        if (hasDataInAnyMonth(meses)) {
+                            Detalle detalle = new Detalle();
+                            String actividadNombre = cellB.getStringCellValue().replaceAll("\\(\\*\\)", "").trim();
+                            detalle.setActividad(actividadService.getByNombreAndArchivoAndSeccion(actividadNombre, datosGenerales.getArchivo().getId(), currentSeccion.getId()));
                             detalle.setMeses(meses);
                             detalle.setDatosGenerales(datosGenerales);
                             detalles.add(detalle);

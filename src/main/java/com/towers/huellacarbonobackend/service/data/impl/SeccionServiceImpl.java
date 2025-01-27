@@ -19,4 +19,10 @@ public class SeccionServiceImpl implements SeccionService {
     public Optional<Seccion> getOptionalByNombre(String nombre) {
         return seccionRepository.findByNombre(nombre);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Seccion> getOptionalByNombreContains(String nombre) {
+        return seccionRepository.findByNombreContains(nombre);
+    }
 }

@@ -44,7 +44,12 @@ public class ExportService {
                 case 4:
                     writeDetalleDataWithSection(sheet, datosGenerales.getDetalles(), 22, 37, 3);
                     break;
-                // Add more cases as needed
+                case 5:
+                    writeDetalleDataWithSectionAndAccion(sheet, datosGenerales.getDetalles(), 22, 29, 4);
+                    break;
+                case 6:
+                    writeDetalleDataWithSectionAndNumberCheck(sheet, datosGenerales.getDetalles(), 23, 33, 3);
+                    break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivo.getId());
             }
@@ -117,6 +122,74 @@ public class ExportService {
                         for (Detalle detalle : detalles) {
                             if (detalle.getTipoCombustible().getNombre().equals(cellValue) &&
                                     detalle.getTipoCombustible().getSeccion().equals(currentSeccion)) {
+                                writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void writeDetalleDataWithSectionAndAccion(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
+        Seccion currentSeccion = null;
+        boolean lastCellWasSection = false;
+
+        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row != null) {
+                Cell cellB = row.getCell(1);
+                Cell cellD = row.getCell(3);
+                if (cellB != null && cellD != null) {
+                    String cellValue = cellB.getStringCellValue().trim();
+                    String accionNombre = cellD.getStringCellValue().trim();
+                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombre(cellValue);
+                    if (optionalSeccion.isPresent()) {
+                        if (!lastCellWasSection) {
+                            currentSeccion = optionalSeccion.get();
+                            lastCellWasSection = true;
+                        }
+                    } else {
+                        lastCellWasSection = false;
+                        for (Detalle detalle : detalles) {
+                            if (detalle.getActividad().getNombre().equals(cellValue) &&
+                                    detalle.getActividad().getSeccion().equals(currentSeccion) &&
+                                    detalle.getActividad().getAccion().getNombre().equals(accionNombre)) {
+                                writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void writeDetalleDataWithSectionAndNumberCheck(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
+        Seccion currentSeccion = null;
+        boolean lastCellWasSection = false;
+
+        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row != null) {
+                Cell cellB = row.getCell(1);
+                if (cellB != null) {
+                    String cellValue = cellB.getStringCellValue().trim();
+                    if (cellValue.matches("^\\d.*")) {
+                        cellValue = cellValue.substring(4).trim();
+                    }
+                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombreContains(cellValue);
+                    if (optionalSeccion.isPresent()) {
+                        if (!lastCellWasSection) {
+                            currentSeccion = optionalSeccion.get();
+                            lastCellWasSection = true;
+                        }
+                    } else {
+                        lastCellWasSection = false;
+                        for (Detalle detalle : detalles) {
+                            if (detalle.getActividad().getNombre().equals(cellValue) &&
+                                    detalle.getActividad().getSeccion().equals(currentSeccion)) {
                                 writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
                                 break;
                             }
