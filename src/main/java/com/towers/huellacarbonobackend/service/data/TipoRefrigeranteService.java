@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface TipoRefrigeranteService {
     List<TipoRefrigerante> getAll();
+
+    TipoRefrigerante getByNombre(String nombre);
 }

@@ -45,6 +45,7 @@ public class DatosGenerales {
     private Archivo archivo;
 
     @OneToMany(mappedBy = "datosGenerales", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy
     private List<Detalle> detalles = new ArrayList<>();
 
     @PrePersist

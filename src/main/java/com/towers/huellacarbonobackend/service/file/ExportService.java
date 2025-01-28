@@ -33,22 +33,28 @@ public class ExportService {
             writeCommonData(sheet, datosGenerales);
             switch (archivo.getId().intValue()) {
                 case 1:
-                    writeDetalleData(sheet, datosGenerales.getDetalles(), 23, 36, 3);
+                    writeGeneracionElectricidad(sheet, datosGenerales.getDetalles(), 23, 36, 3);
                     break;
                 case 2:
-                    writeDetalleDataWithCategory(sheet, datosGenerales);
+                    writeFuentesFijas(sheet, datosGenerales);
                     break;
                 case 3:
-                    writeDetalleDataWithSection(sheet, datosGenerales.getDetalles(), 22, 50, 3);
+                    writeFuentesMovilesYRefinacion(sheet, datosGenerales.getDetalles(), 22, 50, 3);
                     break;
                 case 4:
-                    writeDetalleDataWithSection(sheet, datosGenerales.getDetalles(), 22, 37, 3);
+                    writeFuentesMovilesYRefinacion(sheet, datosGenerales.getDetalles(), 22, 37, 3);
                     break;
                 case 5:
-                    writeDetalleDataWithSectionAndAccion(sheet, datosGenerales.getDetalles(), 22, 29, 4);
+                    writeVenteoYQuema(sheet, datosGenerales.getDetalles(), 22, 29, 4);
                     break;
                 case 6:
-                    writeDetalleDataWithSectionAndNumberCheck(sheet, datosGenerales.getDetalles(), 23, 33, 3);
+                    writeFugasProcesos(sheet, datosGenerales.getDetalles(), 23, 33, 3);
+                    break;
+                case 7:
+                    writeClinker(sheet, datosGenerales.getDetalles(), 28);
+                    break;
+                case 8:
+                    writeRefrigerantes(sheet, datosGenerales.getDetalles(), 22);
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivo.getId());
@@ -68,7 +74,7 @@ public class ExportService {
         writeCell(sheet, 13, 2, datosGenerales.getComentarios());
     }
 
-    private void writeDetalleData(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void writeGeneracionElectricidad(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
         for (Detalle detalle : detalles) {
             for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
@@ -84,7 +90,7 @@ public class ExportService {
         }
     }
 
-    private void writeDetalleDataWithCategory(Sheet sheet, DatosGenerales datosGenerales) {
+    private void writeFuentesFijas(Sheet sheet, DatosGenerales datosGenerales) {
         for (Detalle detalle : datosGenerales.getDetalles()) {
             for (int rowIndex = 22; rowIndex <= 35; rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
@@ -101,7 +107,7 @@ public class ExportService {
         }
     }
 
-    private void writeDetalleDataWithSection(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void writeFuentesMovilesYRefinacion(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
         Seccion currentSeccion = null;
         boolean lastCellWasSection = false;
 
@@ -132,7 +138,7 @@ public class ExportService {
         }
     }
 
-    private void writeDetalleDataWithSectionAndAccion(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void writeVenteoYQuema(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
         Seccion currentSeccion = null;
         boolean lastCellWasSection = false;
 
@@ -166,7 +172,7 @@ public class ExportService {
         }
     }
 
-    private void writeDetalleDataWithSectionAndNumberCheck(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void writeFugasProcesos(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
         Seccion currentSeccion = null;
         boolean lastCellWasSection = false;
 
@@ -198,6 +204,63 @@ public class ExportService {
                 }
             }
         }
+    }
+
+    private void writeClinker(Sheet sheet, List<Detalle> detalles, int startRowIndex) {
+        int rowIndex = startRowIndex;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+            writeCell(sheet, rowIndex, 1, detalle.getClinker().getCemento());
+            writeCell(sheet, rowIndex, 2, detalle.getClinker().getProduccionCemento());
+            writeCell(sheet, rowIndex, 3, detalle.getClinker().getProduccionClinker());
+            writeCell(sheet, rowIndex, 4, detalle.getClinker().getContenidoCaOClinker());
+            writeCell(sheet, rowIndex, 5, detalle.getClinker().getContenidoCaOCaCO3());
+            rowIndex++;
+        }
+    }
+
+    private void writeRefrigerantes(Sheet sheet, List<Detalle> detalles, int startRowIndex) {
+        int rowIndex = startRowIndex;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+
+            RefrigeranteInstalacion refrigeranteInstalacion = detalle.getRefrigeranteInstalacion();
+            RefrigeranteOperacion refrigeranteOperacion = detalle.getRefrigeranteOperacion();
+            RefrigeranteDisposicion refrigeranteDisposicion = detalle.getRefrigeranteDisposicion();
+
+            if (refrigeranteInstalacion != null) {
+                writeRefrigerantesCommonData(sheet, rowIndex, 1, refrigeranteInstalacion);
+                writeCell(sheet, rowIndex, 5, refrigeranteInstalacion.getFugaInstalacion());
+            }
+
+            if (refrigeranteOperacion != null) {
+                writeRefrigerantesCommonData(sheet, rowIndex, 7, refrigeranteOperacion);
+                writeCell(sheet, rowIndex, 11, refrigeranteOperacion.getAnio());
+                writeCell(sheet, rowIndex, 12, refrigeranteOperacion.getFugaUso());
+            }
+
+            if (refrigeranteDisposicion != null) {
+                writeRefrigerantesCommonData(sheet, rowIndex, 14, refrigeranteDisposicion);
+                writeCell(sheet, rowIndex, 18, refrigeranteDisposicion.getFraccionRefrigeranteDisposicion());
+                writeCell(sheet, rowIndex, 19, refrigeranteDisposicion.getFraccionRefrigeranteRecuperado());
+            }
+
+            rowIndex++;
+        }
+    }
+
+    private void writeRefrigerantesCommonData(Sheet sheet, int rowIndex, int startColIndex, Refrigerante refrigerante) {
+        updateListCell(sheet, rowIndex, startColIndex++, refrigerante.getTipoEquipo().getNombre());
+        updateListCell(sheet, rowIndex, startColIndex++, refrigerante.getTipoRefrigerante().getNombre());
+        writeCell(sheet, rowIndex, startColIndex++, refrigerante.getNumeroEquipos());
+        writeCell(sheet, rowIndex, startColIndex, refrigerante.getCapacidadCarga());
     }
 
     private void writeMesesData(Sheet sheet, int rowIndex, int startColIndex, Meses meses) {

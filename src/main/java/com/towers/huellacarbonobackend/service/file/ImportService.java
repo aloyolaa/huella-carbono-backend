@@ -23,6 +23,8 @@ public class ImportService {
     private final SeccionService seccionService;
     private final ActividadService actividadService;
     private final AccionService accionService;
+    private final TipoEquipoService tipoEquipoService;
+    private final TipoRefrigeranteService tipoRefrigeranteService;
 
     @Transactional
     public void handleExcelImport(Long empresaId, Long archivoId, MultipartFile file) {
@@ -41,22 +43,28 @@ public class ImportService {
             readCommonData(sheet, datosGenerales);
             switch (archivoId.intValue()) {
                 case 1:
-                    readDetalleData(sheet, datosGenerales, 23, 36, 3);
+                    readGeneracionElectricidad(sheet, datosGenerales, 23, 36, 3);
                     break;
                 case 2:
-                    readDetalleDataWithCategory(sheet, datosGenerales);
+                    readFuentesFijas(sheet, datosGenerales);
                     break;
                 case 3:
-                    readDetalleDataWithSection(sheet, datosGenerales, 22, 50, 3);
+                    readFuentesMovilesYRefinacion(sheet, datosGenerales, 22, 50, 3);
                     break;
                 case 4:
-                    readDetalleDataWithSection(sheet, datosGenerales, 22, 37, 3);
+                    readFuentesMovilesYRefinacion(sheet, datosGenerales, 22, 37, 3);
                     break;
                 case 5:
-                    readDetalleDataWithSectionAndAccion(sheet, datosGenerales, 22, 29, 4);
+                    readVenteoYQuema(sheet, datosGenerales, 22, 29, 4);
                     break;
                 case 6:
-                    readDetalleDataWithSectionAndNumberCheck(sheet, datosGenerales, 23, 33, 3);
+                    readFugasProcesos(sheet, datosGenerales, 23, 33, 3);
+                    break;
+                case 7:
+                    readClinker(sheet, datosGenerales, 28);
+                    break;
+                case 8:
+                    readRefrigerantes(sheet, datosGenerales, 22);
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivoId);
@@ -75,7 +83,7 @@ public class ImportService {
         datosGenerales.setComentarios(readCell(sheet, 13, 2));
     }
 
-    private void readDetalleData(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void readGeneracionElectricidad(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
         List<Detalle> detalles = new ArrayList<>();
         for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
@@ -97,7 +105,7 @@ public class ImportService {
         datosGenerales.setDetalles(detalles);
     }
 
-    private void readDetalleDataWithCategory(Sheet sheet, DatosGenerales datosGenerales) {
+    private void readFuentesFijas(Sheet sheet, DatosGenerales datosGenerales) {
         List<Detalle> detalles = new ArrayList<>();
         for (int rowIndex = 22; rowIndex <= 35; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
@@ -120,7 +128,7 @@ public class ImportService {
         datosGenerales.setDetalles(detalles);
     }
 
-    private void readDetalleDataWithSection(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void readFuentesMovilesYRefinacion(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
         List<Detalle> detalles = new ArrayList<>();
         Seccion currentSeccion = null;
         boolean lastCellWasSection = false;
@@ -155,7 +163,7 @@ public class ImportService {
         datosGenerales.setDetalles(detalles);
     }
 
-    private void readDetalleDataWithSectionAndAccion(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void readVenteoYQuema(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
         List<Detalle> detalles = new ArrayList<>();
         Seccion currentSeccion = null;
         boolean lastCellWasSection = false;
@@ -193,7 +201,7 @@ public class ImportService {
         datosGenerales.setDetalles(detalles);
     }
 
-    private void readDetalleDataWithSectionAndNumberCheck(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void readFugasProcesos(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
         List<Detalle> detalles = new ArrayList<>();
         Seccion currentSeccion = null;
         boolean lastCellWasSection = false;
@@ -231,22 +239,105 @@ public class ImportService {
         datosGenerales.setDetalles(detalles);
     }
 
+    private void readClinker(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = startRowIndex; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            Cell cellB = row.getCell(1);
+            if (cellB == null || cellB.getStringCellValue().trim().isEmpty()) {
+                break;
+            }
+            Detalle detalle = new Detalle();
+            detalle.setClinker(
+                    new Clinker(
+                            null,
+                            cellB.getStringCellValue(),
+                            readDoubleCell(row, 2),
+                            readDoubleCell(row, 3),
+                            readDoubleCell(row, 4),
+                            readDoubleCell(row, 5)
+                    )
+            );
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readRefrigerantes(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = startRowIndex; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+
+            if (row == null) {
+                break;
+            }
+
+            String tipoEquipoI = readListCell(row, 1);
+            String tipoEquipoO = readListCell(row, 7);
+            String tipoEquipoD = readListCell(row, 14);
+
+            if (tipoEquipoI == null && tipoEquipoO == null && tipoEquipoD == null) {
+                break;
+            }
+
+            Detalle detalle = new Detalle();
+
+            if (tipoEquipoI != null) {
+                detalle.setRefrigeranteInstalacion(
+                        new RefrigeranteInstalacion(
+                                null,
+                                tipoEquipoService.getByNombre(tipoEquipoI),
+                                tipoRefrigeranteService.getByNombre(readListCell(row, 2)),
+                                readIntegerCell(row, 3),
+                                readDoubleCell(row, 4),
+                                readDoubleCell(row, 5)
+                        )
+                );
+            }
+
+            if (tipoEquipoO != null) {
+                detalle.setRefrigeranteOperacion(
+                        new RefrigeranteOperacion(
+                                null,
+                                tipoEquipoService.getByNombre(tipoEquipoO),
+                                tipoRefrigeranteService.getByNombre(readListCell(row, 8)),
+                                readIntegerCell(row, 9),
+                                readDoubleCell(row, 10),
+                                readDoubleCell(row, 11),
+                                readDoubleCell(row, 12)
+                        )
+                );
+            }
+
+            if (tipoEquipoD != null) {
+                detalle.setRefrigeranteDisposicion(
+                        new RefrigeranteDisposicion(
+                                null,
+                                tipoEquipoService.getByNombre(tipoEquipoD),
+                                tipoRefrigeranteService.getByNombre(readListCell(row, 15)),
+                                readIntegerCell(row, 16),
+                                readDoubleCell(row, 17),
+                                readDoubleCell(row, 18),
+                                readDoubleCell(row, 19)
+                        )
+                );
+            }
+
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
     private boolean hasDataInAnyMonth(Meses meses) {
         return meses.getEnero() != null || meses.getFebrero() != null || meses.getMarzo() != null ||
                 meses.getAbril() != null || meses.getMayo() != null || meses.getJunio() != null ||
                 meses.getJulio() != null || meses.getAgosto() != null || meses.getSeptiembre() != null ||
                 meses.getOctubre() != null || meses.getNoviembre() != null || meses.getDiciembre() != null;
-    }
-
-    private String readCell(Sheet sheet, int rowIndex, int colIndex) {
-        Row row = sheet.getRow(rowIndex);
-        if (row != null) {
-            Cell cell = row.getCell(colIndex);
-            if (cell != null) {
-                return cell.getStringCellValue();
-            }
-        }
-        return null;
     }
 
     private Meses readMeses(Row row, int startColIndex) {
@@ -265,6 +356,17 @@ public class ImportService {
         meses.setNoviembre(readDoubleCell(row, colIndex++));
         meses.setDiciembre(readDoubleCell(row, colIndex));
         return meses;
+    }
+
+    private String readCell(Sheet sheet, int rowIndex, int colIndex) {
+        Row row = sheet.getRow(rowIndex);
+        if (row != null) {
+            Cell cell = row.getCell(colIndex);
+            if (cell != null) {
+                return cell.getStringCellValue().trim();
+            }
+        }
+        return null;
     }
 
     private Double readDoubleCell(Row row, int colIndex) {
@@ -288,7 +390,7 @@ public class ImportService {
     private String readListCell(Row row, int colIndex) {
         Cell cell = row.getCell(colIndex);
         if (cell != null && cell.getCellType() == CellType.STRING) {
-            return cell.getStringCellValue();
+            return cell.getStringCellValue().trim();
         }
         return null;
     }
