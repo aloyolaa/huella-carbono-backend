@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface TipoPFCService {
     List<TipoPFC> getAll();
+
+    TipoPFC getByNombre(String nombre);
 }

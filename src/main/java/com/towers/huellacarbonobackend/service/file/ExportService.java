@@ -56,6 +56,12 @@ public class ExportService {
                 case 8:
                     writeRefrigerantes(sheet, datosGenerales.getDetalles(), 22);
                     break;
+                case 9:
+                    writeFugasSF6(sheet, datosGenerales.getDetalles(), 21);
+                    break;
+                case 10:
+                    writePFC(sheet, datosGenerales.getDetalles(), 22);
+                    break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivo.getId());
             }
@@ -231,29 +237,110 @@ public class ExportService {
                 sheet.createRow(rowIndex);
             }
 
-            RefrigeranteInstalacion refrigeranteInstalacion = detalle.getRefrigeranteInstalacion();
-            RefrigeranteOperacion refrigeranteOperacion = detalle.getRefrigeranteOperacion();
-            RefrigeranteDisposicion refrigeranteDisposicion = detalle.getRefrigeranteDisposicion();
+            RefrigeranteInstalacion refrigeranteI = detalle.getRefrigeranteInstalacion();
+            RefrigeranteOperacion refrigeranteO = detalle.getRefrigeranteOperacion();
+            RefrigeranteDisposicion refrigeranteD = detalle.getRefrigeranteDisposicion();
 
-            if (refrigeranteInstalacion != null) {
-                writeRefrigerantesCommonData(sheet, rowIndex, 1, refrigeranteInstalacion);
-                writeCell(sheet, rowIndex, 5, refrigeranteInstalacion.getFugaInstalacion());
+            if (refrigeranteI != null) {
+                writeRefrigerantesCommonData(sheet, rowIndex, 1, refrigeranteI);
+                writeCell(sheet, rowIndex, 5, refrigeranteI.getFugaInstalacion());
             }
 
-            if (refrigeranteOperacion != null) {
-                writeRefrigerantesCommonData(sheet, rowIndex, 7, refrigeranteOperacion);
-                writeCell(sheet, rowIndex, 11, refrigeranteOperacion.getAnio());
-                writeCell(sheet, rowIndex, 12, refrigeranteOperacion.getFugaUso());
+            if (refrigeranteO != null) {
+                writeRefrigerantesCommonData(sheet, rowIndex, 7, refrigeranteO);
+                writeCell(sheet, rowIndex, 11, refrigeranteO.getAnio());
+                writeCell(sheet, rowIndex, 12, refrigeranteO.getFugaUso());
             }
 
-            if (refrigeranteDisposicion != null) {
-                writeRefrigerantesCommonData(sheet, rowIndex, 14, refrigeranteDisposicion);
-                writeCell(sheet, rowIndex, 18, refrigeranteDisposicion.getFraccionRefrigeranteDisposicion());
-                writeCell(sheet, rowIndex, 19, refrigeranteDisposicion.getFraccionRefrigeranteRecuperado());
+            if (refrigeranteD != null) {
+                writeRefrigerantesCommonData(sheet, rowIndex, 14, refrigeranteD);
+                writeCell(sheet, rowIndex, 18, refrigeranteD.getFraccionRefrigeranteDisposicion());
+                writeCell(sheet, rowIndex, 19, refrigeranteD.getFraccionRefrigeranteRecuperado());
             }
 
             rowIndex++;
         }
+    }
+
+    private void writeFugasSF6(Sheet sheet, List<Detalle> detalles, int startRowIndex) {
+        int rowIndex = startRowIndex;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+
+            FugaInstalacion fugaI = detalle.getFugaInstalacion();
+            FugaOperacion fugaO = detalle.getFugaOperacion();
+            FugaDisposicion fugaD = detalle.getFugaDisposicion();
+
+            if (fugaI != null) {
+                writeFugasCommonData(sheet, rowIndex, 1, fugaI);
+                writeCell(sheet, rowIndex, 4, fugaI.getFugaInstalacion());
+            }
+
+            if (fugaO != null) {
+                writeFugasCommonData(sheet, rowIndex, 6, fugaO);
+                writeCell(sheet, rowIndex, 9, fugaO.getTiempoUso());
+                writeCell(sheet, rowIndex, 10, fugaO.getFugaUso());
+            }
+
+            if (fugaD != null) {
+                writeFugasCommonData(sheet, rowIndex, 12, fugaD);
+                writeCell(sheet, rowIndex, 15, fugaD.getFraccionSF6Disposicion());
+                writeCell(sheet, rowIndex, 16, fugaD.getFraccionSF6Recuperado());
+            }
+
+            rowIndex++;
+        }
+    }
+
+    private void writePFC(Sheet sheet, List<Detalle> detalles, int startRowIndex) {
+        int rowIndex = startRowIndex;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+
+            PFCInstalacion pfcI = detalle.getPfcInstalacion();
+            PFCOperacion pfcO = detalle.getPfcOperacion();
+            PFCDisposicion pfcD = detalle.getPfcDisposicion();
+
+            if (pfcI != null) {
+                writePFCCommonData(sheet, rowIndex, 1, pfcI);
+                writeCell(sheet, rowIndex, 5, pfcI.getFugaInstalacion());
+            }
+
+            if (pfcO != null) {
+                writePFCCommonData(sheet, rowIndex, 7, pfcO);
+                writeCell(sheet, rowIndex, 11, pfcO.getTiempoUso());
+                writeCell(sheet, rowIndex, 12, pfcO.getFugaUso());
+            }
+
+            if (pfcD != null) {
+                writePFCCommonData(sheet, rowIndex, 14, pfcD);
+                writeCell(sheet, rowIndex, 18, pfcD.getFraccionGasPFCDisposicion());
+                writeCell(sheet, rowIndex, 19, pfcD.getFraccionGasPFCRecuperado());
+            }
+
+            rowIndex++;
+        }
+    }
+
+    private void writePFCCommonData(Sheet sheet, int rowIndex, int startColIndex, PFC pfc) {
+        writeCell(sheet, rowIndex, startColIndex++, pfc.getDescripcionEquipo());
+        updateListCell(sheet, rowIndex, startColIndex++, pfc.getTipoPFC().getNombre());
+        writeCell(sheet, rowIndex, startColIndex++, pfc.getNumeroEquipos());
+        writeCell(sheet, rowIndex, startColIndex, pfc.getCapacidadCarga());
+    }
+
+    private void writeFugasCommonData(Sheet sheet, int rowIndex, int startColIndex, Fuga fuga) {
+        writeCell(sheet, rowIndex, startColIndex++, fuga.getDescripcionEquipo());
+        writeCell(sheet, rowIndex, startColIndex++, fuga.getNumeroEquipos());
+        writeCell(sheet, rowIndex, startColIndex, fuga.getCapacidadCarga());
     }
 
     private void writeRefrigerantesCommonData(Sheet sheet, int rowIndex, int startColIndex, Refrigerante refrigerante) {

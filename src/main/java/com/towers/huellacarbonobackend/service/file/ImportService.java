@@ -25,6 +25,7 @@ public class ImportService {
     private final AccionService accionService;
     private final TipoEquipoService tipoEquipoService;
     private final TipoRefrigeranteService tipoRefrigeranteService;
+    private final TipoPFCService tipoPFCService;
 
     @Transactional
     public void handleExcelImport(Long empresaId, Long archivoId, MultipartFile file) {
@@ -66,6 +67,12 @@ public class ImportService {
                 case 8:
                     readRefrigerantes(sheet, datosGenerales, 22);
                     break;
+                case 9:
+                    readFugasSF6(sheet, datosGenerales, 21);
+                    break;
+                case 10:
+                    readPFC(sheet, datosGenerales, 22);
+                    break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivoId);
             }
@@ -76,11 +83,13 @@ public class ImportService {
     }
 
     private void readCommonData(Sheet sheet, DatosGenerales datosGenerales) {
-        datosGenerales.setNombre(readCell(sheet, 7, 2));
-        datosGenerales.setCargo(readCell(sheet, 8, 2));
-        datosGenerales.setCorreo(readCell(sheet, 9, 2));
-        datosGenerales.setLocacion(readCell(sheet, 11, 2));
-        datosGenerales.setComentarios(readCell(sheet, 13, 2));
+
+
+        datosGenerales.setNombre(readCell(sheet.getRow(7), 2));
+        datosGenerales.setCargo(readCell(sheet.getRow(8), 2));
+        datosGenerales.setCorreo(readCell(sheet.getRow(9), 2));
+        datosGenerales.setLocacion(readCell(sheet.getRow(11), 2));
+        datosGenerales.setComentarios(readCell(sheet.getRow(13), 2));
     }
 
     private void readGeneracionElectricidad(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
@@ -333,6 +342,135 @@ public class ImportService {
         datosGenerales.setDetalles(detalles);
     }
 
+    private void readFugasSF6(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = startRowIndex; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+
+            if (row == null) {
+                break;
+            }
+
+            String equipoI = readCell(row, 1);
+            String equipoO = readCell(row, 6);
+            String equipoD = readCell(row, 12);
+
+            if (equipoI == null && equipoO == null && equipoD == null) {
+                break;
+            }
+
+            Detalle detalle = new Detalle();
+
+            if (equipoI != null) {
+                detalle.setFugaInstalacion(
+                        new FugaInstalacion(
+                                null,
+                                equipoI,
+                                readIntegerCell(row, 2),
+                                readDoubleCell(row, 3),
+                                readDoubleCell(row, 4)
+                        )
+                );
+            }
+
+            if (equipoO != null) {
+                detalle.setFugaOperacion(
+                        new FugaOperacion(
+                                null,
+                                equipoO,
+                                readIntegerCell(row, 7),
+                                readDoubleCell(row, 8),
+                                readDoubleCell(row, 9),
+                                readDoubleCell(row, 10)
+                        )
+                );
+            }
+
+            if (equipoD != null) {
+                detalle.setFugaDisposicion(
+                        new FugaDisposicion(
+                                null,
+                                equipoD,
+                                readIntegerCell(row, 13),
+                                readDoubleCell(row, 14),
+                                readDoubleCell(row, 15),
+                                readDoubleCell(row, 16)
+                        )
+                );
+            }
+
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readPFC(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = startRowIndex; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+
+            if (row == null) {
+                break;
+            }
+
+            String equipoI = readCell(row, 1);
+            String equipoO = readCell(row, 7);
+            String equipoD = readCell(row, 14);
+
+            if (equipoI == null && equipoO == null && equipoD == null) {
+                break;
+            }
+
+            Detalle detalle = new Detalle();
+
+            if (equipoI != null) {
+                detalle.setPfcInstalacion(
+                        new PFCInstalacion(
+                                null,
+                                equipoI,
+                                tipoPFCService.getByNombre(readCell(row, 2)),
+                                readIntegerCell(row, 3),
+                                readDoubleCell(row, 4),
+                                readDoubleCell(row, 5)
+                        )
+                );
+            }
+
+            if (equipoO != null) {
+                detalle.setPfcOperacion(
+                        new PFCOperacion(
+                                null,
+                                equipoO,
+                                tipoPFCService.getByNombre(readCell(row, 8)),
+                                readIntegerCell(row, 9),
+                                readDoubleCell(row, 10),
+                                readDoubleCell(row, 11),
+                                readDoubleCell(row, 12)
+                        )
+                );
+            }
+
+            if (equipoD != null) {
+                detalle.setPfcDisposicion(
+                        new PFCDisposicion(
+                                null,
+                                equipoD,
+                                tipoPFCService.getByNombre(readCell(row, 15)),
+                                readIntegerCell(row, 16),
+                                readDoubleCell(row, 17),
+                                readDoubleCell(row, 18),
+                                readDoubleCell(row, 19)
+                        )
+                );
+            }
+
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
     private boolean hasDataInAnyMonth(Meses meses) {
         return meses.getEnero() != null || meses.getFebrero() != null || meses.getMarzo() != null ||
                 meses.getAbril() != null || meses.getMayo() != null || meses.getJunio() != null ||
@@ -358,13 +496,19 @@ public class ImportService {
         return meses;
     }
 
-    private String readCell(Sheet sheet, int rowIndex, int colIndex) {
-        Row row = sheet.getRow(rowIndex);
-        if (row != null) {
-            Cell cell = row.getCell(colIndex);
-            if (cell != null) {
-                return cell.getStringCellValue().trim();
-            }
+    private String readListCell(Row row, int colIndex) {
+        Cell cell = row.getCell(colIndex);
+        if (cell != null && cell.getCellType() == CellType.STRING) {
+            return cell.getStringCellValue().trim();
+        }
+        return null;
+    }
+
+    private String readCell(Row row, int colIndex) {
+        Cell cell = row.getCell(colIndex);
+        if (cell != null) {
+            String value = cell.getStringCellValue().trim();
+            return value.isBlank() ? null : value;
         }
         return null;
     }
@@ -383,14 +527,6 @@ public class ImportService {
         if (cell != null) {
             int value = (int) cell.getNumericCellValue();
             return value == 0 ? null : value;
-        }
-        return null;
-    }
-
-    private String readListCell(Row row, int colIndex) {
-        Cell cell = row.getCell(colIndex);
-        if (cell != null && cell.getCellType() == CellType.STRING) {
-            return cell.getStringCellValue().trim();
         }
         return null;
     }
