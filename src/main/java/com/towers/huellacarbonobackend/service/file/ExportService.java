@@ -85,11 +85,13 @@ public class ExportService {
             for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row != null) {
-                    Cell cellB = row.getCell(1);
-                    String tipoCombustibleNombre = cellB.getStringCellValue().replaceAll("\\(\\*\\)", "").trim();
-                    if (cellB != null && detalle.getTipoCombustible().getNombre().equals(tipoCombustibleNombre)) {
-                        writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
-                        break;
+                    String tipoCombustibleNombre = readCell(row, 1);
+                    if (tipoCombustibleNombre != null) {
+                        tipoCombustibleNombre = tipoCombustibleNombre.replaceAll("\\(\\*\\)", "").trim();
+                        if (detalle.getTipoCombustible().getNombre().equals(tipoCombustibleNombre)) {
+                            writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
+                            break;
+                        }
                     }
                 }
             }
@@ -101,12 +103,14 @@ public class ExportService {
             for (int rowIndex = 22; rowIndex <= 35; rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row != null) {
-                    Cell cellB = row.getCell(1);
-                    String tipoCombustibleNombre = cellB.getStringCellValue().replaceAll("\\(\\*\\)", "").trim();
-                    if (cellB != null && detalle.getTipoCombustible().getNombre().equals(tipoCombustibleNombre)) {
-                        writeMesesData(sheet, rowIndex, 4, detalle.getMeses());
-                        updateListCell(sheet, rowIndex, 3, detalle.getCategoriaInstitucion().getNombre());
-                        break;
+                    String tipoCombustibleNombre = readCell(row, 1);
+                    if (tipoCombustibleNombre != null) {
+                        tipoCombustibleNombre = tipoCombustibleNombre.replaceAll("\\(\\*\\)", "").trim();
+                        if (detalle.getTipoCombustible().getNombre().equals(tipoCombustibleNombre)) {
+                            writeMesesData(sheet, rowIndex, 4, detalle.getMeses());
+                            updateListCell(sheet, rowIndex, 3, detalle.getCategoriaInstitucion().getNombre());
+                            break;
+                        }
                     }
                 }
             }
@@ -120,10 +124,10 @@ public class ExportService {
         for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
-                Cell cellB = row.getCell(1);
-                if (cellB != null) {
-                    String cellValue = cellB.getStringCellValue().trim();
-                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombre(cellValue);
+                String tipoCombustibleNombre = readCell(row, 1);
+                if (tipoCombustibleNombre != null) {
+                    tipoCombustibleNombre = tipoCombustibleNombre.replaceAll("\\(\\*\\)", "").trim();
+                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombre(tipoCombustibleNombre);
                     if (optionalSeccion.isPresent()) {
                         if (!lastCellWasSection) {
                             currentSeccion = optionalSeccion.get();
@@ -132,7 +136,7 @@ public class ExportService {
                     } else {
                         lastCellWasSection = false;
                         for (Detalle detalle : detalles) {
-                            if (detalle.getTipoCombustible().getNombre().equals(cellValue) &&
+                            if (detalle.getTipoCombustible().getNombre().equals(tipoCombustibleNombre) &&
                                     detalle.getTipoCombustible().getSeccion().equals(currentSeccion)) {
                                 writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
                                 break;
@@ -146,31 +150,26 @@ public class ExportService {
 
     private void writeVenteoYQuema(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
         Seccion currentSeccion = null;
-        boolean lastCellWasSection = false;
 
         for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
-                Cell cellB = row.getCell(1);
-                Cell cellD = row.getCell(3);
-                if (cellB != null && cellD != null) {
-                    String cellValue = cellB.getStringCellValue().trim();
-                    String accionNombre = cellD.getStringCellValue().trim();
-                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombre(cellValue);
+                String actividadNombre = readCell(row, 1);
+                String accionNombre = readCell(row, 3);
+                if (actividadNombre != null && accionNombre == null) {
+                    actividadNombre = actividadNombre.replaceAll("\\(\\*\\)", "").trim();
+                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombre(actividadNombre);
                     if (optionalSeccion.isPresent()) {
-                        if (!lastCellWasSection) {
-                            currentSeccion = optionalSeccion.get();
-                            lastCellWasSection = true;
-                        }
-                    } else {
-                        lastCellWasSection = false;
-                        for (Detalle detalle : detalles) {
-                            if (detalle.getActividad().getNombre().equals(cellValue) &&
-                                    detalle.getActividad().getSeccion().equals(currentSeccion) &&
-                                    detalle.getActividad().getAccion().getNombre().equals(accionNombre)) {
-                                writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
-                                break;
-                            }
+                        currentSeccion = optionalSeccion.get();
+                    }
+                }
+                if (actividadNombre != null && accionNombre != null) {
+                    for (Detalle detalle : detalles) {
+                        if (detalle.getActividad().getNombre().equals(actividadNombre) &&
+                                detalle.getActividad().getSeccion().equals(currentSeccion) &&
+                                detalle.getActividad().getAccion().getNombre().equals(accionNombre)) {
+                            writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
+                            break;
                         }
                     }
                 }
@@ -185,13 +184,13 @@ public class ExportService {
         for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
-                Cell cellB = row.getCell(1);
-                if (cellB != null) {
-                    String cellValue = cellB.getStringCellValue().trim();
-                    if (cellValue.matches("^\\d.*")) {
-                        cellValue = cellValue.substring(4).trim();
+                String actividadNombre = readCell(row, 1);
+                if (actividadNombre != null) {
+                    if (actividadNombre.matches("^\\d.*")) {
+                        actividadNombre = actividadNombre.substring(4).trim();
                     }
-                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombreContains(cellValue);
+                    actividadNombre = actividadNombre.replaceAll("\\(\\*\\)", "").trim();
+                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombreContains(actividadNombre);
                     if (optionalSeccion.isPresent()) {
                         if (!lastCellWasSection) {
                             currentSeccion = optionalSeccion.get();
@@ -200,7 +199,7 @@ public class ExportService {
                     } else {
                         lastCellWasSection = false;
                         for (Detalle detalle : detalles) {
-                            if (detalle.getActividad().getNombre().equals(cellValue) &&
+                            if (detalle.getActividad().getNombre().equals(actividadNombre) &&
                                     detalle.getActividad().getSeccion().equals(currentSeccion)) {
                                 writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
                                 break;
@@ -364,6 +363,15 @@ public class ExportService {
         writeCell(sheet, rowIndex, colIndex++, meses.getOctubre());
         writeCell(sheet, rowIndex, colIndex++, meses.getNoviembre());
         writeCell(sheet, rowIndex, colIndex, meses.getDiciembre());
+    }
+
+    private String readCell(Row row, int colIndex) {
+        Cell cell = row.getCell(colIndex);
+        if (cell != null) {
+            String value = cell.getStringCellValue().trim();
+            return value.isBlank() ? null : value;
+        }
+        return null;
     }
 
     private void updateListCell(Sheet sheet, int rowIndex, int colIndex, String value) {

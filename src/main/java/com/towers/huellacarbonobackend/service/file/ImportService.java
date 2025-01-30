@@ -83,8 +83,6 @@ public class ImportService {
     }
 
     private void readCommonData(Sheet sheet, DatosGenerales datosGenerales) {
-
-
         datosGenerales.setNombre(readCell(sheet.getRow(7), 2));
         datosGenerales.setCargo(readCell(sheet.getRow(8), 2));
         datosGenerales.setCorreo(readCell(sheet.getRow(9), 2));
@@ -97,12 +95,12 @@ public class ImportService {
         for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
-                Cell cellB = row.getCell(1);
-                if (cellB != null) {
+                String tipoCombustibleNombre = readCell(row, 1);
+                if (tipoCombustibleNombre != null) {
                     Meses meses = readMeses(row, startColIndex);
                     if (hasDataInAnyMonth(meses)) {
                         Detalle detalle = new Detalle();
-                        String tipoCombustibleNombre = cellB.getStringCellValue().replaceAll("\\(\\*\\)", "").trim();
+                        tipoCombustibleNombre = tipoCombustibleNombre.replaceAll("\\(\\*\\)", "").trim();
                         detalle.setTipoCombustible(tipoCombustibleService.getByNombreAndArchivo(tipoCombustibleNombre, datosGenerales.getArchivo().getId()));
                         detalle.setMeses(meses);
                         detalle.setDatosGenerales(datosGenerales);
@@ -119,12 +117,12 @@ public class ImportService {
         for (int rowIndex = 22; rowIndex <= 35; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
-                Cell cellB = row.getCell(1);
-                if (cellB != null) {
+                String tipoCombustibleNombre = readCell(row, 1);
+                if (tipoCombustibleNombre != null) {
                     Meses meses = readMeses(row, 4);
                     if (hasDataInAnyMonth(meses)) {
                         Detalle detalle = new Detalle();
-                        String tipoCombustibleNombre = cellB.getStringCellValue().replaceAll("\\(\\*\\)", "").trim();
+                        tipoCombustibleNombre = tipoCombustibleNombre.replaceAll("\\(\\*\\)", "").trim();
                         detalle.setTipoCombustible(tipoCombustibleService.getByNombreAndArchivo(tipoCombustibleNombre, datosGenerales.getArchivo().getId()));
                         detalle.setMeses(meses);
                         detalle.setCategoriaInstitucion(categoriaInstitucionService.getByNombre(readListCell(row, 3)));
@@ -145,10 +143,9 @@ public class ImportService {
         for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
-                Cell cellB = row.getCell(1);
-                if (cellB != null) {
-                    String cellValue = cellB.getStringCellValue().trim();
-                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombre(cellValue);
+                String tipoCombustibleNombre = readCell(row, 1);
+                if (tipoCombustibleNombre != null) {
+                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombre(tipoCombustibleNombre);
                     if (optionalSeccion.isPresent()) {
                         if (!lastCellWasSection) {
                             currentSeccion = optionalSeccion.get();
@@ -159,7 +156,7 @@ public class ImportService {
                         Meses meses = readMeses(row, startColIndex);
                         if (hasDataInAnyMonth(meses)) {
                             Detalle detalle = new Detalle();
-                            String tipoCombustibleNombre = cellB.getStringCellValue().replaceAll("\\(\\*\\)", "").trim();
+                            tipoCombustibleNombre = tipoCombustibleNombre.replaceAll("\\(\\*\\)", "").trim();
                             detalle.setTipoCombustible(tipoCombustibleService.getByNombreAndArchivoAndSeccion(tipoCombustibleNombre, datosGenerales.getArchivo().getId(), currentSeccion.getId()));
                             detalle.setMeses(meses);
                             detalle.setDatosGenerales(datosGenerales);
@@ -175,34 +172,28 @@ public class ImportService {
     private void readVenteoYQuema(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
         List<Detalle> detalles = new ArrayList<>();
         Seccion currentSeccion = null;
-        boolean lastCellWasSection = false;
 
         for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
-                Cell cellB = row.getCell(1);
-                Cell cellD = row.getCell(3);
-                if (cellB != null && cellD != null) {
-                    String cellValue = cellB.getStringCellValue().trim();
-                    String accionNombre = cellD.getStringCellValue().trim();
-                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombre(cellValue);
+                String actividadNombre = readCell(row, 1);
+                String accionNombre = readCell(row, 3);
+                if (actividadNombre != null && accionNombre == null) {
+                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombre(actividadNombre);
                     if (optionalSeccion.isPresent()) {
-                        if (!lastCellWasSection) {
-                            currentSeccion = optionalSeccion.get();
-                            lastCellWasSection = true;
-                        }
-                    } else {
-                        lastCellWasSection = false;
-                        Meses meses = readMeses(row, startColIndex);
-                        if (hasDataInAnyMonth(meses)) {
-                            Detalle detalle = new Detalle();
-                            String actividadNombre = cellB.getStringCellValue().replaceAll("\\(\\*\\)", "").trim();
-                            Accion accion = accionService.getByNombre(accionNombre);
-                            detalle.setActividad(actividadService.getByNombreAndArchivoAndSeccionAndAccion(actividadNombre, datosGenerales.getArchivo().getId(), currentSeccion.getId(), accion.getId()));
-                            detalle.setMeses(meses);
-                            detalle.setDatosGenerales(datosGenerales);
-                            detalles.add(detalle);
-                        }
+                        currentSeccion = optionalSeccion.orElseThrow();
+                    }
+                }
+                if (actividadNombre != null && accionNombre != null) {
+                    Meses meses = readMeses(row, startColIndex);
+                    if (hasDataInAnyMonth(meses)) {
+                        Detalle detalle = new Detalle();
+                        actividadNombre = actividadNombre.replaceAll("\\(\\*\\)", "").trim();
+                        Accion accion = accionService.getByNombre(accionNombre);
+                        detalle.setActividad(actividadService.getByNombreAndArchivoAndSeccionAndAccion(actividadNombre, datosGenerales.getArchivo().getId(), currentSeccion.getId(), accion.getId()));
+                        detalle.setMeses(meses);
+                        detalle.setDatosGenerales(datosGenerales);
+                        detalles.add(detalle);
                     }
                 }
             }
@@ -218,13 +209,12 @@ public class ImportService {
         for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
-                Cell cellB = row.getCell(1);
-                if (cellB != null) {
-                    String cellValue = cellB.getStringCellValue().trim();
-                    if (cellValue.matches("^\\d.*")) {
-                        cellValue = cellValue.substring(4).trim();
+                String actividadNombre = readCell(row, 1);
+                if (actividadNombre != null) {
+                    if (actividadNombre.matches("^\\d.*")) {
+                        actividadNombre = actividadNombre.substring(4).trim();
                     }
-                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombreContains(cellValue);
+                    Optional<Seccion> optionalSeccion = seccionService.getOptionalByNombreContains(actividadNombre);
                     if (optionalSeccion.isPresent()) {
                         if (!lastCellWasSection) {
                             currentSeccion = optionalSeccion.get();
@@ -235,7 +225,7 @@ public class ImportService {
                         Meses meses = readMeses(row, startColIndex);
                         if (hasDataInAnyMonth(meses)) {
                             Detalle detalle = new Detalle();
-                            String actividadNombre = cellB.getStringCellValue().replaceAll("\\(\\*\\)", "").trim();
+                            actividadNombre = actividadNombre.replaceAll("\\(\\*\\)", "").trim();
                             detalle.setActividad(actividadService.getByNombreAndArchivoAndSeccion(actividadNombre, datosGenerales.getArchivo().getId(), currentSeccion.getId()));
                             detalle.setMeses(meses);
                             detalle.setDatosGenerales(datosGenerales);
@@ -255,15 +245,15 @@ public class ImportService {
             if (row == null) {
                 break;
             }
-            Cell cellB = row.getCell(1);
-            if (cellB == null || cellB.getStringCellValue().trim().isEmpty()) {
+            String cemento = readCell(row, 1);
+            if (cemento == null) {
                 break;
             }
             Detalle detalle = new Detalle();
             detalle.setClinker(
                     new Clinker(
                             null,
-                            cellB.getStringCellValue(),
+                            cemento,
                             readDoubleCell(row, 2),
                             readDoubleCell(row, 3),
                             readDoubleCell(row, 4),
@@ -280,15 +270,12 @@ public class ImportService {
         List<Detalle> detalles = new ArrayList<>();
         for (int rowIndex = startRowIndex; ; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
-
             if (row == null) {
                 break;
             }
-
             String tipoEquipoI = readListCell(row, 1);
             String tipoEquipoO = readListCell(row, 7);
             String tipoEquipoD = readListCell(row, 14);
-
             if (tipoEquipoI == null && tipoEquipoO == null && tipoEquipoD == null) {
                 break;
             }
