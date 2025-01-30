@@ -4,8 +4,11 @@ import com.towers.huellacarbonobackend.dto.ExportDto;
 import com.towers.huellacarbonobackend.entity.*;
 import com.towers.huellacarbonobackend.service.data.DataService;
 import com.towers.huellacarbonobackend.service.data.SeccionService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +64,18 @@ public class ExportService {
                     break;
                 case 10:
                     writePFC(sheet, datosGenerales.getDetalles(), 22);
+                    break;
+                case 11:
+                    writeGanado(sheet, datosGenerales.getDetalles());
+                    break;
+                case 12:
+                    writeFertilizantes(sheet, datosGenerales.getDetalles());
+                    break;
+                case 13:
+                    writeEncalado(sheet, datosGenerales.getDetalles());
+                    break;
+                case 14:
+                    writeSuelosGestionados(sheet, datosGenerales.getDetalles());
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivo.getId());
@@ -325,6 +340,63 @@ public class ExportService {
                 writeCell(sheet, rowIndex, 19, pfcD.getFraccionGasPFCRecuperado());
             }
 
+            rowIndex++;
+        }
+    }
+
+    private void writeGanado(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 24;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+            updateListCell(sheet, rowIndex, 1, detalle.getGanado().getTipoAnimal().getNombre());
+            updateListCell(sheet, rowIndex, 3, detalle.getGanado().getTipoTratamiento().getNombre());
+            writeCell(sheet, rowIndex, 5, detalle.getGanado().getPesoPromedioAnimal());
+            writeCell(sheet, rowIndex, 6, detalle.getGanado().getCantidadAnualAnimales());
+            rowIndex++;
+        }
+    }
+
+    private void writeFertilizantes(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 24;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+            updateListCell(sheet, rowIndex, 1, detalle.getFertilizante().getTipoFertilizante().getNombre());
+            updateListCell(sheet, rowIndex, 3, detalle.getFertilizante().getResiduo().getNombre());
+            writeCell(sheet, rowIndex, 5, detalle.getFertilizante().getContenidoNitrogeno());
+            writeCell(sheet, rowIndex, 6, detalle.getFertilizante().getCantidadEmpleada());
+            rowIndex++;
+        }
+    }
+
+    private void writeEncalado(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 22;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+            updateListCell(sheet, rowIndex, 1, detalle.getEncalado().getTipoCal().getNombre());
+            writeCell(sheet, rowIndex, 3, detalle.getEncalado().getCantidadAplicada());
+            rowIndex++;
+        }
+    }
+
+    private void writeSuelosGestionados(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 23;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+            updateListCell(sheet, rowIndex, 1, detalle.getSueloGestionado().getTipoSuelo().getNombre());
+            writeCell(sheet, rowIndex, 3, detalle.getSueloGestionado().getTipoSuelo().getDescripcion());
+            writeCell(sheet, rowIndex, 4, detalle.getSueloGestionado().getAreaGestionada());
             rowIndex++;
         }
     }

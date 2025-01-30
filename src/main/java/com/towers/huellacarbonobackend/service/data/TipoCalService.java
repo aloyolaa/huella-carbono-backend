@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface TipoCalService {
     List<TipoCal> getAll();
+
+    TipoCal getByNombre(String nombre);
 }

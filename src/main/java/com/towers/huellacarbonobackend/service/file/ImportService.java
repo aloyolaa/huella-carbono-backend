@@ -26,6 +26,12 @@ public class ImportService {
     private final TipoEquipoService tipoEquipoService;
     private final TipoRefrigeranteService tipoRefrigeranteService;
     private final TipoPFCService tipoPFCService;
+    private final TipoAnimalService tipoAnimalService;
+    private final TipoTratamientoService tipoTratamientoService;
+    private final TipoFertilizanteService tipoFertilizanteService;
+    private final ResiduoService residuoService;
+    private final TipoCalService tipoCalService;
+    private final TipoSueloService tipoSueloService;
 
     @Transactional
     public void handleExcelImport(Long empresaId, Long archivoId, MultipartFile file) {
@@ -72,6 +78,18 @@ public class ImportService {
                     break;
                 case 10:
                     readPFC(sheet, datosGenerales, 22);
+                    break;
+                case 11:
+                    readGanado(sheet, datosGenerales);
+                    break;
+                case 12:
+                    readFertilizantes(sheet, datosGenerales);
+                    break;
+                case 13:
+                    readEncalado(sheet, datosGenerales);
+                    break;
+                case 14:
+                    readSuelosGestionados(sheet, datosGenerales);
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivoId);
@@ -452,6 +470,110 @@ public class ImportService {
                 );
             }
 
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readGanado(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 24; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            String tipoAnimal = readListCell(row, 1);
+            if (tipoAnimal == null) {
+                break;
+            }
+            Detalle detalle = new Detalle();
+            detalle.setGanado(
+                    new Ganado(
+                            null,
+                            tipoAnimalService.getByNombre(tipoAnimal),
+                            tipoTratamientoService.getByNombre(readListCell(row, 3)),
+                            readDoubleCell(row, 5),
+                            readIntegerCell(row, 6)
+                    )
+            );
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readFertilizantes(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 24; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            String tipoFertilizante = readListCell(row, 1);
+            if (tipoFertilizante == null) {
+                break;
+            }
+            Detalle detalle = new Detalle();
+            detalle.setFertilizante(
+                    new Fertilizante(
+                            null,
+                            tipoFertilizanteService.getByNombre(tipoFertilizante),
+                            residuoService.getByNombre(readListCell(row, 3)),
+                            readDoubleCell(row, 5),
+                            readDoubleCell(row, 6)
+                    )
+            );
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readEncalado(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 22; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            String tipoCal = readListCell(row, 1);
+            if (tipoCal == null) {
+                break;
+            }
+            Detalle detalle = new Detalle();
+            detalle.setEncalado(
+                    new Encalado(
+                            null,
+                            tipoCalService.getByNombre(tipoCal),
+                            readDoubleCell(row, 3)
+                    )
+            );
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readSuelosGestionados(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 23; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            String tipoSuelo = readListCell(row, 1);
+            if (tipoSuelo == null) {
+                break;
+            }
+            Detalle detalle = new Detalle();
+            detalle.setSueloGestionado(
+                    new SueloGestionado(
+                            null,
+                            tipoSueloService.getByNombre(tipoSuelo),
+                            readDoubleCell(row, 4)
+                    )
+            );
             detalle.setDatosGenerales(datosGenerales);
             detalles.add(detalle);
         }

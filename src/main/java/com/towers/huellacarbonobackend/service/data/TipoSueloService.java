@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface TipoSueloService {
     List<TipoSuelo> getAll();
+
+    TipoSuelo getByNombre(String nombre);
 }

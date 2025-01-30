@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface TipoFertilizanteService {
     List<TipoFertilizante> getAll();
+
+    TipoFertilizante getByNombre(String nombre);
 }

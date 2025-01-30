@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface TipoAnimalService {
     List<TipoAnimal> getAll();
+
+    TipoAnimal getByNombre(String nombre);
 }
