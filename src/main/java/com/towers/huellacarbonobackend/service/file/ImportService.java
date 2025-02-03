@@ -53,7 +53,7 @@ public class ImportService {
             readCommonData(sheet, datosGenerales);
             switch (archivoId.intValue()) {
                 case 1:
-                    readGeneracionElectricidad(sheet, datosGenerales);
+                    readGeneracionYOtraEnergia(sheet, datosGenerales, 23, 36);
                     break;
                 case 2:
                     readFuentesFijas(sheet, datosGenerales);
@@ -103,6 +103,15 @@ public class ImportService {
                 case 17:
                     readEmbalses(sheet, datosGenerales);
                     break;
+                case 18:
+                    readConsumoElectricidad(sheet, datosGenerales);
+                    break;
+                case 19, 20:
+                    readPerdidas(sheet, datosGenerales);
+                    break;
+                case 21:
+                    readGeneracionYOtraEnergia(sheet, datosGenerales, 22, 35);
+                    break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivoId);
             }
@@ -120,9 +129,9 @@ public class ImportService {
         datosGenerales.setComentarios(readCell(sheet.getRow(13), 2));
     }
 
-    private void readGeneracionElectricidad(Sheet sheet, DatosGenerales datosGenerales) {
+    private void readGeneracionYOtraEnergia(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex) {
         List<Detalle> detalles = new ArrayList<>();
-        for (int rowIndex = 23; rowIndex <= 36; rowIndex++) {
+        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
                 String tipoCombustibleNombre = readCell(row, 1);
@@ -672,6 +681,48 @@ public class ImportService {
                             readDoubleCell(row, 7)
                     )
             );
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readConsumoElectricidad(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 22; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            String area = readCell(row, 1);
+            if (area == null) {
+                break;
+            }
+            Detalle detalle = new Detalle();
+            detalle.setArea(area);
+            detalle.setSuministro(readCell(row, 2));
+            detalle.setMeses(readMeses(row, 3));
+            ;
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readPerdidas(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 22; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            String descripcion = readCell(row, 1);
+            if (descripcion == null) {
+                break;
+            }
+            Detalle detalle = new Detalle();
+            detalle.setDescripcion(descripcion);
+            detalle.setMeses(readMeses(row, 2));
             detalle.setDatosGenerales(datosGenerales);
             detalles.add(detalle);
         }

@@ -33,7 +33,7 @@ public class ExportService {
             writeCommonData(sheet, datosGenerales);
             switch (archivo.getId().intValue()) {
                 case 1:
-                    writeGeneracionElectricidad(sheet, datosGenerales.getDetalles());
+                    writeGeneracionYOtraEnergia(sheet, datosGenerales.getDetalles(), 23, 36);
                     break;
                 case 2:
                     writeFuentesFijas(sheet, datosGenerales);
@@ -83,6 +83,15 @@ public class ExportService {
                 case 17:
                     writeEmbalses(sheet, datosGenerales.getDetalles());
                     break;
+                case 18:
+                    writeConsumoElectricidad(sheet, datosGenerales.getDetalles());
+                    break;
+                case 19, 20:
+                    writePerdidas(sheet, datosGenerales.getDetalles());
+                    break;
+                case 21:
+                    writeGeneracionYOtraEnergia(sheet, datosGenerales.getDetalles(), 22, 35);
+                    break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivo.getId());
             }
@@ -101,9 +110,9 @@ public class ExportService {
         writeCell(sheet, 13, 2, datosGenerales.getComentarios());
     }
 
-    private void writeGeneracionElectricidad(Sheet sheet, List<Detalle> detalles) {
+    private void writeGeneracionYOtraEnergia(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex) {
         for (Detalle detalle : detalles) {
-            for (int rowIndex = 23; rowIndex <= 36; rowIndex++) {
+            for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row != null) {
                     String tipoCombustibleNombre = readCell(row, 1);
@@ -457,6 +466,33 @@ public class ExportService {
         }
     }
 
+    private void writeConsumoElectricidad(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 22;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+            writeCell(sheet, rowIndex, 1, detalle.getArea());
+            writeCell(sheet, rowIndex, 2, detalle.getSuministro());
+            writeMesesData(sheet, rowIndex, 3, detalle.getMeses());
+            rowIndex++;
+        }
+    }
+
+    private void writePerdidas(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 22;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+            writeCell(sheet, rowIndex, 1, detalle.getDescripcion());
+            writeMesesData(sheet, rowIndex, 2, detalle.getMeses());
+            rowIndex++;
+        }
+    }
+    
     private void writePFCCommonData(Sheet sheet, int rowIndex, int startColIndex, PFC pfc) {
         writeCell(sheet, rowIndex, startColIndex++, pfc.getDescripcionEquipo());
         updateListCell(sheet, rowIndex, startColIndex++, pfc.getTipoPFC().getNombre());
