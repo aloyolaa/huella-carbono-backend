@@ -32,6 +32,9 @@ public class ImportService {
     private final ResiduoService residuoService;
     private final TipoCalService tipoCalService;
     private final TipoSueloService tipoSueloService;
+    private final TipoCultivoService tipoCultivoService;
+    private final ResiduoAgricolaService residuoAgricolaService;
+    private final ZonaService zonaService;
 
     @Transactional
     public void handleExcelImport(Long empresaId, Long archivoId, MultipartFile file) {
@@ -50,34 +53,34 @@ public class ImportService {
             readCommonData(sheet, datosGenerales);
             switch (archivoId.intValue()) {
                 case 1:
-                    readGeneracionElectricidad(sheet, datosGenerales, 23, 36, 3);
+                    readGeneracionElectricidad(sheet, datosGenerales);
                     break;
                 case 2:
                     readFuentesFijas(sheet, datosGenerales);
                     break;
                 case 3:
-                    readFuentesMovilesYRefinacion(sheet, datosGenerales, 22, 50, 3);
+                    readFuentesMovilesYRefinacion(sheet, datosGenerales, 50);
                     break;
                 case 4:
-                    readFuentesMovilesYRefinacion(sheet, datosGenerales, 22, 37, 3);
+                    readFuentesMovilesYRefinacion(sheet, datosGenerales, 37);
                     break;
                 case 5:
-                    readVenteoYQuema(sheet, datosGenerales, 22, 29, 4);
+                    readVenteoYQuema(sheet, datosGenerales);
                     break;
                 case 6:
-                    readFugasProcesos(sheet, datosGenerales, 23, 33, 3);
+                    readFugasProcesos(sheet, datosGenerales);
                     break;
                 case 7:
-                    readClinker(sheet, datosGenerales, 28);
+                    readClinker(sheet, datosGenerales);
                     break;
                 case 8:
-                    readRefrigerantes(sheet, datosGenerales, 22);
+                    readRefrigerantes(sheet, datosGenerales);
                     break;
                 case 9:
-                    readFugasSF6(sheet, datosGenerales, 21);
+                    readFugasSF6(sheet, datosGenerales);
                     break;
                 case 10:
-                    readPFC(sheet, datosGenerales, 22);
+                    readPFC(sheet, datosGenerales);
                     break;
                 case 11:
                     readGanado(sheet, datosGenerales);
@@ -90,6 +93,15 @@ public class ImportService {
                     break;
                 case 14:
                     readSuelosGestionados(sheet, datosGenerales);
+                    break;
+                case 15:
+                    readCultivo(sheet, datosGenerales);
+                    break;
+                case 16:
+                    readBiomasa(sheet, datosGenerales);
+                    break;
+                case 17:
+                    readEmbalses(sheet, datosGenerales);
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivoId);
@@ -108,14 +120,14 @@ public class ImportService {
         datosGenerales.setComentarios(readCell(sheet.getRow(13), 2));
     }
 
-    private void readGeneracionElectricidad(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void readGeneracionElectricidad(Sheet sheet, DatosGenerales datosGenerales) {
         List<Detalle> detalles = new ArrayList<>();
-        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+        for (int rowIndex = 23; rowIndex <= 36; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
                 String tipoCombustibleNombre = readCell(row, 1);
                 if (tipoCombustibleNombre != null) {
-                    Meses meses = readMeses(row, startColIndex);
+                    Meses meses = readMeses(row, 3);
                     if (hasDataInAnyMonth(meses)) {
                         Detalle detalle = new Detalle();
                         tipoCombustibleNombre = tipoCombustibleNombre.replaceAll("\\(\\*\\)", "").trim();
@@ -153,12 +165,12 @@ public class ImportService {
         datosGenerales.setDetalles(detalles);
     }
 
-    private void readFuentesMovilesYRefinacion(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void readFuentesMovilesYRefinacion(Sheet sheet, DatosGenerales datosGenerales, int endRowIndex) {
         List<Detalle> detalles = new ArrayList<>();
         Seccion currentSeccion = null;
         boolean lastCellWasSection = false;
 
-        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+        for (int rowIndex = 22; rowIndex <= endRowIndex; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
                 String tipoCombustibleNombre = readCell(row, 1);
@@ -171,7 +183,7 @@ public class ImportService {
                         }
                     } else {
                         lastCellWasSection = false;
-                        Meses meses = readMeses(row, startColIndex);
+                        Meses meses = readMeses(row, 3);
                         if (hasDataInAnyMonth(meses)) {
                             Detalle detalle = new Detalle();
                             tipoCombustibleNombre = tipoCombustibleNombre.replaceAll("\\(\\*\\)", "").trim();
@@ -187,11 +199,11 @@ public class ImportService {
         datosGenerales.setDetalles(detalles);
     }
 
-    private void readVenteoYQuema(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void readVenteoYQuema(Sheet sheet, DatosGenerales datosGenerales) {
         List<Detalle> detalles = new ArrayList<>();
         Seccion currentSeccion = null;
 
-        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+        for (int rowIndex = 22; rowIndex <= 29; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
                 String actividadNombre = readCell(row, 1);
@@ -203,7 +215,7 @@ public class ImportService {
                     }
                 }
                 if (actividadNombre != null && accionNombre != null) {
-                    Meses meses = readMeses(row, startColIndex);
+                    Meses meses = readMeses(row, 4);
                     if (hasDataInAnyMonth(meses)) {
                         Detalle detalle = new Detalle();
                         actividadNombre = actividadNombre.replaceAll("\\(\\*\\)", "").trim();
@@ -219,12 +231,12 @@ public class ImportService {
         datosGenerales.setDetalles(detalles);
     }
 
-    private void readFugasProcesos(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void readFugasProcesos(Sheet sheet, DatosGenerales datosGenerales) {
         List<Detalle> detalles = new ArrayList<>();
         Seccion currentSeccion = null;
         boolean lastCellWasSection = false;
 
-        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+        for (int rowIndex = 23; rowIndex <= 33; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
                 String actividadNombre = readCell(row, 1);
@@ -240,7 +252,7 @@ public class ImportService {
                         }
                     } else {
                         lastCellWasSection = false;
-                        Meses meses = readMeses(row, startColIndex);
+                        Meses meses = readMeses(row, 3);
                         if (hasDataInAnyMonth(meses)) {
                             Detalle detalle = new Detalle();
                             actividadNombre = actividadNombre.replaceAll("\\(\\*\\)", "").trim();
@@ -256,9 +268,9 @@ public class ImportService {
         datosGenerales.setDetalles(detalles);
     }
 
-    private void readClinker(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex) {
+    private void readClinker(Sheet sheet, DatosGenerales datosGenerales) {
         List<Detalle> detalles = new ArrayList<>();
-        for (int rowIndex = startRowIndex; ; rowIndex++) {
+        for (int rowIndex = 28; ; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row == null) {
                 break;
@@ -284,9 +296,9 @@ public class ImportService {
         datosGenerales.setDetalles(detalles);
     }
 
-    private void readRefrigerantes(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex) {
+    private void readRefrigerantes(Sheet sheet, DatosGenerales datosGenerales) {
         List<Detalle> detalles = new ArrayList<>();
-        for (int rowIndex = startRowIndex; ; rowIndex++) {
+        for (int rowIndex = 22; ; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row == null) {
                 break;
@@ -347,9 +359,9 @@ public class ImportService {
         datosGenerales.setDetalles(detalles);
     }
 
-    private void readFugasSF6(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex) {
+    private void readFugasSF6(Sheet sheet, DatosGenerales datosGenerales) {
         List<Detalle> detalles = new ArrayList<>();
-        for (int rowIndex = startRowIndex; ; rowIndex++) {
+        for (int rowIndex = 21; ; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
 
             if (row == null) {
@@ -410,9 +422,9 @@ public class ImportService {
         datosGenerales.setDetalles(detalles);
     }
 
-    private void readPFC(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex) {
+    private void readPFC(Sheet sheet, DatosGenerales datosGenerales) {
         List<Detalle> detalles = new ArrayList<>();
-        for (int rowIndex = startRowIndex; ; rowIndex++) {
+        for (int rowIndex = 22; ; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
 
             if (row == null) {
@@ -572,6 +584,92 @@ public class ImportService {
                             null,
                             tipoSueloService.getByNombre(tipoSuelo),
                             readDoubleCell(row, 4)
+                    )
+            );
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readCultivo(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 24; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            String tipoCultivo = readListCell(row, 1);
+            if (tipoCultivo == null) {
+                break;
+            }
+            Detalle detalle = new Detalle();
+            detalle.setCultivoArroz(
+                    new CultivoArroz(
+                            null,
+                            tipoCultivoService.getByNombre(tipoCultivo),
+                            readIntegerCell(row, 3),
+                            readDoubleCell(row, 4),
+                            tipoFertilizanteService.getByNombre(readListCell(row, 5)),
+                            residuoService.getByNombre(readListCell(row, 7)),
+                            readDoubleCell(row, 9),
+                            readDoubleCell(row, 10)
+                    )
+            );
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readBiomasa(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 22; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            String residuoAgricola = readListCell(row, 1);
+            if (residuoAgricola == null) {
+                break;
+            }
+            Detalle detalle = new Detalle();
+            detalle.setQuemaBiomasa(
+                    new QuemaBiomasa(
+                            null,
+                            residuoAgricolaService.getByNombre(residuoAgricola),
+                            readDoubleCell(row, 3),
+                            readDoubleCell(row, 4),
+                            readDoubleCell(row, 5)
+                    )
+            );
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readEmbalses(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 22; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            String embalse = readListCell(row, 1);
+            if (embalse == null) {
+                break;
+            }
+            Detalle detalle = new Detalle();
+            detalle.setEmbalse(
+                    new Embalse(
+                            null,
+                            embalse,
+                            readCell(row, 2),
+                            zonaService.getByNombre(readListCell(row, 3)),
+                            readDoubleCell(row, 5),
+                            readIntegerCell(row, 6),
+                            readDoubleCell(row, 7)
                     )
             );
             detalle.setDatosGenerales(datosGenerales);

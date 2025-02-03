@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface TipoCultivoService {
     List<TipoCultivo> getAll();
+
+    TipoCultivo getByNombre(String nombre);
 }

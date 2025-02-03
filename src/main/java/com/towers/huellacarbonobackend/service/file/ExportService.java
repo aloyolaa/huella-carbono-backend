@@ -4,11 +4,8 @@ import com.towers.huellacarbonobackend.dto.ExportDto;
 import com.towers.huellacarbonobackend.entity.*;
 import com.towers.huellacarbonobackend.service.data.DataService;
 import com.towers.huellacarbonobackend.service.data.SeccionService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
@@ -36,34 +33,34 @@ public class ExportService {
             writeCommonData(sheet, datosGenerales);
             switch (archivo.getId().intValue()) {
                 case 1:
-                    writeGeneracionElectricidad(sheet, datosGenerales.getDetalles(), 23, 36, 3);
+                    writeGeneracionElectricidad(sheet, datosGenerales.getDetalles());
                     break;
                 case 2:
                     writeFuentesFijas(sheet, datosGenerales);
                     break;
                 case 3:
-                    writeFuentesMovilesYRefinacion(sheet, datosGenerales.getDetalles(), 22, 50, 3);
+                    writeFuentesMovilesYRefinacion(sheet, datosGenerales.getDetalles(), 50);
                     break;
                 case 4:
-                    writeFuentesMovilesYRefinacion(sheet, datosGenerales.getDetalles(), 22, 37, 3);
+                    writeFuentesMovilesYRefinacion(sheet, datosGenerales.getDetalles(), 37);
                     break;
                 case 5:
-                    writeVenteoYQuema(sheet, datosGenerales.getDetalles(), 22, 29, 4);
+                    writeVenteoYQuema(sheet, datosGenerales.getDetalles());
                     break;
                 case 6:
-                    writeFugasProcesos(sheet, datosGenerales.getDetalles(), 23, 33, 3);
+                    writeFugasProcesos(sheet, datosGenerales.getDetalles());
                     break;
                 case 7:
-                    writeClinker(sheet, datosGenerales.getDetalles(), 28);
+                    writeClinker(sheet, datosGenerales.getDetalles());
                     break;
                 case 8:
-                    writeRefrigerantes(sheet, datosGenerales.getDetalles(), 22);
+                    writeRefrigerantes(sheet, datosGenerales.getDetalles());
                     break;
                 case 9:
-                    writeFugasSF6(sheet, datosGenerales.getDetalles(), 21);
+                    writeFugasSF6(sheet, datosGenerales.getDetalles());
                     break;
                 case 10:
-                    writePFC(sheet, datosGenerales.getDetalles(), 22);
+                    writePFC(sheet, datosGenerales.getDetalles());
                     break;
                 case 11:
                     writeGanado(sheet, datosGenerales.getDetalles());
@@ -76,6 +73,15 @@ public class ExportService {
                     break;
                 case 14:
                     writeSuelosGestionados(sheet, datosGenerales.getDetalles());
+                    break;
+                case 15:
+                    writeCultivo(sheet, datosGenerales.getDetalles());
+                    break;
+                case 16:
+                    writeBiomasa(sheet, datosGenerales.getDetalles());
+                    break;
+                case 17:
+                    writeEmbalses(sheet, datosGenerales.getDetalles());
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivo.getId());
@@ -95,16 +101,16 @@ public class ExportService {
         writeCell(sheet, 13, 2, datosGenerales.getComentarios());
     }
 
-    private void writeGeneracionElectricidad(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void writeGeneracionElectricidad(Sheet sheet, List<Detalle> detalles) {
         for (Detalle detalle : detalles) {
-            for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+            for (int rowIndex = 23; rowIndex <= 36; rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row != null) {
                     String tipoCombustibleNombre = readCell(row, 1);
                     if (tipoCombustibleNombre != null) {
                         tipoCombustibleNombre = tipoCombustibleNombre.replaceAll("\\(\\*\\)", "").trim();
                         if (detalle.getTipoCombustible().getNombre().equals(tipoCombustibleNombre)) {
-                            writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
+                            writeMesesData(sheet, rowIndex, 3, detalle.getMeses());
                             break;
                         }
                     }
@@ -132,11 +138,11 @@ public class ExportService {
         }
     }
 
-    private void writeFuentesMovilesYRefinacion(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void writeFuentesMovilesYRefinacion(Sheet sheet, List<Detalle> detalles, int endRowIndex) {
         Seccion currentSeccion = null;
         boolean lastCellWasSection = false;
 
-        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+        for (int rowIndex = 22; rowIndex <= endRowIndex; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
                 String tipoCombustibleNombre = readCell(row, 1);
@@ -153,7 +159,7 @@ public class ExportService {
                         for (Detalle detalle : detalles) {
                             if (detalle.getTipoCombustible().getNombre().equals(tipoCombustibleNombre) &&
                                     detalle.getTipoCombustible().getSeccion().equals(currentSeccion)) {
-                                writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
+                                writeMesesData(sheet, rowIndex, 3, detalle.getMeses());
                                 break;
                             }
                         }
@@ -163,10 +169,10 @@ public class ExportService {
         }
     }
 
-    private void writeVenteoYQuema(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void writeVenteoYQuema(Sheet sheet, List<Detalle> detalles) {
         Seccion currentSeccion = null;
 
-        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+        for (int rowIndex = 22; rowIndex <= 29; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
                 String actividadNombre = readCell(row, 1);
@@ -183,7 +189,7 @@ public class ExportService {
                         if (detalle.getActividad().getNombre().equals(actividadNombre) &&
                                 detalle.getActividad().getSeccion().equals(currentSeccion) &&
                                 detalle.getActividad().getAccion().getNombre().equals(accionNombre)) {
-                            writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
+                            writeMesesData(sheet, rowIndex, 4, detalle.getMeses());
                             break;
                         }
                     }
@@ -192,11 +198,11 @@ public class ExportService {
         }
     }
 
-    private void writeFugasProcesos(Sheet sheet, List<Detalle> detalles, int startRowIndex, int endRowIndex, int startColIndex) {
+    private void writeFugasProcesos(Sheet sheet, List<Detalle> detalles) {
         Seccion currentSeccion = null;
         boolean lastCellWasSection = false;
 
-        for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+        for (int rowIndex = 23; rowIndex <= 33; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
                 String actividadNombre = readCell(row, 1);
@@ -216,7 +222,7 @@ public class ExportService {
                         for (Detalle detalle : detalles) {
                             if (detalle.getActividad().getNombre().equals(actividadNombre) &&
                                     detalle.getActividad().getSeccion().equals(currentSeccion)) {
-                                writeMesesData(sheet, rowIndex, startColIndex, detalle.getMeses());
+                                writeMesesData(sheet, rowIndex, 3, detalle.getMeses());
                                 break;
                             }
                         }
@@ -226,8 +232,8 @@ public class ExportService {
         }
     }
 
-    private void writeClinker(Sheet sheet, List<Detalle> detalles, int startRowIndex) {
-        int rowIndex = startRowIndex;
+    private void writeClinker(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 28;
         for (Detalle detalle : detalles) {
             Row row = sheet.getRow(rowIndex);
             if (row == null) {
@@ -242,8 +248,8 @@ public class ExportService {
         }
     }
 
-    private void writeRefrigerantes(Sheet sheet, List<Detalle> detalles, int startRowIndex) {
-        int rowIndex = startRowIndex;
+    private void writeRefrigerantes(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 22;
         for (Detalle detalle : detalles) {
             Row row = sheet.getRow(rowIndex);
 
@@ -276,8 +282,8 @@ public class ExportService {
         }
     }
 
-    private void writeFugasSF6(Sheet sheet, List<Detalle> detalles, int startRowIndex) {
-        int rowIndex = startRowIndex;
+    private void writeFugasSF6(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 21;
         for (Detalle detalle : detalles) {
             Row row = sheet.getRow(rowIndex);
 
@@ -310,8 +316,8 @@ public class ExportService {
         }
     }
 
-    private void writePFC(Sheet sheet, List<Detalle> detalles, int startRowIndex) {
-        int rowIndex = startRowIndex;
+    private void writePFC(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 22;
         for (Detalle detalle : detalles) {
             Row row = sheet.getRow(rowIndex);
 
@@ -397,6 +403,56 @@ public class ExportService {
             updateListCell(sheet, rowIndex, 1, detalle.getSueloGestionado().getTipoSuelo().getNombre());
             writeCell(sheet, rowIndex, 3, detalle.getSueloGestionado().getTipoSuelo().getDescripcion());
             writeCell(sheet, rowIndex, 4, detalle.getSueloGestionado().getAreaGestionada());
+            rowIndex++;
+        }
+    }
+
+    private void writeCultivo(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 24;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+            updateListCell(sheet, rowIndex, 1, detalle.getCultivoArroz().getTipoCultivo().getNombre());
+            writeCell(sheet, rowIndex, 3, detalle.getCultivoArroz().getPeriodoCultivo());
+            writeCell(sheet, rowIndex, 4, detalle.getCultivoArroz().getAreaCultivo());
+            updateListCell(sheet, rowIndex, 5, detalle.getCultivoArroz().getTipoFertilizante().getNombre());
+            updateListCell(sheet, rowIndex, 7, detalle.getCultivoArroz().getResiduo().getNombre());
+            writeCell(sheet, rowIndex, 9, detalle.getCultivoArroz().getContenidoNitrogeno());
+            writeCell(sheet, rowIndex, 10, detalle.getCultivoArroz().getCantidadEmpleada());
+            rowIndex++;
+        }
+    }
+
+    private void writeBiomasa(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 22;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+            updateListCell(sheet, rowIndex, 1, detalle.getQuemaBiomasa().getResiduoAgricola().getNombre());
+            writeCell(sheet, rowIndex, 3, detalle.getQuemaBiomasa().getAreaCultiva());
+            writeCell(sheet, rowIndex, 4, detalle.getQuemaBiomasa().getAreaQuemada());
+            writeCell(sheet, rowIndex, 5, detalle.getQuemaBiomasa().getProduccion());
+            rowIndex++;
+        }
+    }
+
+    private void writeEmbalses(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 22;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+            writeCell(sheet, rowIndex, 1, detalle.getEmbalse().getNombre());
+            writeCell(sheet, rowIndex, 2, detalle.getEmbalse().getUbicacion());
+            updateListCell(sheet, rowIndex, 3, detalle.getEmbalse().getZona().getNombre());
+            writeCell(sheet, rowIndex, 5, detalle.getEmbalse().getArea());
+            writeCell(sheet, rowIndex, 6, detalle.getEmbalse().getPeriodoLibreHielo());
+            writeCell(sheet, rowIndex, 7, detalle.getEmbalse().getFraccionAreaInundada());
             rowIndex++;
         }
     }

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ResiduoAgricolaService {
     List<ResiduoAgricola> getAll();
+
+    ResiduoAgricola getByNombre(String nombre);
 }
