@@ -92,6 +92,15 @@ public class ExportService {
                 case 21:
                     writeGeneracionYOtraEnergia(sheet, datosGenerales.getDetalles(), 22, 35);
                     break;
+                case 22:
+                    writeTransporteMaterial(sheet, datosGenerales.getDetalles(), 22);
+                    break;
+                case 23:
+                    writeTransporteMaterial(sheet, datosGenerales.getDetalles(), 24);
+                    break;
+                case 24, 25:
+                    writeTransporteVehiculo(sheet, datosGenerales.getDetalles());
+                    break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivo.getId());
             }
@@ -492,7 +501,48 @@ public class ExportService {
             rowIndex++;
         }
     }
-    
+
+    private void writeTransporteMaterial(Sheet sheet, List<Detalle> detalles, int startRowIndex) {
+        int rowIndex = startRowIndex;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+            writeCell(sheet, rowIndex, 1, detalle.getTransporteMaterial().getDescripcion());
+            writeCell(sheet, rowIndex, 2, detalle.getTransporteMaterial().getViajes());
+            writeCell(sheet, rowIndex, 3, detalle.getTransporteMaterial().getTramo());
+            writeCell(sheet, rowIndex, 4, detalle.getTransporteMaterial().getPesoTransportado());
+            writeCell(sheet, rowIndex, 5, detalle.getTransporteMaterial().getDistanciaRecorrida());
+            updateListCell(sheet, rowIndex, 6, detalle.getTransporteMaterial().getTipoVehiculo().getNombre());
+            rowIndex++;
+        }
+    }
+
+    private void writeTransporteVehiculo(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 23;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+
+            int distanciaRecorridaRowIndex = 2;
+            int personasViajandoRowIndex = 3;
+            if (detalle.getTransporteVehiculo().getTipoTransporte() != null) {
+                updateListCell(sheet, rowIndex, 2, detalle.getTransporteVehiculo().getTipoTransporte().getNombre());
+                distanciaRecorridaRowIndex = 3;
+                personasViajandoRowIndex = 5;
+            }
+
+            writeCell(sheet, rowIndex, 1, detalle.getTransporteVehiculo().getTramo());
+            writeCell(sheet, rowIndex, distanciaRecorridaRowIndex, detalle.getTransporteVehiculo().getDistanciaRecorrida());
+            writeCell(sheet, rowIndex, personasViajandoRowIndex, detalle.getTransporteVehiculo().getPersonasViajando());
+            writeCell(sheet, rowIndex, 4, detalle.getTransporteVehiculo().getVecesRecorrido());
+            rowIndex++;
+        }
+    }
+
     private void writePFCCommonData(Sheet sheet, int rowIndex, int startColIndex, PFC pfc) {
         writeCell(sheet, rowIndex, startColIndex++, pfc.getDescripcionEquipo());
         updateListCell(sheet, rowIndex, startColIndex++, pfc.getTipoPFC().getNombre());

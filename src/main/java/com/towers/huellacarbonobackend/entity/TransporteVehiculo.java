@@ -22,7 +22,7 @@ public class TransporteVehiculo {
     private String tramo;
 
     @Column(name = "distancia_recorrida", nullable = false)
-    private String distanciaRecorrida;
+    private Double distanciaRecorrida;
 
     @Column(name = "personas_viajando", nullable = false)
     private Integer personasViajando;

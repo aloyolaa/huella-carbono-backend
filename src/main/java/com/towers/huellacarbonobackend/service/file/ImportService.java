@@ -35,6 +35,8 @@ public class ImportService {
     private final TipoCultivoService tipoCultivoService;
     private final ResiduoAgricolaService residuoAgricolaService;
     private final ZonaService zonaService;
+    private final TipoVehiculoService tipoVehiculoService;
+    private final TipoTransporteService tipoTransporteService;
 
     @Transactional
     public void handleExcelImport(Long empresaId, Long archivoId, MultipartFile file) {
@@ -111,6 +113,15 @@ public class ImportService {
                     break;
                 case 21:
                     readGeneracionYOtraEnergia(sheet, datosGenerales, 22, 35);
+                    break;
+                case 22:
+                    readTransporteMaterial(sheet, datosGenerales, 22);
+                    break;
+                case 23:
+                    readTransporteMaterial(sheet, datosGenerales, 24);
+                    break;
+                case 24, 25:
+                    readTransporteVehiculo(sheet, datosGenerales);
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivoId);
@@ -723,6 +734,73 @@ public class ImportService {
             Detalle detalle = new Detalle();
             detalle.setDescripcion(descripcion);
             detalle.setMeses(readMeses(row, 2));
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readTransporteMaterial(Sheet sheet, DatosGenerales datosGenerales, int startRowIndex) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = startRowIndex; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            String descripcion = readCell(row, 1);
+            if (descripcion == null) {
+                break;
+            }
+            Detalle detalle = new Detalle();
+            detalle.setTransporteMaterial(
+                    new TransporteMaterial(
+                            null,
+                            descripcion,
+                            readIntegerCell(row, 2),
+                            readCell(row, 3),
+                            readDoubleCell(row, 4),
+                            readDoubleCell(row, 5),
+                            tipoVehiculoService.getByNombre(readListCell(row, 6))
+                    )
+            );
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readTransporteVehiculo(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 23; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            String tramo = readCell(row, 1);
+            if (tramo == null) {
+                break;
+            }
+
+            int distanciaRecorridaRowIndex = 2;
+            int personasViajandoRowIndex = 3;
+            TipoTransporte tipoTransporte = null;
+            if (datosGenerales.getArchivo().getId() == 25) {
+                tipoTransporte = tipoTransporteService.getByNombre(readListCell(row, 2));
+                distanciaRecorridaRowIndex = 3;
+                personasViajandoRowIndex = 5;
+            }
+
+            Detalle detalle = new Detalle();
+            detalle.setTransporteVehiculo(
+                    new TransporteVehiculo(
+                            null,
+                            tramo,
+                            readDoubleCell(row, distanciaRecorridaRowIndex),
+                            readIntegerCell(row, personasViajandoRowIndex),
+                            readIntegerCell(row, 4),
+                            tipoTransporte
+                    )
+            );
             detalle.setDatosGenerales(datosGenerales);
             detalles.add(detalle);
         }
