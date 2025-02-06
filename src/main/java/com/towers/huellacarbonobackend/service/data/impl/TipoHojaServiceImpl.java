@@ -19,4 +19,11 @@ public class TipoHojaServiceImpl implements TipoHojaService {
     public List<TipoHoja> getAll() {
         return tipoHojaRepository.findAll();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TipoHoja getTipoHojaByNombre(String nombre) {
+        return tipoHojaRepository.findByNombre(nombre)
+                .orElseThrow(() -> new RuntimeException("Tipo de hoja " + nombre + " no encontrado."));
+    }
 }

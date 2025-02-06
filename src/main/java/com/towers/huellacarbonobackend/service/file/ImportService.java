@@ -37,6 +37,8 @@ public class ImportService {
     private final ZonaService zonaService;
     private final TipoVehiculoService tipoVehiculoService;
     private final TipoTransporteService tipoTransporteService;
+    private final CondicionSEDSService condicionSEDSService;
+    private final TipoHojaService tipoHojaService;
 
     @Transactional
     public void handleExcelImport(Long empresaId, Long archivoId, MultipartFile file) {
@@ -122,6 +124,21 @@ public class ImportService {
                     break;
                 case 24, 25:
                     readTransporteVehiculo(sheet, datosGenerales);
+                    break;
+                case 26:
+                    readTransporteCasaTrabajo(sheet, datosGenerales);
+                    break;
+                case 27:
+                    readConsumoAgua(sheet, datosGenerales);
+                    break;
+                case 28:
+                    readConsumoPapel(sheet, datosGenerales);
+                    break;
+                case 29:
+                    readGeneracionIndirectaNF3(sheet, datosGenerales);
+                    break;
+                case 30:
+                    readGeneracionResiduos(sheet, datosGenerales);
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivoId);
@@ -713,7 +730,6 @@ public class ImportService {
             detalle.setArea(area);
             detalle.setSuministro(readCell(row, 2));
             detalle.setMeses(readMeses(row, 3));
-            ;
             detalle.setDatosGenerales(datosGenerales);
             detalles.add(detalle);
         }
@@ -805,6 +821,211 @@ public class ImportService {
             detalles.add(detalle);
         }
         datosGenerales.setDetalles(detalles);
+    }
+
+    private void readTransporteCasaTrabajo(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 23; ; rowIndex++) {
+            List<TransporteCasaTrabajo> transportes = new ArrayList<>();
+            Row row = sheet.getRow(rowIndex);
+
+            if (row == null) {
+                break;
+            }
+
+            String custer = readCell(row, 1);
+            String combi = readCell(row, 7);
+            String bus = readCell(row, 13);
+            String tren = readCell(row, 19);
+            String metropolitano = readCell(row, 25);
+            String taxi = readCell(row, 31);
+            String mototaxi = readCell(row, 37);
+            String autoDB5 = readCell(row, 43);
+            String autoGasohol = readCell(row, 49);
+            String autoGLP = readCell(row, 55);
+            String autoGNV = readCell(row, 61);
+
+            if (custer == null && combi == null && bus == null &&
+                    tren == null && metropolitano == null && taxi == null &&
+                    mototaxi == null && autoDB5 == null && autoGasohol == null &&
+                    autoGLP == null && autoGNV == null) {
+                break;
+            }
+
+            Detalle detalle = new Detalle();
+
+            if (custer != null) {
+                transportes.add(createTransporteCasaTrabajo(row, detalle, custer, 1L));
+            }
+            if (combi != null) {
+                transportes.add(createTransporteCasaTrabajo(row, detalle, combi, 2L));
+            }
+            if (bus != null) {
+                transportes.add(createTransporteCasaTrabajo(row, detalle, bus, 3L));
+            }
+            if (tren != null) {
+                transportes.add(createTransporteCasaTrabajo(row, detalle, tren, 4L));
+            }
+            if (metropolitano != null) {
+                transportes.add(createTransporteCasaTrabajo(row, detalle, metropolitano, 5L));
+            }
+            if (taxi != null) {
+                transportes.add(createTransporteCasaTrabajo(row, detalle, taxi, 6L));
+            }
+            if (mototaxi != null) {
+                transportes.add(createTransporteCasaTrabajo(row, detalle, mototaxi, 7L));
+            }
+            if (autoDB5 != null) {
+                transportes.add(createTransporteCasaTrabajo(row, detalle, autoDB5, 8L));
+            }
+            if (autoGasohol != null) {
+                transportes.add(createTransporteCasaTrabajo(row, detalle, autoGasohol, 9L));
+            }
+            if (autoGLP != null) {
+                transportes.add(createTransporteCasaTrabajo(row, detalle, autoGLP, 10L));
+            }
+            if (autoGNV != null) {
+                transportes.add(createTransporteCasaTrabajo(row, detalle, autoGNV, 11L));
+            }
+
+            detalle.setTransporteCasaTrabajos(transportes);
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readConsumoAgua(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 22; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            String value = readCell(row, 1);
+            if (value == null) {
+                break;
+            }
+            Double superficie = Double.parseDouble(value);
+            Detalle detalle = new Detalle();
+            detalle.setSuperficie(superficie);
+            detalle.setMedidor(String.valueOf(readIntegerCell(row, 2)));
+            detalle.setMeses(readMeses(row, 3));
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readConsumoPapel(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 22; rowIndex <= 28; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row != null) {
+                String tipoHojaNombre = readCell(row, 1);
+                if (tipoHojaNombre != null) {
+                    Integer comprasAnuales = readIntegerCell(row, 2);
+                    if (comprasAnuales != null) {
+                        Detalle detalle = new Detalle();
+                        detalle.setConsumoPapel(
+                                new ConsumoPapel(
+                                        null,
+                                        tipoHojaService.getTipoHojaByNombre(tipoHojaNombre),
+                                        comprasAnuales,
+                                        readCell(row, 4),
+                                        readDoubleCell(row, 5),
+                                        readCell(row, 6),
+                                        readDoubleCell(row, 7)
+                                ));
+                        detalle.setDatosGenerales(datosGenerales);
+                        detalles.add(detalle);
+                    }
+                }
+            }
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readGeneracionIndirectaNF3(Sheet sheet, DatosGenerales datosGenerales) {
+        List<Detalle> detalles = new ArrayList<>();
+        for (int rowIndex = 23; ; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            Integer pantallas = readIntegerCell(row, 1);
+            if (pantallas == null) {
+                break;
+            }
+            Detalle detalle = new Detalle();
+            detalle.setGeneracionIndirectaNF3(
+                    new GeneracionIndirectaNF3(
+                            null,
+                            pantallas,
+                            readDoubleCell(row, 2),
+                            readDoubleCell(row, 3)
+                    )
+            );
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
+        }
+        datosGenerales.setDetalles(detalles);
+    }
+
+    private void readGeneracionResiduos(Sheet sheet, DatosGenerales datosGenerales) {
+        Detalle detalle = new Detalle();
+        GeneracionResiduos generacionResiduos = new GeneracionResiduos();
+        List<GeneracionResiduosDetalle> generacionResiduosDetalles = new ArrayList<>();
+        generacionResiduos.setAnioHuella(readIntegerCell(sheet.getRow(19), 2));
+        generacionResiduos.setPrecipitacion(readDoubleCell(sheet.getRow(22), 2));
+        generacionResiduos.setAnioInicio(readIntegerCell(sheet.getRow(19), 6));
+        generacionResiduos.setTemperatura(readDoubleCell(sheet.getRow(22), 6));
+        generacionResiduos.setContenidoGrasas(readListCell(sheet.getRow(27), 2) == "Sí");
+        generacionResiduos.setTasaCrecimiento(readDoubleCell(sheet.getRow(39), 2));
+        generacionResiduos.setCondicionSEDS(condicionSEDSService.getByNombre(readListCell(sheet.getRow(24), 2)));
+        for (int rowIndex = 31; rowIndex <= 36; rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                break;
+            }
+            Integer anio = readIntegerCell(row, 1);
+            if (anio == null) {
+                break;
+            }
+
+            GeneracionResiduosDetalle generacionResiduosDetalle = new GeneracionResiduosDetalle(
+                    null,
+                    anio,
+                    readDoubleCell(row, 2),
+                    readDoubleCell(row, 3),
+                    readDoubleCell(row, 4),
+                    readDoubleCell(row, 5),
+                    readDoubleCell(row, 6),
+                    readDoubleCell(row, 7),
+                    readDoubleCell(row, 8),
+                    generacionResiduos
+            );
+
+            generacionResiduosDetalles.add(generacionResiduosDetalle);
+        }
+        generacionResiduos.setGeneracionResiduosDetalles(generacionResiduosDetalles);
+        detalle.setGeneracionResiduos(generacionResiduos);
+        detalle.setDatosGenerales(datosGenerales);
+        datosGenerales.setDetalles(List.of(detalle));
+    }
+
+    private TransporteCasaTrabajo createTransporteCasaTrabajo(Row row, Detalle detalle, String descripcion, Long tipoMovilidadId) {
+        int addCol = (tipoMovilidadId.intValue() - 1) * 6;
+        return new TransporteCasaTrabajo(
+                null,
+                descripcion,
+                readIntegerCell(row, 2 + addCol),
+                readIntegerCell(row, 3 + addCol),
+                readIntegerCell(row, 4 + addCol),
+                readDoubleCell(row, 5 + addCol),
+                new TipoMovilidad(tipoMovilidadId),
+                detalle
+        );
     }
 
     private boolean hasDataInAnyMonth(Meses meses) {

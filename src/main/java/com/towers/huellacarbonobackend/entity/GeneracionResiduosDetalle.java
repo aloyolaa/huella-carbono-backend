@@ -22,25 +22,25 @@ public class GeneracionResiduosDetalle {
     private Integer anio;
 
     @Column(name = "productos_madera", nullable = false)
-    private Integer productosMadera;
+    private Double productosMadera;
 
     @Column(name = "productos_papel", nullable = false)
-    private Integer productosPapel;
+    private Double productosPapel;
 
     @Column(name = "residuos", nullable = false)
-    private Integer residuos;
+    private Double residuos;
 
     @Column(name = "textiles", nullable = false)
-    private Integer textiles;
+    private Double textiles;
 
     @Column(name = "jardines", nullable = false)
-    private Integer jardines;
+    private Double jardines;
 
     @Column(name = "paniales", nullable = false)
-    private Integer paniales;
+    private Double paniales;
 
     @Column(name = "otros", nullable = false)
-    private Integer otros;
+    private Double otros;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "generacion_residuos_id", nullable = false)

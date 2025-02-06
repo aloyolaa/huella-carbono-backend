@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface CondicionSEDSService {
     List<CondicionSEDS> getAll();
+
+    CondicionSEDS getByNombre(String nombre);
 }

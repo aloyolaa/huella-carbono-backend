@@ -101,6 +101,21 @@ public class ExportService {
                 case 24, 25:
                     writeTransporteVehiculo(sheet, datosGenerales.getDetalles());
                     break;
+                case 26:
+                    writeTransporteCasaTrabajo(sheet, datosGenerales.getDetalles());
+                    break;
+                case 27:
+                    writeConsumoAgua(sheet, datosGenerales.getDetalles());
+                    break;
+                case 28:
+                    writeConsumoPapel(sheet, datosGenerales.getDetalles());
+                    break;
+                case 29:
+                    writeGeneracionIndirectaNF3(sheet, datosGenerales.getDetalles());
+                    break;
+                case 30:
+                    writeGeneracionResiduos(sheet, datosGenerales.getDetalles());
+                    break;
                 default:
                     throw new IllegalArgumentException("Unsupported archivo id: " + archivo.getId());
             }
@@ -541,6 +556,149 @@ public class ExportService {
             writeCell(sheet, rowIndex, 4, detalle.getTransporteVehiculo().getVecesRecorrido());
             rowIndex++;
         }
+    }
+
+    private void writeTransporteCasaTrabajo(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 23;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+
+            Optional<TransporteCasaTrabajo> custer = detalle.getTransporteCasaTrabajos().stream().filter(t -> t.getTipoMovilidad().getId() == 1).findFirst();
+            Optional<TransporteCasaTrabajo> combi = detalle.getTransporteCasaTrabajos().stream().filter(t -> t.getTipoMovilidad().getId() == 2).findFirst();
+            Optional<TransporteCasaTrabajo> bus = detalle.getTransporteCasaTrabajos().stream().filter(t -> t.getTipoMovilidad().getId() == 3).findFirst();
+            Optional<TransporteCasaTrabajo> tren = detalle.getTransporteCasaTrabajos().stream().filter(t -> t.getTipoMovilidad().getId() == 4).findFirst();
+            Optional<TransporteCasaTrabajo> metropolitano = detalle.getTransporteCasaTrabajos().stream().filter(t -> t.getTipoMovilidad().getId() == 5).findFirst();
+            Optional<TransporteCasaTrabajo> taxi = detalle.getTransporteCasaTrabajos().stream().filter(t -> t.getTipoMovilidad().getId() == 6).findFirst();
+            Optional<TransporteCasaTrabajo> mototaxi = detalle.getTransporteCasaTrabajos().stream().filter(t -> t.getTipoMovilidad().getId() == 7).findFirst();
+            Optional<TransporteCasaTrabajo> autoDB5 = detalle.getTransporteCasaTrabajos().stream().filter(t -> t.getTipoMovilidad().getId() == 8).findFirst();
+            Optional<TransporteCasaTrabajo> autoGasohol = detalle.getTransporteCasaTrabajos().stream().filter(t -> t.getTipoMovilidad().getId() == 9).findFirst();
+            Optional<TransporteCasaTrabajo> autoGLP = detalle.getTransporteCasaTrabajos().stream().filter(t -> t.getTipoMovilidad().getId() == 10).findFirst();
+            Optional<TransporteCasaTrabajo> autoGNV = detalle.getTransporteCasaTrabajos().stream().filter(t -> t.getTipoMovilidad().getId() == 11).findFirst();
+
+            if (custer.isPresent()) {
+                writeTransporteCasaTrabajoCommonData(sheet, rowIndex, 1, custer.orElseThrow());
+            }
+            if (combi.isPresent()) {
+                writeTransporteCasaTrabajoCommonData(sheet, rowIndex, 7, combi.orElseThrow());
+            }
+            if (bus.isPresent()) {
+                writeTransporteCasaTrabajoCommonData(sheet, rowIndex, 13, bus.orElseThrow());
+            }
+            if (tren.isPresent()) {
+                writeTransporteCasaTrabajoCommonData(sheet, rowIndex, 19, tren.orElseThrow());
+            }
+            if (metropolitano.isPresent()) {
+                writeTransporteCasaTrabajoCommonData(sheet, rowIndex, 25, metropolitano.orElseThrow());
+            }
+            if (taxi.isPresent()) {
+                writeTransporteCasaTrabajoCommonData(sheet, rowIndex, 31, taxi.orElseThrow());
+            }
+            if (mototaxi.isPresent()) {
+                writeTransporteCasaTrabajoCommonData(sheet, rowIndex, 37, mototaxi.orElseThrow());
+            }
+            if (autoDB5.isPresent()) {
+                writeTransporteCasaTrabajoCommonData(sheet, rowIndex, 43, autoDB5.orElseThrow());
+            }
+            if (autoGasohol.isPresent()) {
+                writeTransporteCasaTrabajoCommonData(sheet, rowIndex, 49, autoGasohol.orElseThrow());
+            }
+            if (autoGLP.isPresent()) {
+                writeTransporteCasaTrabajoCommonData(sheet, rowIndex, 55, autoGLP.orElseThrow());
+            }
+            if (autoGNV.isPresent()) {
+                writeTransporteCasaTrabajoCommonData(sheet, rowIndex, 61, autoGNV.orElseThrow());
+            }
+
+            rowIndex++;
+        }
+    }
+
+    private void writeConsumoAgua(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 22;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+            writeCell(sheet, rowIndex, 1, detalle.getSuperficie());
+            writeCell(sheet, rowIndex, 2, detalle.getMedidor());
+            writeMesesData(sheet, rowIndex, 3, detalle.getMeses());
+            rowIndex++;
+        }
+    }
+
+    private void writeConsumoPapel(Sheet sheet, List<Detalle> detalles) {
+        for (Detalle detalle : detalles) {
+            for (int rowIndex = 22; rowIndex <= 28; rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                if (row != null) {
+                    String tipoHojaNombre = readCell(row, 1);
+                    if (detalle.getConsumoPapel().getTipoHoja().getNombre().equals(tipoHojaNombre)) {
+                            ConsumoPapel consumoPapel = detalle.getConsumoPapel();
+                            writeCell(sheet, rowIndex, 2, consumoPapel.getComprasAnuales());
+                            writeCell(sheet, rowIndex, 5, consumoPapel.getReciclado());
+                            writeCell(sheet, rowIndex, 6, consumoPapel.getCertificado());
+                            writeCell(sheet, rowIndex, 7, consumoPapel.getDensidad());
+                            break;
+                        }
+
+                }
+            }
+        }
+    }
+
+    private void writeGeneracionIndirectaNF3(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 23;
+        for (Detalle detalle : detalles) {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
+            }
+            writeCell(sheet, rowIndex, 1, detalle.getGeneracionIndirectaNF3().getNumeroPantallas());
+            writeCell(sheet, rowIndex, 2, detalle.getGeneracionIndirectaNF3().getAlto());
+            writeCell(sheet, rowIndex, 3, detalle.getGeneracionIndirectaNF3().getAncho());
+            rowIndex++;
+        }
+    }
+
+    private void writeGeneracionResiduos(Sheet sheet, List<Detalle> detalles) {
+        int rowIndex = 31;
+        for (Detalle detalle : detalles) {
+            writeCell(sheet, 19, 2, detalle.getGeneracionResiduos().getAnioHuella());
+            writeCell(sheet, 22, 2, detalle.getGeneracionResiduos().getPrecipitacion());
+            writeCell(sheet, 19, 6, detalle.getGeneracionResiduos().getAnioInicio());
+            writeCell(sheet, 22, 6, detalle.getGeneracionResiduos().getTemperatura());
+            updateListCell(sheet, 27, 2, detalle.getGeneracionResiduos().getContenidoGrasas() ? "Sí" : "No");
+            writeCell(sheet, 39, 2, detalle.getGeneracionResiduos().getTasaCrecimiento());
+            updateListCell(sheet, 24, 2, detalle.getGeneracionResiduos().getCondicionSEDS().getNombre());
+            for (GeneracionResiduosDetalle generacionResiduosDetalle : detalle.getGeneracionResiduos().getGeneracionResiduosDetalles()) {
+                Row row = sheet.getRow(rowIndex);
+                if (row == null) {
+                    sheet.createRow(rowIndex);
+                }
+                writeCell(sheet, rowIndex, 1, generacionResiduosDetalle.getAnio());
+                writeCell(sheet, rowIndex, 2, generacionResiduosDetalle.getProductosMadera());
+                writeCell(sheet, rowIndex, 3, generacionResiduosDetalle.getProductosPapel());
+                writeCell(sheet, rowIndex, 4, generacionResiduosDetalle.getResiduos());
+                writeCell(sheet, rowIndex, 5, generacionResiduosDetalle.getTextiles());
+                writeCell(sheet, rowIndex, 6, generacionResiduosDetalle.getJardines());
+                writeCell(sheet, rowIndex, 7, generacionResiduosDetalle.getPaniales());
+                writeCell(sheet, rowIndex, 8, generacionResiduosDetalle.getOtros());
+                rowIndex++;
+            }
+        }
+    }
+
+    private void writeTransporteCasaTrabajoCommonData(Sheet sheet, int rowIndex, int startColIndex, TransporteCasaTrabajo transporte) {
+        writeCell(sheet, rowIndex, startColIndex++, transporte.getDescripcionPersonal());
+        writeCell(sheet, rowIndex, startColIndex++, transporte.getTrabajadores());
+        writeCell(sheet, rowIndex, startColIndex++, transporte.getViajesSemanales());
+        writeCell(sheet, rowIndex, startColIndex++, transporte.getDiasLaborales());
+        writeCell(sheet, rowIndex, startColIndex, transporte.getDistanciaViaje());
     }
 
     private void writePFCCommonData(Sheet sheet, int rowIndex, int startColIndex, PFC pfc) {
