@@ -1,6 +1,7 @@
 package com.towers.huellacarbonobackend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,15 +19,19 @@ public class DatosGenerales {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @NotBlank(message = "{NotBlank.datosGenerales.nombre}")
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
+    @NotBlank(message = "{NotBlank.datosGenerales.cargo}")
     @Column(name = "cargo", nullable = false)
     private String cargo;
 
+    @NotBlank(message = "{NotBlank.datosGenerales.correo}")
     @Column(name = "correo", nullable = false)
     private String correo;
 
+    @NotBlank(message = "{NotBlank.datosGenerales.locacion}")
     @Column(name = "locacion", nullable = false)
     private String locacion;
 
