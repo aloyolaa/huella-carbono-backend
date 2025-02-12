@@ -142,7 +142,7 @@ public class ExportService {
                     String tipoCombustibleNombre = readCell(row, 1);
                     if (tipoCombustibleNombre != null) {
                         tipoCombustibleNombre = tipoCombustibleNombre.replaceAll("\\(\\*\\)", "").trim();
-                        if (detalle.getTipoCombustible().getNombre().equals(tipoCombustibleNombre)) {
+                        if (detalle.getTipoCombustible().getNombre().equalsIgnoreCase(tipoCombustibleNombre)) {
                             writeMesesData(sheet, rowIndex, 3, detalle.getMeses());
                             break;
                         }
@@ -160,7 +160,7 @@ public class ExportService {
                     String tipoCombustibleNombre = readCell(row, 1);
                     if (tipoCombustibleNombre != null) {
                         tipoCombustibleNombre = tipoCombustibleNombre.replaceAll("\\(\\*\\)", "").trim();
-                        if (detalle.getTipoCombustible().getNombre().equals(tipoCombustibleNombre)) {
+                        if (detalle.getTipoCombustible().getNombre().equalsIgnoreCase(tipoCombustibleNombre)) {
                             writeMesesData(sheet, rowIndex, 4, detalle.getMeses());
                             updateListCell(sheet, rowIndex, 3, detalle.getCategoriaInstitucion().getNombre());
                             break;
