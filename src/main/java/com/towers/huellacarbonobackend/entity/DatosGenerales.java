@@ -57,4 +57,9 @@ public class DatosGenerales {
     public void prePersist() {
         this.anio = Year.now().getValue();
     }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.anio = Year.now().getValue();
+    }
 }
