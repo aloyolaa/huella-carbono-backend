@@ -19,19 +19,19 @@ public class DatosGenerales {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @NotBlank(message = "{NotBlank.datosGenerales.nombre}")
+    @NotBlank(message = "El Nombre de Datos Generales es requerido")
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @NotBlank(message = "{NotBlank.datosGenerales.cargo}")
+    @NotBlank(message = "El Cargo de Datos Generales es requerido")
     @Column(name = "cargo", nullable = false)
     private String cargo;
 
-    @NotBlank(message = "{NotBlank.datosGenerales.correo}")
+    @NotBlank(message = "El Correo de Datos Generales es requerido")
     @Column(name = "correo", nullable = false)
     private String correo;
 
-    @NotBlank(message = "{NotBlank.datosGenerales.locacion}")
+    @NotBlank(message = "La Locación de Datos Generales es requerida")
     @Column(name = "locacion", nullable = false)
     private String locacion;
 
