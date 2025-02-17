@@ -63,7 +63,7 @@ public class ExportService {
                     writePFC(sheet, datosGenerales.getDetalles());
                     break;
                 case 11:
-                    writeGanado(sheet, datosGenerales.getDetalles());
+                    writeGanado(sheet, datosGenerales);
                     break;
                 case 12:
                     writeFertilizantes(sheet, datosGenerales.getDetalles());
@@ -383,9 +383,10 @@ public class ExportService {
         }
     }
 
-    private void writeGanado(Sheet sheet, List<Detalle> detalles) {
+    private void writeGanado(Sheet sheet, DatosGenerales datosGenerales) {
+        writeCell(sheet, 19, 3, datosGenerales.getGanadoData().getTemperatura());
         int rowIndex = 24;
-        for (Detalle detalle : detalles) {
+        for (Detalle detalle : datosGenerales.getDetalles()) {
             Row row = sheet.getRow(rowIndex);
             if (row == null) {
                 sheet.createRow(rowIndex);
