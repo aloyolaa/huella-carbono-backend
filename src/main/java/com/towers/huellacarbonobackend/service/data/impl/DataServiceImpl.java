@@ -28,6 +28,12 @@ public class DataServiceImpl implements DataService {
     @Override
     @Transactional
     public void save(DataDto dataDto, Long empresa, Long archivo) {
+        Optional<DatosGenerales> optionalDatosGenerales = getOptionalByEmpresaAndAnio(empresa, archivo);
+
+        if (optionalDatosGenerales.isPresent()) {
+            deleteById(optionalDatosGenerales.orElseThrow().getId());
+        }
+
         datosGeneralesRepository.save(dataMapper.toDatosGenerales(dataDto, empresa, archivo));
     }
 
