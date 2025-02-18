@@ -26,7 +26,7 @@ public class GanadoFormat implements ImportOperation, ExportOperation {
 
     @Override
     public void readData(Sheet sheet, DatosGenerales datosGenerales) {
-        datosGenerales.setGanadoData(new GanadoData(readDoubleCell(sheet.getRow(19), 3), datosGenerales));
+        datosGenerales.setGanadoData(new GanadoData(null, readDoubleCell(sheet.getRow(19), 3), datosGenerales));
         List<Detalle> detalles = new ArrayList<>();
         for (int rowIndex = 24; ; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
