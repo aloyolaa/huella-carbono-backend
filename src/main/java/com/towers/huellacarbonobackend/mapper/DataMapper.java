@@ -22,7 +22,8 @@ public class DataMapper {
         datosGenerales.setCorreo(dataDto.correo());
         datosGenerales.setLocacion(dataDto.locacion());
         datosGenerales.setComentarios(dataDto.comentarios());
-        datosGenerales.setGanadoData(new GanadoData(dataDto.ganadoData().temperatura(), datosGenerales));
+        datosGenerales.setGanadoData(dataDto.ganadoData() != null ?
+                new GanadoData(dataDto.ganadoData().id(), dataDto.ganadoData().temperatura(), datosGenerales) : null);
         datosGenerales.setArchivo(new Archivo(archivo));
         datosGenerales.setEmpresa(new Empresa(empresa));
         datosGenerales.setDetalles(dataDto.detalles().stream().map(d -> detalleMapper.toDetalle(d, datosGenerales)).toList());
@@ -38,7 +39,8 @@ public class DataMapper {
                 datosGenerales.getCorreo(),
                 datosGenerales.getLocacion(),
                 datosGenerales.getComentarios(),
-                new GanadoDataDto(datosGenerales.getGanadoData().getTemperatura()),
+                datosGenerales.getGanadoData() != null ?
+                        new GanadoDataDto(datosGenerales.getGanadoData().getId(), datosGenerales.getGanadoData().getTemperatura()) : null,
                 datosGenerales.getDetalles().stream().map(detalleMapper::toDetalleDto).toList()
         );
     }
