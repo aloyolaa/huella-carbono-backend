@@ -4,6 +4,7 @@ import com.towers.huellacarbonobackend.dto.ExportDto;
 import com.towers.huellacarbonobackend.entity.*;
 import com.towers.huellacarbonobackend.service.data.DataService;
 import com.towers.huellacarbonobackend.service.data.SeccionService;
+import com.towers.huellacarbonobackend.service.file.ftp.FtpFileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -16,7 +17,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ExportService {
+public class ExportAllService {
     private final DataService dataService;
     private final SeccionService seccionService;
     private final FtpFileStorageService ftpFileStorageService;

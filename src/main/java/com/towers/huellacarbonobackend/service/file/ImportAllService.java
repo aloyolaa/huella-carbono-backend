@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ImportService {
+public class ImportAllService {
     private final DataService dataService;
     private final TipoCombustibleService tipoCombustibleService;
     private final CategoriaInstitucionService categoriaInstitucionService;
