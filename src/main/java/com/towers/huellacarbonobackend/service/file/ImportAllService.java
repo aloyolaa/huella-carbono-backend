@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ImportService {
+public class ImportAllService {
     private final DataService dataService;
     private final TipoCombustibleService tipoCombustibleService;
     private final CategoriaInstitucionService categoriaInstitucionService;
@@ -526,6 +526,7 @@ public class ImportService {
     }
 
     private void readGanado(Sheet sheet, DatosGenerales datosGenerales) {
+        datosGenerales.setGanadoData(new GanadoData(readDoubleCell(sheet.getRow(19), 3), datosGenerales));
         List<Detalle> detalles = new ArrayList<>();
         for (int rowIndex = 24; ; rowIndex++) {
             Row row = sheet.getRow(rowIndex);

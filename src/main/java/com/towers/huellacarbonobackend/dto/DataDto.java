@@ -15,6 +15,7 @@ public record DataDto(
         @NotBlank(message = "{NotBlank.datosGenerales.locacion}")
         String locacion,
         String comentarios,
+        GanadoDataDto ganadoData,
         List<DetalleDto> detalles
 ) {
 }

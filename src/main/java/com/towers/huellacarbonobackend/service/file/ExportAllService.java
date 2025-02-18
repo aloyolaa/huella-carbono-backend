@@ -4,6 +4,7 @@ import com.towers.huellacarbonobackend.dto.ExportDto;
 import com.towers.huellacarbonobackend.entity.*;
 import com.towers.huellacarbonobackend.service.data.DataService;
 import com.towers.huellacarbonobackend.service.data.SeccionService;
+import com.towers.huellacarbonobackend.service.file.ftp.FtpFileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -16,7 +17,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ExportService {
+public class ExportAllService {
     private final DataService dataService;
     private final SeccionService seccionService;
     private final FtpFileStorageService ftpFileStorageService;
@@ -63,7 +64,7 @@ public class ExportService {
                     writePFC(sheet, datosGenerales.getDetalles());
                     break;
                 case 11:
-                    writeGanado(sheet, datosGenerales.getDetalles());
+                    writeGanado(sheet, datosGenerales);
                     break;
                 case 12:
                     writeFertilizantes(sheet, datosGenerales.getDetalles());
@@ -383,9 +384,10 @@ public class ExportService {
         }
     }
 
-    private void writeGanado(Sheet sheet, List<Detalle> detalles) {
+    private void writeGanado(Sheet sheet, DatosGenerales datosGenerales) {
+        writeCell(sheet, 19, 3, datosGenerales.getGanadoData().getTemperatura());
         int rowIndex = 24;
-        for (Detalle detalle : detalles) {
+        for (Detalle detalle : datosGenerales.getDetalles()) {
             Row row = sheet.getRow(rowIndex);
             if (row == null) {
                 sheet.createRow(rowIndex);

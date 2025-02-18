@@ -1,4 +1,4 @@
-package com.towers.huellacarbonobackend.service.file;
+package com.towers.huellacarbonobackend.service.file.ftp;
 
 import com.towers.huellacarbonobackend.exception.FileStorageException;
 import lombok.RequiredArgsConstructor;
