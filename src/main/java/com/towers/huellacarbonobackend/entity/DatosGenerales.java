@@ -52,6 +52,9 @@ public class DatosGenerales {
     @OneToOne(mappedBy = "datosGenerales", cascade = CascadeType.ALL, orphanRemoval = true)
     private GanadoData ganadoData;
 
+    @OneToOne(mappedBy = "datosGenerales", cascade = CascadeType.ALL, orphanRemoval = true)
+    private GeneracionResiduosData generacionResiduosData;
+
     @OneToMany(mappedBy = "datosGenerales", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy
     private List<Detalle> detalles = new ArrayList<>();

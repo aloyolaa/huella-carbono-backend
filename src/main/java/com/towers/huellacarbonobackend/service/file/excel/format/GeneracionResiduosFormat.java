@@ -3,7 +3,7 @@ package com.towers.huellacarbonobackend.service.file.excel.format;
 import com.towers.huellacarbonobackend.entity.DatosGenerales;
 import com.towers.huellacarbonobackend.entity.Detalle;
 import com.towers.huellacarbonobackend.entity.GeneracionResiduos;
-import com.towers.huellacarbonobackend.entity.GeneracionResiduosDetalle;
+import com.towers.huellacarbonobackend.entity.GeneracionResiduosData;
 import com.towers.huellacarbonobackend.service.data.CondicionSEDSService;
 import com.towers.huellacarbonobackend.service.file.excel.exp.ExportOperation;
 import com.towers.huellacarbonobackend.service.file.excel.imp.ImportOperation;
@@ -24,16 +24,20 @@ public class GeneracionResiduosFormat implements ImportOperation, ExportOperatio
 
     @Override
     public void readData(Sheet sheet, DatosGenerales datosGenerales) {
-        Detalle detalle = new Detalle();
-        GeneracionResiduos generacionResiduos = new GeneracionResiduos();
-        List<GeneracionResiduosDetalle> generacionResiduosDetalles = new ArrayList<>();
-        generacionResiduos.setAnioHuella(readIntegerCell(sheet.getRow(19), 2));
-        generacionResiduos.setPrecipitacion(readDoubleCell(sheet.getRow(22), 2));
-        generacionResiduos.setAnioInicio(readIntegerCell(sheet.getRow(19), 6));
-        generacionResiduos.setTemperatura(readDoubleCell(sheet.getRow(22), 6));
-        generacionResiduos.setContenidoGrasas(readListCell(sheet.getRow(27), 2).equals("Sí"));
-        generacionResiduos.setTasaCrecimiento(readDoubleCell(sheet.getRow(39), 2));
-        generacionResiduos.setCondicionSEDS(condicionSEDSService.getByNombre(readListCell(sheet.getRow(24), 2)));
+        datosGenerales.setGeneracionResiduosData(
+                new GeneracionResiduosData(
+                        null,
+                        readIntegerCell(sheet.getRow(19), 2),
+                        readDoubleCell(sheet.getRow(22), 2),
+                        readIntegerCell(sheet.getRow(19), 6),
+                        readDoubleCell(sheet.getRow(22), 6),
+                        readListCell(sheet.getRow(27), 2).equals("Sí"),
+                        readDoubleCell(sheet.getRow(39), 2),
+                        condicionSEDSService.getByNombre(readListCell(sheet.getRow(24), 2)),
+                        datosGenerales
+                )
+        );
+        List<Detalle> detalles = new ArrayList<>();
         for (int rowIndex = 31; rowIndex <= 36; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row == null) {
@@ -43,54 +47,50 @@ public class GeneracionResiduosFormat implements ImportOperation, ExportOperatio
             if (anio == null) {
                 break;
             }
-
-            GeneracionResiduosDetalle generacionResiduosDetalle = new GeneracionResiduosDetalle(
-                    null,
-                    anio,
-                    readDoubleCell(row, 2),
-                    readDoubleCell(row, 3),
-                    readDoubleCell(row, 4),
-                    readDoubleCell(row, 5),
-                    readDoubleCell(row, 6),
-                    readDoubleCell(row, 7),
-                    readDoubleCell(row, 8),
-                    generacionResiduos
+            Detalle detalle = new Detalle();
+            detalle.setGeneracionResiduos(
+                    new GeneracionResiduos(
+                            null,
+                            anio,
+                            readDoubleCell(row, 2),
+                            readDoubleCell(row, 3),
+                            readDoubleCell(row, 4),
+                            readDoubleCell(row, 5),
+                            readDoubleCell(row, 6),
+                            readDoubleCell(row, 7),
+                            readDoubleCell(row, 8)
+                    )
             );
-
-            generacionResiduosDetalles.add(generacionResiduosDetalle);
+            detalle.setDatosGenerales(datosGenerales);
+            detalles.add(detalle);
         }
-        generacionResiduos.setGeneracionResiduosDetalles(generacionResiduosDetalles);
-        detalle.setGeneracionResiduos(generacionResiduos);
-        detalle.setDatosGenerales(datosGenerales);
-        datosGenerales.setDetalles(List.of(detalle));
+        datosGenerales.setDetalles(detalles);
     }
 
     @Override
     public void writeData(Sheet sheet, DatosGenerales datosGenerales) {
+        writeCell(sheet, 19, 2, datosGenerales.getGeneracionResiduosData().getAnioHuella());
+        writeCell(sheet, 22, 2, datosGenerales.getGeneracionResiduosData().getPrecipitacion());
+        writeCell(sheet, 19, 6, datosGenerales.getGeneracionResiduosData().getAnioInicio());
+        writeCell(sheet, 22, 6, datosGenerales.getGeneracionResiduosData().getTemperatura());
+        updateListCell(sheet, 27, 2, datosGenerales.getGeneracionResiduosData().getContenidoGrasas() ? "Sí" : "No");
+        writeCell(sheet, 39, 2, datosGenerales.getGeneracionResiduosData().getTasaCrecimiento());
+        updateListCell(sheet, 24, 2, datosGenerales.getGeneracionResiduosData().getCondicionSEDS().getNombre());
         int rowIndex = 31;
         for (Detalle detalle : datosGenerales.getDetalles()) {
-            writeCell(sheet, 19, 2, detalle.getGeneracionResiduos().getAnioHuella());
-            writeCell(sheet, 22, 2, detalle.getGeneracionResiduos().getPrecipitacion());
-            writeCell(sheet, 19, 6, detalle.getGeneracionResiduos().getAnioInicio());
-            writeCell(sheet, 22, 6, detalle.getGeneracionResiduos().getTemperatura());
-            updateListCell(sheet, 27, 2, detalle.getGeneracionResiduos().getContenidoGrasas() ? "Sí" : "No");
-            writeCell(sheet, 39, 2, detalle.getGeneracionResiduos().getTasaCrecimiento());
-            updateListCell(sheet, 24, 2, detalle.getGeneracionResiduos().getCondicionSEDS().getNombre());
-            for (GeneracionResiduosDetalle generacionResiduosDetalle : detalle.getGeneracionResiduos().getGeneracionResiduosDetalles()) {
-                Row row = sheet.getRow(rowIndex);
-                if (row == null) {
-                    sheet.createRow(rowIndex);
-                }
-                writeCell(sheet, rowIndex, 1, generacionResiduosDetalle.getAnio());
-                writeCell(sheet, rowIndex, 2, generacionResiduosDetalle.getProductosMadera());
-                writeCell(sheet, rowIndex, 3, generacionResiduosDetalle.getProductosPapel());
-                writeCell(sheet, rowIndex, 4, generacionResiduosDetalle.getResiduos());
-                writeCell(sheet, rowIndex, 5, generacionResiduosDetalle.getTextiles());
-                writeCell(sheet, rowIndex, 6, generacionResiduosDetalle.getJardines());
-                writeCell(sheet, rowIndex, 7, generacionResiduosDetalle.getPaniales());
-                writeCell(sheet, rowIndex, 8, generacionResiduosDetalle.getOtros());
-                rowIndex++;
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                sheet.createRow(rowIndex);
             }
+            writeCell(sheet, rowIndex, 1, detalle.getGeneracionResiduos().getAnio());
+            writeCell(sheet, rowIndex, 2, detalle.getGeneracionResiduos().getProductosMadera());
+            writeCell(sheet, rowIndex, 3, detalle.getGeneracionResiduos().getProductosPapel());
+            writeCell(sheet, rowIndex, 4, detalle.getGeneracionResiduos().getResiduos());
+            writeCell(sheet, rowIndex, 5, detalle.getGeneracionResiduos().getTextiles());
+            writeCell(sheet, rowIndex, 6, detalle.getGeneracionResiduos().getJardines());
+            writeCell(sheet, rowIndex, 7, detalle.getGeneracionResiduos().getPaniales());
+            writeCell(sheet, rowIndex, 8, detalle.getGeneracionResiduos().getOtros());
+            rowIndex++;
         }
     }
 }

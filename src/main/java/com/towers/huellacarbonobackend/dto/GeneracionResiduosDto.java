@@ -1,16 +1,14 @@
 package com.towers.huellacarbonobackend.dto;
 
-import java.util.List;
-
 public record GeneracionResiduosDto(
         Long id,
-        Integer anioHuella,
-        Double precipitacion,
-        Integer anioInicio,
-        Double temperatura,
-        Boolean contenidoGrasas,
-        Double tasaCrecimiento,
-        Long condicionSEDS,
-        List<GeneracionResiduosDetalleDto> generacionResiduosDetalles
+        Integer anio,
+        Double productosMadera,
+        Double productosPapel,
+        Double residuos,
+        Double textiles,
+        Double jardines,
+        Double paniales,
+        Double otros
 ) {
 }

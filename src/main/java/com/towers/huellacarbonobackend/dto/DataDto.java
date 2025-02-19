@@ -16,6 +16,7 @@ public record DataDto(
         String locacion,
         String comentarios,
         GanadoDataDto ganadoData,
+        GeneracionResiduosDataDto generacionResiduosData,
         List<DetalleDto> detalles
 ) {
 }

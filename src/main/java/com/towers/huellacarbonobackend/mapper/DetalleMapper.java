@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class DetalleMapper {
-    private final GeneracionResiduosMapper generacionResiduosMapper;
-
     public Detalle toDetalle(DetalleDto detalleDto, DatosGenerales datosGenerales) {
         Detalle detalle = new Detalle();
         detalle.setId(detalleDto.id());
@@ -285,7 +283,17 @@ public class DetalleMapper {
         );
         detalle.setGeneracionResiduos(
                 detalleDto.generacionResiduos() != null ?
-                        generacionResiduosMapper.toGeneracionResiduos(detalleDto.generacionResiduos()) : null
+                        new GeneracionResiduos(
+                                detalleDto.generacionResiduos().id(),
+                                detalleDto.generacionResiduos().anio(),
+                                detalleDto.generacionResiduos().productosMadera(),
+                                detalleDto.generacionResiduos().productosPapel(),
+                                detalleDto.generacionResiduos().residuos(),
+                                detalleDto.generacionResiduos().textiles(),
+                                detalleDto.generacionResiduos().jardines(),
+                                detalleDto.generacionResiduos().paniales(),
+                                detalleDto.generacionResiduos().otros()
+                        ) : null
         );
         return detalle;
     }
@@ -487,7 +495,17 @@ public class DetalleMapper {
                         detalle.getGeneracionIndirectaNF3().getAlto(),
                         detalle.getGeneracionIndirectaNF3().getAncho()
                 ) : null,
-                detalle.getGeneracionResiduos() != null ? generacionResiduosMapper.toGeneracionResiduosDto(detalle.getGeneracionResiduos()) : null,
+                detalle.getGeneracionResiduos() != null ? new GeneracionResiduosDto(
+                        detalle.getGeneracionResiduos().getId(),
+                        detalle.getGeneracionResiduos().getAnio(),
+                        detalle.getGeneracionResiduos().getProductosMadera(),
+                        detalle.getGeneracionResiduos().getProductosPapel(),
+                        detalle.getGeneracionResiduos().getResiduos(),
+                        detalle.getGeneracionResiduos().getTextiles(),
+                        detalle.getGeneracionResiduos().getJardines(),
+                        detalle.getGeneracionResiduos().getPaniales(),
+                        detalle.getGeneracionResiduos().getOtros()
+                ) : null,
                 detalle.getTransporteCasaTrabajos() != null ? detalle.getTransporteCasaTrabajos().stream().map(transporteCasaTrabajo -> new TransporteCasaTrabajoDto(
                         transporteCasaTrabajo.getId(),
                         transporteCasaTrabajo.getDescripcionPersonal(),

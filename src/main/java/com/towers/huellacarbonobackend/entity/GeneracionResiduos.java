@@ -1,17 +1,16 @@
 package com.towers.huellacarbonobackend.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "generacion_residuos")
+@AllArgsConstructor
 @NoArgsConstructor
 public class GeneracionResiduos {
     @Id
@@ -19,28 +18,27 @@ public class GeneracionResiduos {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "anio_huella", nullable = false)
-    private Integer anioHuella;
+    @Column(name = "anio", nullable = false)
+    private Integer anio;
 
-    @Column(name = "precipitacion", nullable = false)
-    private Double precipitacion;
+    @Column(name = "productos_madera", nullable = false)
+    private Double productosMadera;
 
-    @Column(name = "anio_inicio", nullable = false)
-    private Integer anioInicio;
+    @Column(name = "productos_papel", nullable = false)
+    private Double productosPapel;
 
-    @Column(name = "temperatura", nullable = false)
-    private Double temperatura;
+    @Column(name = "residuos", nullable = false)
+    private Double residuos;
 
-    @Column(name = "contenido_grasas", nullable = false)
-    private Boolean contenidoGrasas;
+    @Column(name = "textiles", nullable = false)
+    private Double textiles;
 
-    @Column(name = "tasa_crecimiento", nullable = false)
-    private Double tasaCrecimiento;
+    @Column(name = "jardines", nullable = false)
+    private Double jardines;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "condicion_seds_id", nullable = false)
-    private CondicionSEDS condicionSEDS;
+    @Column(name = "paniales", nullable = false)
+    private Double paniales;
 
-    @OneToMany(mappedBy = "generacionResiduos", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GeneracionResiduosDetalle> generacionResiduosDetalles = new ArrayList<>();
+    @Column(name = "otros", nullable = false)
+    private Double otros;
 }

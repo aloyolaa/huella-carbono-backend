@@ -2,10 +2,8 @@ package com.towers.huellacarbonobackend.mapper;
 
 import com.towers.huellacarbonobackend.dto.DataDto;
 import com.towers.huellacarbonobackend.dto.GanadoDataDto;
-import com.towers.huellacarbonobackend.entity.Archivo;
-import com.towers.huellacarbonobackend.entity.DatosGenerales;
-import com.towers.huellacarbonobackend.entity.Empresa;
-import com.towers.huellacarbonobackend.entity.GanadoData;
+import com.towers.huellacarbonobackend.dto.GeneracionResiduosDataDto;
+import com.towers.huellacarbonobackend.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +22,19 @@ public class DataMapper {
         datosGenerales.setComentarios(dataDto.comentarios());
         datosGenerales.setGanadoData(dataDto.ganadoData() != null ?
                 new GanadoData(dataDto.ganadoData().id(), dataDto.ganadoData().temperatura(), datosGenerales) : null);
+        datosGenerales.setGeneracionResiduosData(dataDto.generacionResiduosData() != null ?
+                new GeneracionResiduosData(
+                        dataDto.generacionResiduosData().id(),
+                        dataDto.generacionResiduosData().anioHuella(),
+                        dataDto.generacionResiduosData().precipitacion(),
+                        dataDto.generacionResiduosData().anioInicio(),
+                        dataDto.generacionResiduosData().temperatura(),
+                        dataDto.generacionResiduosData().contenidoGrasas(),
+                        dataDto.generacionResiduosData().tasaCrecimiento(),
+                        new CondicionSEDS(dataDto.generacionResiduosData().condicionSEDS()),
+                        datosGenerales
+                ) : null
+        );
         datosGenerales.setArchivo(new Archivo(archivo));
         datosGenerales.setEmpresa(new Empresa(empresa));
         datosGenerales.setDetalles(dataDto.detalles().stream().map(d -> detalleMapper.toDetalle(d, datosGenerales)).toList());
@@ -41,6 +52,17 @@ public class DataMapper {
                 datosGenerales.getComentarios(),
                 datosGenerales.getGanadoData() != null ?
                         new GanadoDataDto(datosGenerales.getGanadoData().getId(), datosGenerales.getGanadoData().getTemperatura()) : null,
+                datosGenerales.getGeneracionResiduosData() != null ?
+                        new GeneracionResiduosDataDto(
+                                datosGenerales.getGeneracionResiduosData().getId(),
+                                datosGenerales.getGeneracionResiduosData().getAnioHuella(),
+                                datosGenerales.getGeneracionResiduosData().getPrecipitacion(),
+                                datosGenerales.getGeneracionResiduosData().getAnioInicio(),
+                                datosGenerales.getGeneracionResiduosData().getTemperatura(),
+                                datosGenerales.getGeneracionResiduosData().getContenidoGrasas(),
+                                datosGenerales.getGeneracionResiduosData().getTasaCrecimiento(),
+                                datosGenerales.getGeneracionResiduosData().getCondicionSEDS().getId()
+                        ) : null,
                 datosGenerales.getDetalles().stream().map(detalleMapper::toDetalleDto).toList()
         );
     }
