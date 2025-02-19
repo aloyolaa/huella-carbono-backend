@@ -2,8 +2,8 @@ package com.towers.huellacarbonobackend.controller;
 
 import com.towers.huellacarbonobackend.dto.ExportDto;
 import com.towers.huellacarbonobackend.dto.ResponseDto;
-import com.towers.huellacarbonobackend.service.file.excel.exp.ExportService;
-import com.towers.huellacarbonobackend.service.file.excel.imp.ImportService;
+import com.towers.huellacarbonobackend.service.file.ExportAllService;
+import com.towers.huellacarbonobackend.service.file.ImportAllService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/file")
 @RequiredArgsConstructor
 public class FileController {
-    private final ExportService exportService;
-    private final ImportService importService;
+    private final ExportAllService exportService;
+    private final ImportAllService importService;
 
     @GetMapping("/export/{dataId}")
     public ResponseEntity<ResponseDto> exportToExcel(@PathVariable Long dataId) {
