@@ -16,5 +16,7 @@ public interface DataService {
 
     DataDto getByEmpresaAndAnio(Long empresaId, Long archivo);
 
+    DatosGenerales getByArchivoAndAnio(Long archivo, Integer anio);
+
     void deleteById(Long id);
 }

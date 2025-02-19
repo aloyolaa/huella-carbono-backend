@@ -53,6 +53,13 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public DatosGenerales getByArchivoAndAnio(Long archivo, Integer anio) {
+        return datosGeneralesRepository.findByArchivoAndAnio(archivo, anio)
+                .orElseThrow(() -> new EntityNotFoundException("No hay datos registrados para el presente año."));
+    }
+
+    @Override
     @Transactional
     public void deleteById(Long id) {
         datosGeneralesRepository.deleteById(id);
