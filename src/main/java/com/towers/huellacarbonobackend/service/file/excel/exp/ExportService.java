@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Year;
 import java.util.Base64;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class ExportService {
     private final Map<Long, ExportOperation> exportOperations;
 
     public ExportDto handleExcelExport(Long id) {
-        DatosGenerales datosGenerales = dataService.getById(id);
+        DatosGenerales datosGenerales = dataService.getByArchivoAndAnio(id, Year.now().getValue());
         Archivo archivo = datosGenerales.getArchivo();
         String fileName = archivo.getFichero();
 
