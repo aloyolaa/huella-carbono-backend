@@ -42,7 +42,7 @@ public class ImportAllService {
 
     @Transactional
     public void handleExcelImport(Long empresaId, Long archivoId, MultipartFile file) {
-        Optional<DatosGenerales> optionalDatosGenerales = dataService.getOptionalByEmpresaAndAnio(empresaId, archivoId);
+        Optional<DatosGenerales> optionalDatosGenerales = dataService.getOptionalByEmpresaAndAnio(empresaId, archivoId, null);
 
         if (optionalDatosGenerales.isPresent()) {
             dataService.deleteById(optionalDatosGenerales.orElseThrow().getId());

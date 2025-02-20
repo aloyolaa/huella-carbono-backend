@@ -40,14 +40,14 @@ public class DataServiceImpl implements DataService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<DatosGenerales> getOptionalByEmpresaAndAnio(Long empresaId, Long archivo) {
-        return datosGeneralesRepository.findByEmpresaAndAnio(Year.now().getValue(), empresaId, archivo);
+    public Optional<DatosGenerales> getOptionalByEmpresaAndAnio(Long empresaId, Long archivo, Integer anio) {
+        return datosGeneralesRepository.findByEmpresaAndAnio(anio, empresaId, archivo);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public DataDto getByEmpresaAndAnio(Long empresaId, Long archivo) {
-        return getOptionalByEmpresaAndAnio(empresaId, archivo)
+    public DataDto getByEmpresaAndAnio(Long empresaId, Long archivo, Integer anio) {
+        return getOptionalByEmpresaAndAnio(empresaId, archivo, anio)
                 .map(dataMapper::toDataDto)
                 .orElseThrow(() -> new EntityNotFoundException("No hay datos registrados para el presente año."));
     }

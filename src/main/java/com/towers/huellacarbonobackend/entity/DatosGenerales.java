@@ -55,14 +55,4 @@ public class DatosGenerales {
     @OneToMany(mappedBy = "datosGenerales", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy
     private List<Detalle> detalles = new ArrayList<>();
-
-    @PrePersist
-    public void prePersist() {
-        this.anio = Year.now().getValue();
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        this.anio = Year.now().getValue();
-    }
 }

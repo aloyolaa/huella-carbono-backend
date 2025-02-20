@@ -32,7 +32,7 @@ public class ConsumoAguaFormat implements ImportOperation, ExportOperation {
             Double superficie = Double.parseDouble(value);
             Detalle detalle = new Detalle();
             detalle.setSuperficie(superficie);
-            detalle.setMedidor(String.valueOf(readIntegerCell(row, 2)));
+            detalle.setMedidor(readCell(row, 2));
             detalle.setMeses(readMeses(row, 3));
             detalle.setDatosGenerales(datosGenerales);
             detalles.add(detalle);
