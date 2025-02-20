@@ -26,10 +26,10 @@ public class DataController {
         );
     }
 
-    @GetMapping("/{empresa}/{archivo}")
+    @GetMapping("/{empresa}/{archivo}/{anio}")
     @PreAuthorize("hasAuthority('REGISTER')")
-    public ResponseEntity<ResponseDto> get(@PathVariable Long empresa, @PathVariable Long archivo) {
-        DataDto byEmpresaAndAnio = dataService.getByEmpresaAndAnio(empresa, archivo);
+    public ResponseEntity<ResponseDto> get(@PathVariable Long empresa, @PathVariable Long archivo, @PathVariable Integer anio) {
+        DataDto byEmpresaAndAnio = dataService.getByEmpresaAndAnio(empresa, archivo, anio);
         return new ResponseEntity<>(
                 new ResponseDto(byEmpresaAndAnio, true)
                 , HttpStatus.OK

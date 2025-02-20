@@ -26,7 +26,7 @@ public class ImportService {
 
     @Transactional
     public void handleExcelImport(Long empresaId, Long archivoId, Integer anio, MultipartFile file) {
-        Optional<DatosGenerales> optionalDatosGenerales = dataService.getOptionalByEmpresaAndAnio(empresaId, archivoId);
+        Optional<DatosGenerales> optionalDatosGenerales = dataService.getOptionalByEmpresaAndAnio(empresaId, archivoId, anio);
 
         if (optionalDatosGenerales.isPresent()) {
             dataService.deleteById(optionalDatosGenerales.orElseThrow().getId());
