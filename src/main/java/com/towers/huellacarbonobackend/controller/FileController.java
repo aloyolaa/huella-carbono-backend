@@ -17,18 +17,18 @@ public class FileController {
     private final ExportService exportService;
     private final ImportService importService;
 
-    @GetMapping("/export/{dataId}")
-    public ResponseEntity<ResponseDto> exportToExcel(@PathVariable Long dataId) {
-        ExportDto exportDto = exportService.handleExcelExport(dataId);
+    @GetMapping("/export/{archivoId}/{anio}")
+    public ResponseEntity<ResponseDto> exportToExcel(@PathVariable Long archivoId, @PathVariable Integer anio) {
+        ExportDto exportDto = exportService.handleExcelExport(archivoId, anio);
         return new ResponseEntity<>(
                 new ResponseDto(exportDto, true)
                 , HttpStatus.OK
         );
     }
 
-    @PostMapping("/import/{empresa}/{archivo}")
-    public ResponseEntity<ResponseDto> importExcel(@RequestParam MultipartFile file, @PathVariable Long empresa, @PathVariable Long archivo) {
-        importService.handleExcelImport(empresa, archivo, file);
+    @PostMapping("/import/{empresa}/{archivo}/{anio}")
+    public ResponseEntity<ResponseDto> importExcel(@RequestParam MultipartFile file, @PathVariable Long empresa, @PathVariable Long archivo, @PathVariable Integer anio) {
+        importService.handleExcelImport(empresa, archivo, anio, file);
         return new ResponseEntity<>(
                 new ResponseDto("Datos importados y guardados correctamente.", true)
                 , HttpStatus.OK

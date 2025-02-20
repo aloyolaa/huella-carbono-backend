@@ -25,7 +25,7 @@ public class ImportService {
     private final Map<Long, ImportOperation> importOperations;
 
     @Transactional
-    public void handleExcelImport(Long empresaId, Long archivoId, MultipartFile file) {
+    public void handleExcelImport(Long empresaId, Long archivoId, Integer anio, MultipartFile file) {
         Optional<DatosGenerales> optionalDatosGenerales = dataService.getOptionalByEmpresaAndAnio(empresaId, archivoId);
 
         if (optionalDatosGenerales.isPresent()) {
@@ -33,6 +33,7 @@ public class ImportService {
         }
 
         DatosGenerales datosGenerales = new DatosGenerales();
+        datosGenerales.setAnio(anio);
         datosGenerales.setArchivo(new Archivo(archivoId));
         datosGenerales.setEmpresa(new Empresa(empresaId));
 
