@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.entity.TipoMovilidad;
+import com.towers.huellacarbonobackend.entity.data.TipoMovilidad;
 import com.towers.huellacarbonobackend.repository.TipoMovilidadRepository;
 import com.towers.huellacarbonobackend.service.data.TipoMovilidadService;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.mapper;
 
 import com.towers.huellacarbonobackend.dto.ArchivoDto;
-import com.towers.huellacarbonobackend.entity.Archivo;
+import com.towers.huellacarbonobackend.entity.data.Archivo;
 import org.springframework.stereotype.Service;
 
 @Service

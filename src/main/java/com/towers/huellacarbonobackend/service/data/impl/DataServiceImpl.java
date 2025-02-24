@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
 import com.towers.huellacarbonobackend.dto.DataDto;
-import com.towers.huellacarbonobackend.entity.DatosGenerales;
+import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
 import com.towers.huellacarbonobackend.mapper.DataMapper;
 import com.towers.huellacarbonobackend.repository.DatosGeneralesRepository;
 import com.towers.huellacarbonobackend.service.data.DataService;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Year;
 import java.util.Optional;
 
 @Service

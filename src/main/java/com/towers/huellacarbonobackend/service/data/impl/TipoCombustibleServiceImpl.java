@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
 import com.towers.huellacarbonobackend.dto.TipoCombustibleDto;
-import com.towers.huellacarbonobackend.entity.TipoCombustible;
+import com.towers.huellacarbonobackend.entity.data.TipoCombustible;
 import com.towers.huellacarbonobackend.mapper.TipoCombustibleMapper;
 import com.towers.huellacarbonobackend.repository.TipoCombustibleRepository;
 import com.towers.huellacarbonobackend.service.data.TipoCombustibleService;

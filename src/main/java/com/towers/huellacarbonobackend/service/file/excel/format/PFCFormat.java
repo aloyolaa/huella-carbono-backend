@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.file.excel.format;
 
-import com.towers.huellacarbonobackend.entity.*;
+import com.towers.huellacarbonobackend.entity.data.*;
 import com.towers.huellacarbonobackend.service.data.TipoPFCService;
 import com.towers.huellacarbonobackend.service.file.excel.exp.ExportOperation;
 import com.towers.huellacarbonobackend.service.file.excel.imp.ImportOperation;

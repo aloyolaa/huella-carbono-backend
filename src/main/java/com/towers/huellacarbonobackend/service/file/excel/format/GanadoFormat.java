@@ -1,9 +1,9 @@
 package com.towers.huellacarbonobackend.service.file.excel.format;
 
-import com.towers.huellacarbonobackend.entity.DatosGenerales;
-import com.towers.huellacarbonobackend.entity.Detalle;
-import com.towers.huellacarbonobackend.entity.Ganado;
-import com.towers.huellacarbonobackend.entity.GanadoData;
+import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
+import com.towers.huellacarbonobackend.entity.data.Detalle;
+import com.towers.huellacarbonobackend.entity.data.Ganado;
+import com.towers.huellacarbonobackend.entity.data.GanadoData;
 import com.towers.huellacarbonobackend.service.data.TipoAnimalService;
 import com.towers.huellacarbonobackend.service.data.TipoTratamientoService;
 import com.towers.huellacarbonobackend.service.file.excel.exp.ExportOperation;

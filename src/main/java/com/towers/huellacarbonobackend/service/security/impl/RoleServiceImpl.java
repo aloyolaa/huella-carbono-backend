@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.security.impl;
 
-import com.towers.huellacarbonobackend.entity.Role;
+import com.towers.huellacarbonobackend.entity.data.Role;
 import com.towers.huellacarbonobackend.exception.DataAccessExceptionImpl;
 import com.towers.huellacarbonobackend.repository.RoleRepository;
 import com.towers.huellacarbonobackend.service.security.RoleService;

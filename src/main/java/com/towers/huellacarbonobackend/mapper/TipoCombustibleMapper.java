@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.mapper;
 
 import com.towers.huellacarbonobackend.dto.TipoCombustibleDto;
-import com.towers.huellacarbonobackend.entity.TipoCombustible;
+import com.towers.huellacarbonobackend.entity.data.TipoCombustible;
 import org.springframework.stereotype.Service;
 
 @Service

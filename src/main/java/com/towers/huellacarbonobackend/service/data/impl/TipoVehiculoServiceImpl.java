@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.entity.TipoVehiculo;
+import com.towers.huellacarbonobackend.entity.data.TipoVehiculo;
 import com.towers.huellacarbonobackend.repository.TipoVehiculoRepository;
 import com.towers.huellacarbonobackend.service.data.TipoVehiculoService;
 import jakarta.persistence.EntityNotFoundException;

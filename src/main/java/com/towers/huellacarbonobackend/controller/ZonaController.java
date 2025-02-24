@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.controller;
 
 import com.towers.huellacarbonobackend.dto.ResponseDto;
-import com.towers.huellacarbonobackend.entity.Zona;
+import com.towers.huellacarbonobackend.entity.data.Zona;
 import com.towers.huellacarbonobackend.service.data.ZonaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

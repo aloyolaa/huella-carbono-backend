@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.file;
 
-import com.towers.huellacarbonobackend.entity.*;
+import com.towers.huellacarbonobackend.entity.data.*;
 import com.towers.huellacarbonobackend.service.data.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;

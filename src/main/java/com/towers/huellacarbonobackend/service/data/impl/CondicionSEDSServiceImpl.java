@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.entity.CondicionSEDS;
+import com.towers.huellacarbonobackend.entity.data.CondicionSEDS;
 import com.towers.huellacarbonobackend.repository.CondicionSEDSRepository;
 import com.towers.huellacarbonobackend.service.data.CondicionSEDSService;
 import jakarta.persistence.EntityNotFoundException;

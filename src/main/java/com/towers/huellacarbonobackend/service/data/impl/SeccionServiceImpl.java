@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.entity.Seccion;
+import com.towers.huellacarbonobackend.entity.data.Seccion;
 import com.towers.huellacarbonobackend.repository.SeccionRepository;
 import com.towers.huellacarbonobackend.service.data.SeccionService;
 import lombok.RequiredArgsConstructor;

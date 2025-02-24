@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.repository;
 
-import com.towers.huellacarbonobackend.entity.CondicionSEDS;
+import com.towers.huellacarbonobackend.entity.data.CondicionSEDS;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

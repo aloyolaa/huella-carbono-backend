@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.service.file.excel;
 
-import com.towers.huellacarbonobackend.entity.DatosGenerales;
-import com.towers.huellacarbonobackend.entity.Meses;
+import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
+import com.towers.huellacarbonobackend.entity.data.Meses;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;

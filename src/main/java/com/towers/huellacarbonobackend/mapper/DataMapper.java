@@ -2,10 +2,13 @@ package com.towers.huellacarbonobackend.mapper;
 
 import com.towers.huellacarbonobackend.dto.DataDto;
 import com.towers.huellacarbonobackend.dto.GanadoDataDto;
-import com.towers.huellacarbonobackend.entity.Archivo;
-import com.towers.huellacarbonobackend.entity.DatosGenerales;
-import com.towers.huellacarbonobackend.entity.Empresa;
-import com.towers.huellacarbonobackend.entity.GanadoData;
+import com.towers.huellacarbonobackend.entity.data.Archivo;
+import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
+import com.towers.huellacarbonobackend.entity.data.Empresa;
+import com.towers.huellacarbonobackend.entity.data.GanadoData;
+import com.towers.huellacarbonobackend.service.calculate.ConsumoElectricidadCalculate;
+import com.towers.huellacarbonobackend.service.calculate.GeneracionYOtraEnergiaCalculate;
+import com.towers.huellacarbonobackend.service.calculate.PerdidasCalculate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DataMapper {
     private final DetalleMapper detalleMapper;
+    private final GeneracionYOtraEnergiaCalculate generacionYOtraEnergiaCalculate;
+    private final ConsumoElectricidadCalculate consumoElectricidadCalculate;
+    private final PerdidasCalculate perdidasCalculate;
 
     public DatosGenerales toDatosGenerales(DataDto dataDto, Long empresa, Long archivo) {
         DatosGenerales datosGenerales = new DatosGenerales();
@@ -41,9 +47,19 @@ public class DataMapper {
                 datosGenerales.getLocacion(),
                 datosGenerales.getComentarios(),
                 datosGenerales.getAnio(),
+                getEmision(datosGenerales),
                 datosGenerales.getGanadoData() != null ?
                         new GanadoDataDto(datosGenerales.getGanadoData().getId(), datosGenerales.getGanadoData().getTemperatura()) : null,
                 datosGenerales.getDetalles().stream().map(detalleMapper::toDetalleDto).toList()
         );
+    }
+
+    private double getEmision(DatosGenerales datosGenerales) {
+        return switch (datosGenerales.getArchivo().getId().intValue()) {
+            case 18 -> consumoElectricidadCalculate.calculate(datosGenerales);
+            case 19, 20 -> perdidasCalculate.calculate(datosGenerales);
+            case 21 -> generacionYOtraEnergiaCalculate.calculate(datosGenerales);
+            default -> 0.0;
+        };
     }
 }

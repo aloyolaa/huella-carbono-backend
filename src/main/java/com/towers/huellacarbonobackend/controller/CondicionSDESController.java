@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.controller;
 
 import com.towers.huellacarbonobackend.dto.ResponseDto;
-import com.towers.huellacarbonobackend.entity.CondicionSEDS;
+import com.towers.huellacarbonobackend.entity.data.CondicionSEDS;
 import com.towers.huellacarbonobackend.service.data.CondicionSEDSService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

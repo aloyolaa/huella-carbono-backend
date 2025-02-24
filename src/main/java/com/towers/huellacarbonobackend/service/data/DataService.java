@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.service.data;
 
 import com.towers.huellacarbonobackend.dto.DataDto;
-import com.towers.huellacarbonobackend.entity.DatosGenerales;
+import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
 
 import java.util.Optional;
 

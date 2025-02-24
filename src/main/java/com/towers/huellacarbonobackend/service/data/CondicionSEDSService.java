@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data;
 
-import com.towers.huellacarbonobackend.entity.CondicionSEDS;
+import com.towers.huellacarbonobackend.entity.data.CondicionSEDS;
 
 import java.util.List;
 

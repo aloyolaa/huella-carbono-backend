@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data;
 
-import com.towers.huellacarbonobackend.entity.TipoRefrigerante;
+import com.towers.huellacarbonobackend.entity.data.TipoRefrigerante;
 
 import java.util.List;
 

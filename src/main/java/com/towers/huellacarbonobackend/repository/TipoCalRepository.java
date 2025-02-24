@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.repository;
 
-import com.towers.huellacarbonobackend.entity.TipoCal;
+import com.towers.huellacarbonobackend.entity.data.TipoCal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

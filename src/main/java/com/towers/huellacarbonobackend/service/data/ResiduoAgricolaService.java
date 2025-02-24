@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data;
 
-import com.towers.huellacarbonobackend.entity.ResiduoAgricola;
+import com.towers.huellacarbonobackend.entity.data.ResiduoAgricola;
 
 import java.util.List;
 

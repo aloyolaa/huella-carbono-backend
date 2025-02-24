@@ -1,9 +1,9 @@
 package com.towers.huellacarbonobackend.service.file.excel.format;
 
-import com.towers.huellacarbonobackend.entity.DatosGenerales;
-import com.towers.huellacarbonobackend.entity.Detalle;
-import com.towers.huellacarbonobackend.entity.TipoTransporte;
-import com.towers.huellacarbonobackend.entity.TransporteVehiculo;
+import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
+import com.towers.huellacarbonobackend.entity.data.Detalle;
+import com.towers.huellacarbonobackend.entity.data.TipoTransporte;
+import com.towers.huellacarbonobackend.entity.data.TransporteVehiculo;
 import com.towers.huellacarbonobackend.service.data.TipoTransporteService;
 import com.towers.huellacarbonobackend.service.file.excel.exp.ExportOperation;
 import com.towers.huellacarbonobackend.service.file.excel.imp.ImportOperation;

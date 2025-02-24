@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.entity.TipoRefrigerante;
+import com.towers.huellacarbonobackend.entity.data.TipoRefrigerante;
 import com.towers.huellacarbonobackend.repository.TipoRefrigeranteRepository;
 import com.towers.huellacarbonobackend.service.data.TipoRefrigeranteService;
 import jakarta.persistence.EntityNotFoundException;

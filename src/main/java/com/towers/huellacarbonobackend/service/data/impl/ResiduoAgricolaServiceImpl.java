@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.entity.ResiduoAgricola;
+import com.towers.huellacarbonobackend.entity.data.ResiduoAgricola;
 import com.towers.huellacarbonobackend.repository.ResiduoAgricolaRepository;
 import com.towers.huellacarbonobackend.service.data.ResiduoAgricolaService;
 import jakarta.persistence.EntityNotFoundException;

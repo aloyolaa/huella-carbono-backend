@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.security.impl;
 
-import com.towers.huellacarbonobackend.entity.Usuario;
+import com.towers.huellacarbonobackend.entity.data.Usuario;
 import com.towers.huellacarbonobackend.exception.DataAccessExceptionImpl;
 import com.towers.huellacarbonobackend.repository.UsuarioRepository;
 import com.towers.huellacarbonobackend.service.security.UsuarioService;

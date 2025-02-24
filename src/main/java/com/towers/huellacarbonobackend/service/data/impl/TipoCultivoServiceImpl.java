@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.entity.TipoCultivo;
+import com.towers.huellacarbonobackend.entity.data.TipoCultivo;
 import com.towers.huellacarbonobackend.repository.TipoCultivoRepository;
 import com.towers.huellacarbonobackend.service.data.TipoCultivoService;
 import jakarta.persistence.EntityNotFoundException;
