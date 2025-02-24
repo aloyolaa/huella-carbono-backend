@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
 import com.towers.huellacarbonobackend.dto.ActividadDto;
-import com.towers.huellacarbonobackend.entity.Actividad;
+import com.towers.huellacarbonobackend.entity.data.Actividad;
 import com.towers.huellacarbonobackend.mapper.ActividadMapper;
 import com.towers.huellacarbonobackend.repository.ActividadRepository;
 import com.towers.huellacarbonobackend.service.data.ActividadService;

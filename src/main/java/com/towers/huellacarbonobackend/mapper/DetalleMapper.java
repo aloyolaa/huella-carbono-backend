@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.mapper;
 
 import com.towers.huellacarbonobackend.dto.*;
-import com.towers.huellacarbonobackend.entity.*;
+import com.towers.huellacarbonobackend.entity.data.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,8 @@
 package com.towers.huellacarbonobackend.service.file.excel.imp;
 
-import com.towers.huellacarbonobackend.entity.Archivo;
-import com.towers.huellacarbonobackend.entity.DatosGenerales;
-import com.towers.huellacarbonobackend.entity.Empresa;
+import com.towers.huellacarbonobackend.entity.data.Archivo;
+import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
+import com.towers.huellacarbonobackend.entity.data.Empresa;
 import com.towers.huellacarbonobackend.service.data.DataService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Sheet;

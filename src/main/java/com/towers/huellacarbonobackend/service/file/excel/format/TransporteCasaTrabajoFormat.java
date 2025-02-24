@@ -1,9 +1,9 @@
 package com.towers.huellacarbonobackend.service.file.excel.format;
 
-import com.towers.huellacarbonobackend.entity.DatosGenerales;
-import com.towers.huellacarbonobackend.entity.Detalle;
-import com.towers.huellacarbonobackend.entity.TipoMovilidad;
-import com.towers.huellacarbonobackend.entity.TransporteCasaTrabajo;
+import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
+import com.towers.huellacarbonobackend.entity.data.Detalle;
+import com.towers.huellacarbonobackend.entity.data.TipoMovilidad;
+import com.towers.huellacarbonobackend.entity.data.TransporteCasaTrabajo;
 import com.towers.huellacarbonobackend.service.file.excel.exp.ExportOperation;
 import com.towers.huellacarbonobackend.service.file.excel.imp.ImportOperation;
 import lombok.RequiredArgsConstructor;

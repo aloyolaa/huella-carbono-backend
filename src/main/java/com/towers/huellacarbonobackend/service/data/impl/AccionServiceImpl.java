@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.entity.Accion;
+import com.towers.huellacarbonobackend.entity.data.Accion;
 import com.towers.huellacarbonobackend.repository.AccionRepository;
 import com.towers.huellacarbonobackend.service.data.AccionService;
 import jakarta.persistence.EntityNotFoundException;

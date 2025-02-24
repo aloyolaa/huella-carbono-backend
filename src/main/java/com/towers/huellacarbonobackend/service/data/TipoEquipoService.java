@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data;
 
-import com.towers.huellacarbonobackend.entity.TipoEquipo;
+import com.towers.huellacarbonobackend.entity.data.TipoEquipo;
 
 import java.util.List;
 

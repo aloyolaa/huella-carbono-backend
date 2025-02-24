@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.service.file;
 
 import com.towers.huellacarbonobackend.dto.ExportDto;
-import com.towers.huellacarbonobackend.entity.*;
+import com.towers.huellacarbonobackend.entity.data.*;
 import com.towers.huellacarbonobackend.service.data.DataService;
 import com.towers.huellacarbonobackend.service.data.SeccionService;
 import com.towers.huellacarbonobackend.service.file.ftp.FtpFileStorageService;

@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.file.excel.format;
 
-import com.towers.huellacarbonobackend.entity.*;
+import com.towers.huellacarbonobackend.entity.data.*;
 import com.towers.huellacarbonobackend.service.data.AccionService;
 import com.towers.huellacarbonobackend.service.data.ActividadService;
 import com.towers.huellacarbonobackend.service.data.SeccionService;

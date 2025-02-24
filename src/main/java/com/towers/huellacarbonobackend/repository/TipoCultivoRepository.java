@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.repository;
 
-import com.towers.huellacarbonobackend.entity.TipoCultivo;
+import com.towers.huellacarbonobackend.entity.data.TipoCultivo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.security.impl;
 
-import com.towers.huellacarbonobackend.entity.Usuario;
+import com.towers.huellacarbonobackend.entity.data.Usuario;
 import com.towers.huellacarbonobackend.service.security.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

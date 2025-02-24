@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.repository;
 
-import com.towers.huellacarbonobackend.entity.Actividad;
+import com.towers.huellacarbonobackend.entity.data.Actividad;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

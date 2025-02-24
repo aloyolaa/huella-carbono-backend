@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.security;
 
-import com.towers.huellacarbonobackend.entity.Role;
+import com.towers.huellacarbonobackend.entity.data.Role;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.entity.Zona;
+import com.towers.huellacarbonobackend.entity.data.Zona;
 import com.towers.huellacarbonobackend.repository.ZonaRepository;
 import com.towers.huellacarbonobackend.service.data.ZonaService;
 import jakarta.persistence.EntityNotFoundException;

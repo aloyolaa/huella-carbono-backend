@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.entity.TipoCal;
+import com.towers.huellacarbonobackend.entity.data.TipoCal;
 import com.towers.huellacarbonobackend.repository.TipoCalRepository;
 import com.towers.huellacarbonobackend.service.data.TipoCalService;
 import jakarta.persistence.EntityNotFoundException;

@@ -1,8 +1,8 @@
 package com.towers.huellacarbonobackend.service.file.excel.exp;
 
 import com.towers.huellacarbonobackend.dto.ExportDto;
-import com.towers.huellacarbonobackend.entity.Archivo;
-import com.towers.huellacarbonobackend.entity.DatosGenerales;
+import com.towers.huellacarbonobackend.entity.data.Archivo;
+import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
 import com.towers.huellacarbonobackend.service.data.DataService;
 import com.towers.huellacarbonobackend.service.file.ftp.FtpFileStorageService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Year;
 import java.util.Base64;
 import java.util.Map;
 

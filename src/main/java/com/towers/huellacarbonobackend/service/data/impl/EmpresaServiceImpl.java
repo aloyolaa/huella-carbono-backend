@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
 import com.towers.huellacarbonobackend.dto.ArchivoDto;
-import com.towers.huellacarbonobackend.entity.Empresa;
+import com.towers.huellacarbonobackend.entity.data.Empresa;
 import com.towers.huellacarbonobackend.exception.DataAccessExceptionImpl;
 import com.towers.huellacarbonobackend.mapper.ArchivoMapper;
 import com.towers.huellacarbonobackend.repository.EmpresaRepository;

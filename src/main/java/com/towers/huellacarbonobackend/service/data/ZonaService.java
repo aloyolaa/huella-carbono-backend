@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data;
 
-import com.towers.huellacarbonobackend.entity.Zona;
+import com.towers.huellacarbonobackend.entity.data.Zona;
 
 import java.util.List;
 

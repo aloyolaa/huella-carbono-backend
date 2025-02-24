@@ -1,8 +1,8 @@
 package com.towers.huellacarbonobackend.mapper;
 
 import com.towers.huellacarbonobackend.dto.GeneracionResiduosDto;
-import com.towers.huellacarbonobackend.entity.CondicionSEDS;
-import com.towers.huellacarbonobackend.entity.GeneracionResiduos;
+import com.towers.huellacarbonobackend.entity.data.CondicionSEDS;
+import com.towers.huellacarbonobackend.entity.data.GeneracionResiduos;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

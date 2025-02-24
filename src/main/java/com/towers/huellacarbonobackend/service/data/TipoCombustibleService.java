@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.service.data;
 
 import com.towers.huellacarbonobackend.dto.TipoCombustibleDto;
-import com.towers.huellacarbonobackend.entity.TipoCombustible;
+import com.towers.huellacarbonobackend.entity.data.TipoCombustible;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.entity.TipoPFC;
+import com.towers.huellacarbonobackend.entity.data.TipoPFC;
 import com.towers.huellacarbonobackend.repository.TipoPFCRepository;
 import com.towers.huellacarbonobackend.service.data.TipoPFCService;
 import jakarta.persistence.EntityNotFoundException;

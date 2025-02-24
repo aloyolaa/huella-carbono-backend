@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data;
 
-import com.towers.huellacarbonobackend.entity.Seccion;
+import com.towers.huellacarbonobackend.entity.data.Seccion;
 
 import java.util.Optional;
 

@@ -3,7 +3,7 @@ package com.towers.huellacarbonobackend.configuration.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.towers.huellacarbonobackend.dto.ErrorResponse;
 import com.towers.huellacarbonobackend.dto.ResponseDto;
-import com.towers.huellacarbonobackend.entity.Usuario;
+import com.towers.huellacarbonobackend.entity.data.Usuario;
 import com.towers.huellacarbonobackend.exception.UserAuthenticationException;
 import com.towers.huellacarbonobackend.service.security.UsuarioService;
 import io.jsonwebtoken.Claims;

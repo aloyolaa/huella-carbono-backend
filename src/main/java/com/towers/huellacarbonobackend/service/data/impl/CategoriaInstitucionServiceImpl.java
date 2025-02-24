@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.entity.CategoriaInstitucion;
+import com.towers.huellacarbonobackend.entity.data.CategoriaInstitucion;
 import com.towers.huellacarbonobackend.repository.CategoriaInstitucionRepository;
 import com.towers.huellacarbonobackend.service.data.CategoriaInstitucionService;
 import lombok.RequiredArgsConstructor;

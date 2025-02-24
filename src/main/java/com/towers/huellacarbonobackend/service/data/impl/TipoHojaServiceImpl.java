@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.entity.TipoHoja;
+import com.towers.huellacarbonobackend.entity.data.TipoHoja;
 import com.towers.huellacarbonobackend.repository.TipoHojaRepository;
 import com.towers.huellacarbonobackend.service.data.TipoHojaService;
 import lombok.RequiredArgsConstructor;

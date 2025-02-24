@@ -1,7 +1,7 @@
 package com.towers.huellacarbonobackend.controller;
 
 import com.towers.huellacarbonobackend.dto.ResponseDto;
-import com.towers.huellacarbonobackend.entity.TipoSuelo;
+import com.towers.huellacarbonobackend.entity.data.TipoSuelo;
 import com.towers.huellacarbonobackend.service.data.TipoSueloService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

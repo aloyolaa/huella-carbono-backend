@@ -1,8 +1,8 @@
 package com.towers.huellacarbonobackend.mapper;
 
 import com.towers.huellacarbonobackend.dto.GeneracionResiduosDetalleDto;
-import com.towers.huellacarbonobackend.entity.GeneracionResiduos;
-import com.towers.huellacarbonobackend.entity.GeneracionResiduosDetalle;
+import com.towers.huellacarbonobackend.entity.data.GeneracionResiduos;
+import com.towers.huellacarbonobackend.entity.data.GeneracionResiduosDetalle;
 import org.springframework.stereotype.Service;
 
 @Service
