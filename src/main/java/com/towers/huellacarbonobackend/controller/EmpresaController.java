@@ -1,16 +1,15 @@
 package com.towers.huellacarbonobackend.controller;
 
 import com.towers.huellacarbonobackend.dto.ArchivoDto;
+import com.towers.huellacarbonobackend.dto.DataDto;
 import com.towers.huellacarbonobackend.dto.ResponseDto;
-import com.towers.huellacarbonobackend.service.data.EmpresaService;
+import com.towers.huellacarbonobackend.service.data.EmpresaArchivoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,15 +17,29 @@ import java.util.List;
 @RequestMapping("/empresa")
 @RequiredArgsConstructor
 public class EmpresaController {
-    private final EmpresaService empresaService;
+    private final EmpresaArchivoService empresaArchivoService;
 
-    @GetMapping("/archivo/{id}")
+    @GetMapping("/archivo/{id}/{anio}")
     @PreAuthorize("hasAuthority('REGISTER')")
-    public ResponseEntity<ResponseDto> getArchivos(@PathVariable Long id) {
-        List<ArchivoDto> archivos = empresaService.getArchivos(id);
+    public ResponseEntity<ResponseDto> getArchivos(@PathVariable Long id, @PathVariable Integer anio) {
+        List<ArchivoDto> archivos = empresaArchivoService.getArchivosByAnio(id, anio);
+        boolean accesos = !archivos.isEmpty();
         return new ResponseEntity<>(
-                new ResponseDto(archivos, true),
+                new ResponseDto(
+                        new AccesosDto(accesos, archivos)
+                        , true),
                 HttpStatus.OK
+        );
+    }
+
+    @PostMapping("/archivo/save/{id}/{anio}")
+    @PreAuthorize("hasAuthority('REGISTER')")
+    public ResponseEntity<ResponseDto> saveArchivos(@RequestBody List<Integer> archivos, @PathVariable Long id, @PathVariable Integer anio) {
+        empresaArchivoService.save(archivos, id, anio);
+        System.out.println(archivos);
+        return new ResponseEntity<>(
+                new ResponseDto("Accesos guardados correctamente.", true)
+                , HttpStatus.OK
         );
     }
 }

@@ -4,6 +4,7 @@ import com.towers.huellacarbonobackend.entity.data.Usuario;
 import com.towers.huellacarbonobackend.service.security.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario usuario = usuarioService.findByUsername(username);
 
-        return new org.springframework.security.core.userdetails.User(
+        return new User(
                 usuario.getUsername(),
                 usuario.getPassword(),
                 usuario.getHabilitado(),

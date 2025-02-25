@@ -4,6 +4,7 @@ import com.towers.huellacarbonobackend.dto.ArchivoDto;
 import com.towers.huellacarbonobackend.entity.data.Empresa;
 import com.towers.huellacarbonobackend.exception.DataAccessExceptionImpl;
 import com.towers.huellacarbonobackend.mapper.ArchivoMapper;
+import com.towers.huellacarbonobackend.repository.EmpresaArchivoRepository;
 import com.towers.huellacarbonobackend.repository.EmpresaRepository;
 import com.towers.huellacarbonobackend.service.data.EmpresaService;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmpresaServiceImpl implements EmpresaService {
     private final EmpresaRepository empresaRepository;
+    private final EmpresaArchivoRepository empresaArchivoRepository;
     private final ArchivoMapper archivoMapper;
 
     @Override
@@ -33,12 +35,12 @@ public class EmpresaServiceImpl implements EmpresaService {
         }
     }
 
-    @Override
-    public List<ArchivoDto> getArchivos(Long id) {
+    /*@Override
+    public List<ArchivoDto> getArchivosByAnio(Long id, Integer anio) {
         Empresa byId = getById(id);
         return byId.getArchivos().stream()
                 .map(archivoMapper::toArchivoDto)
                 .sorted(Comparator.comparingLong(ArchivoDto::id))
                 .toList();
-    }
+    }*/
 }

@@ -19,14 +19,23 @@ public class Empresa {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "nombre", nullable = false)
-    private String nombre;
+    @Column(name = "razon_social", nullable = false)
+    private String razonSocial;
 
-    @ManyToMany
-    @JoinTable(name = "empresa_archivo",
-            joinColumns = @JoinColumn(name = "empresa_id"),
-            inverseJoinColumns = @JoinColumn(name = "archivo_id"))
-    private Set<Archivo> archivos = new LinkedHashSet<>();
+    @Column(name = "ruc", nullable = false)
+    private String ruc;
+
+    @Column(name = "direccion", nullable = false)
+    private String direccion;
+
+    @Column(name = "telefono", nullable = false)
+    private Double telefono;
+
+    @Column(name = "correo", nullable = false)
+    private String correo;
+
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EmpresaArchivo> empresaArchivos = new LinkedHashSet<>();
 
     public Empresa(Long id) {
         this.id = id;

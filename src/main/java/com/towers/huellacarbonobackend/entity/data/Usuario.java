@@ -32,6 +32,9 @@ public class Usuario {
     @Column(name = "habilitado")
     private Boolean habilitado;
 
+    @Column(name = "es_nuevo")
+    private Boolean esNuevo;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
@@ -43,5 +46,9 @@ public class Usuario {
     @PrePersist
     public void prePersist() {
         this.habilitado = true;
+        this.esNuevo = true;
+        Role r = new Role();
+        r.setId(1L);
+        this.role = r;
     }
 }
