@@ -8,5 +8,5 @@ import java.util.List;
 public interface EmpresaService {
     Empresa getById(Long id);
 
-    List<ArchivoDto> getArchivos(Long id);
+    //List<ArchivoDto> getArchivosByAnio(Long id, Integer anio);
 }
