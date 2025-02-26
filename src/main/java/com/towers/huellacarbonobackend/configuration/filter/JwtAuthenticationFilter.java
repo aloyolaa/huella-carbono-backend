@@ -2,6 +2,7 @@ package com.towers.huellacarbonobackend.configuration.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.towers.huellacarbonobackend.dto.ErrorResponse;
+import com.towers.huellacarbonobackend.dto.LoginResponse;
 import com.towers.huellacarbonobackend.dto.ResponseDto;
 import com.towers.huellacarbonobackend.entity.data.Usuario;
 import com.towers.huellacarbonobackend.exception.UserAuthenticationException;
@@ -60,28 +61,42 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         Usuario usuario = usuarioService.findByUsername(principal.getUsername());
 
-        Claims claims = Jwts.claims()
-                .add("firstName", usuario.getNombre())
-                .add("lastName", usuario.getApellido())
-                .add("company_id", usuario.getEmpresa().getId())
-                .add("company", usuario.getEmpresa().getNombre())
-                .add("authorities", new ObjectMapper().writeValueAsString(principal.getAuthorities()))
-                .build();
-        String token = Jwts.builder()
-                .subject(usuario.getUsername())
-                .claims(claims)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 7200000)) // 2 horas
-                .signWith(SECRET_KEY)
-                .compact();
-        response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + token);
-        Map<String, Object> body = new HashMap<>();
-        body.put("token", token);
-        body.put("message", "Has iniciado sesión con éxito.");
-        ResponseDto responseDto = new ResponseDto(body, true);
-        response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto));
-        response.setContentType(CONTENT_TYPE);
-        response.setStatus(200);
+        if (Boolean.FALSE.equals(usuario.getEsNuevo())) {
+            Claims claims = Jwts.claims()
+                    .add("firstName", usuario.getNombre())
+                    .add("lastName", usuario.getApellido())
+                    .add("company_id", usuario.getEmpresa().getId())
+                    .add("company", usuario.getEmpresa().getRazonSocial())
+                    .add("authorities", new ObjectMapper().writeValueAsString(principal.getAuthorities()))
+                    .build();
+            String token = Jwts.builder()
+                    .subject(usuario.getUsername())
+                    .claims(claims)
+                    .issuedAt(new Date())
+                    .expiration(new Date(System.currentTimeMillis() + 7200000)) // 2 horas
+                    .signWith(SECRET_KEY)
+                    .compact();
+            response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + token);
+            LoginResponse loginResponse = new LoginResponse(
+                    "Has iniciado sesión con éxito.",
+                    usuario.getEsNuevo(),
+                    token
+            );
+            ResponseDto responseDto = new ResponseDto(loginResponse, true);
+            response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto));
+            response.setContentType(CONTENT_TYPE);
+            response.setStatus(200);
+        } else {
+            LoginResponse loginResponse = new LoginResponse(
+                    "El usuario es nuevo.",
+                    usuario.getEsNuevo(),
+                    null
+            );
+            ResponseDto responseDto = new ResponseDto(loginResponse, true);
+            response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto));
+            response.setContentType(CONTENT_TYPE);
+            response.setStatus(200);
+        }
     }
 
     @Override
