@@ -17,9 +17,9 @@ public class FileController {
     private final ExportService exportService;
     private final ImportService importService;
 
-    @GetMapping("/export/{archivoId}/{anio}")
-    public ResponseEntity<ResponseDto> exportToExcel(@PathVariable Long archivoId, @PathVariable Integer anio) {
-        ExportDto exportDto = exportService.handleExcelExport(archivoId, anio);
+    @GetMapping("/export/{empresa}/{archivo}/{anio}")
+    public ResponseEntity<ResponseDto> exportToExcel(@PathVariable Long empresa, @PathVariable Long archivo, @PathVariable Integer anio) {
+        ExportDto exportDto = exportService.handleExcelExport(empresa, archivo, anio);
         return new ResponseEntity<>(
                 new ResponseDto(exportDto, true)
                 , HttpStatus.OK

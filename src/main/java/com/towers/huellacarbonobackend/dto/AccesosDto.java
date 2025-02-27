@@ -1,6 +1,4 @@
-package com.towers.huellacarbonobackend.controller;
-
-import com.towers.huellacarbonobackend.dto.ArchivoDto;
+package com.towers.huellacarbonobackend.dto;
 
 import java.util.List;
 
