@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Configuración de contraseña</title>
+</head>
+<body>
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
+    <h1 style="color: #333;">Configuración de contraseña</h1>
+
+    <p>Estimado cliente de <strong th:text="${razonSocial}">Su Empresa</strong>,</p>
+
+    <p>Su cuenta ha sido creada exitosamente en nuestro sistema. Para completar el proceso de registro, necesita configurar su contraseña.</p>
+
+    <div style="background-color: #f8f9fa; padding: 15px; margin: 20px 0; border-radius: 5px;">
+        <p><strong>Nombre de usuario:</strong> <span th:text="${username}">username</span></p>
+        <p><strong>Contraseña temporal:</strong> <span th:text="${password}">password</span> (Debe cambiarla usando el enlace a continuación.)</p>
+    </div>
+
+    <p>Por favor, haga clic en el siguiente enlace para establecer su nueva contraseña:</p>
+
+    <p style="text-align: center; margin: 30px 0;">
+        <a th:href="${urlRestablecimiento}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Configurar contraseña</a>
+    </p>
+
+    <p>Este enlace expirará en 24 horas. Si no solicitó esta cuenta, puede ignorar este correo.</p>
+
+    <p>Atentamente,<br>El equipo de soporte</p>
+</div>
+</body>
+</html>

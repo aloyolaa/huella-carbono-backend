@@ -1,10 +1,11 @@
 package com.towers.huellacarbonobackend.controller;
 
+import com.towers.huellacarbonobackend.dto.AccesosDto;
 import com.towers.huellacarbonobackend.dto.ArchivoDto;
-import com.towers.huellacarbonobackend.dto.DataDto;
+import com.towers.huellacarbonobackend.dto.EmpresaDto;
 import com.towers.huellacarbonobackend.dto.ResponseDto;
 import com.towers.huellacarbonobackend.service.data.EmpresaArchivoService;
-import jakarta.validation.Valid;
+import com.towers.huellacarbonobackend.service.data.EmpresaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/empresa")
 @RequiredArgsConstructor
 public class EmpresaController {
+    private final EmpresaService empresaService;
     private final EmpresaArchivoService empresaArchivoService;
 
     @GetMapping("/archivo/{id}/{anio}")
@@ -39,6 +41,15 @@ public class EmpresaController {
         System.out.println(archivos);
         return new ResponseEntity<>(
                 new ResponseDto("Accesos guardados correctamente.", true)
+                , HttpStatus.OK
+        );
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<ResponseDto> registrarEmpresa(@RequestBody EmpresaDto empresaDto) {
+        empresaService.registrarEmpresa(empresaDto);
+        return new ResponseEntity<>(
+                new ResponseDto("Empresa registrada correctamente. Se ha enviado un correo para configurar la contraseña.", true)
                 , HttpStatus.OK
         );
     }

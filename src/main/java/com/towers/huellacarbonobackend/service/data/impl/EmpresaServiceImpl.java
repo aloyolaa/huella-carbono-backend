@@ -1,12 +1,16 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
 import com.towers.huellacarbonobackend.dto.ArchivoDto;
+import com.towers.huellacarbonobackend.dto.EmpresaDto;
 import com.towers.huellacarbonobackend.entity.data.Empresa;
+import com.towers.huellacarbonobackend.entity.data.Usuario;
 import com.towers.huellacarbonobackend.exception.DataAccessExceptionImpl;
 import com.towers.huellacarbonobackend.mapper.ArchivoMapper;
 import com.towers.huellacarbonobackend.repository.EmpresaArchivoRepository;
 import com.towers.huellacarbonobackend.repository.EmpresaRepository;
 import com.towers.huellacarbonobackend.service.data.EmpresaService;
+import com.towers.huellacarbonobackend.service.security.EmailService;
+import com.towers.huellacarbonobackend.service.security.UsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
@@ -16,13 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class EmpresaServiceImpl implements EmpresaService {
     private final EmpresaRepository empresaRepository;
-    private final EmpresaArchivoRepository empresaArchivoRepository;
-    private final ArchivoMapper archivoMapper;
+    private final UsuarioService usuarioService;
+    private final EmailService emailService;
 
     @Override
     @Transactional(readOnly = true)
@@ -35,12 +40,37 @@ public class EmpresaServiceImpl implements EmpresaService {
         }
     }
 
-    /*@Override
-    public List<ArchivoDto> getArchivosByAnio(Long id, Integer anio) {
-        Empresa byId = getById(id);
-        return byId.getArchivos().stream()
-                .map(archivoMapper::toArchivoDto)
-                .sorted(Comparator.comparingLong(ArchivoDto::id))
-                .toList();
-    }*/
+    @Override
+    @Transactional
+    public void registrarEmpresa(EmpresaDto empresaDto) {
+        if (empresaRepository.existsByRuc(empresaDto.ruc())) {
+            throw new DataAccessExceptionImpl("Ya existe una empresa con este RUC");
+        }
+
+        if (empresaRepository.existsByCorreo(empresaDto.correo())) {
+            throw new DataAccessExceptionImpl("Ya existe una empresa con este correo");
+        }
+
+        Empresa empresa = new Empresa();
+        empresa.setRazonSocial(empresaDto.razonSocial());
+        empresa.setRuc(empresaDto.ruc());
+        empresa.setDireccion(empresaDto.direccion());
+        empresa.setTelefono(empresaDto.telefono());
+        empresa.setCorreo(empresaDto.correo());
+
+        empresaRepository.save(empresa);
+
+        String password = generarPasswordAleatorio();
+
+        // Creamos el usuario asociado a la empresa
+        Usuario usuario = usuarioService.crearUsuarioParaEmpresa(empresa, password);
+
+        // Enviamos el correo de confirmación
+        emailService.enviarCorreoRestablecimiento(usuario, password);
+    }
+
+    @Override
+    public String generarPasswordAleatorio() {
+        return UUID.randomUUID().toString().substring(0, 10);
+    }
 }

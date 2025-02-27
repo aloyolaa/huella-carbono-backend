@@ -27,7 +27,6 @@ public class DataServiceImpl implements DataService {
     @Override
     @Transactional
     public void save(DataDto dataDto, Long empresa, Long archivo) {
-        System.out.println("id: " + dataDto.id());
         datosGeneralesRepository.save(dataMapper.toDatosGenerales(dataDto, empresa, archivo));
     }
 
@@ -48,14 +47,14 @@ public class DataServiceImpl implements DataService {
     public DataDto getByEmpresaAndAnio(Long empresaId, Long archivo, Integer anio) {
         return getOptionalByEmpresaAndAnio(empresaId, archivo, anio)
                 .map(dataMapper::toDataDto)
-                .orElseThrow(() -> new EntityNotFoundException("No hay datos registrados para el presente año."));
+                .orElseThrow(() -> new EntityNotFoundException("No hay datos registrados para el año " + anio));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public DatosGenerales getByArchivoAndAnio(Long archivo, Integer anio) {
-        return datosGeneralesRepository.findByArchivoAndAnio(archivo, anio)
-                .orElseThrow(() -> new EntityNotFoundException("No hay datos registrados para el presente año."));
+    public DatosGenerales getByArchivoAndAnio(Long empresa, Long archivo, Integer anio) {
+        return datosGeneralesRepository.findByEmpresaAndAnio(anio, empresa, archivo)
+                .orElseThrow(() -> new EntityNotFoundException("No hay datos registrados para el año " + anio));
     }
 
     @Override
