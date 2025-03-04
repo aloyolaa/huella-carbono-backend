@@ -56,9 +56,9 @@ public class DataMapper {
 
     private double getEmision(DatosGenerales datosGenerales) {
         return switch (datosGenerales.getArchivo().getId().intValue()) {
+            case 1, 21 -> generacionYOtraEnergiaCalculate.calculate(datosGenerales);
             case 18 -> consumoElectricidadCalculate.calculate(datosGenerales);
             case 19, 20 -> perdidasCalculate.calculate(datosGenerales);
-            case 21 -> generacionYOtraEnergiaCalculate.calculate(datosGenerales);
             default -> 0.0;
         };
     }
