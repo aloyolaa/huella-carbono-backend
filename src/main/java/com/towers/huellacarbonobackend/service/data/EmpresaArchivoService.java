@@ -8,4 +8,6 @@ public interface EmpresaArchivoService {
     void save(List<Integer> archivos, Long id, Integer anio);
 
     List<ArchivoDto> getArchivosByAnio(Long id, Integer anio);
+
+    boolean existsByEmpresa(Long id);
 }

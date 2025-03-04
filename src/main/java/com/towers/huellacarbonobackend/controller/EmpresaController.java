@@ -38,7 +38,6 @@ public class EmpresaController {
     @PreAuthorize("hasAuthority('REGISTER')")
     public ResponseEntity<ResponseDto> saveArchivos(@RequestBody List<Integer> archivos, @PathVariable Long id, @PathVariable Integer anio) {
         empresaArchivoService.save(archivos, id, anio);
-        System.out.println(archivos);
         return new ResponseEntity<>(
                 new ResponseDto("Accesos guardados correctamente.", true)
                 , HttpStatus.OK
@@ -46,11 +45,23 @@ public class EmpresaController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ResponseDto> registrarEmpresa(@RequestBody EmpresaDto empresaDto) {
+    public ResponseEntity<ResponseDto> save(@RequestBody EmpresaDto empresaDto) {
         empresaService.registrarEmpresa(empresaDto);
         return new ResponseEntity<>(
                 new ResponseDto("Empresa registrada correctamente. Se ha enviado un correo para configurar la contraseña.", true)
                 , HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/exists/{id}")
+    @PreAuthorize("hasAuthority('REGISTER')")
+    public ResponseEntity<ResponseDto> existsByEmpresa(@PathVariable Long id) {
+        boolean existsArchivos = empresaArchivoService.existsByEmpresa(id);
+        return new ResponseEntity<>(
+                new ResponseDto(
+                        existsArchivos
+                        , true),
+                HttpStatus.OK
         );
     }
 }
