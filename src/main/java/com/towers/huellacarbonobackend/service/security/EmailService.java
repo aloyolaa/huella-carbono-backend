@@ -34,7 +34,7 @@ public class EmailService {
         context.setVariable("username", usuario.getUsername());
         context.setVariable("password", password);
 
-        String urlRestablecimiento = appFrontUrl + "?token=" + token;
+        String urlRestablecimiento = appFrontUrl + "/configurationuser/" + token;
         context.setVariable("urlRestablecimiento", urlRestablecimiento);
 
         String contenidoHtml = templateEngine.process("email-restablecer-clave", context);
