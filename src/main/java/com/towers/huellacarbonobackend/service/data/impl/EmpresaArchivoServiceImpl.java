@@ -42,4 +42,10 @@ public class EmpresaArchivoServiceImpl implements EmpresaArchivoService {
                 .map(e -> archivoMapper.toArchivoDto(e.getArchivo()))
                 .toList();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByEmpresa(Long id) {
+        return empresaArchivoRepository.existsByEmpresa(id);
+    }
 }
