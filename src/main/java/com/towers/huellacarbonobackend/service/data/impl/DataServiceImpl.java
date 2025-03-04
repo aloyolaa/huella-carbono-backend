@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -61,5 +62,11 @@ public class DataServiceImpl implements DataService {
     @Transactional
     public void deleteById(Long id) {
         datosGeneralesRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DatosGenerales> getByAnioAndEmpresa(Integer anio, Long id) {
+        return datosGeneralesRepository.findByAnioAndEmpresa(anio, id);
     }
 }

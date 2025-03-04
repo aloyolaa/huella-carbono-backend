@@ -3,6 +3,7 @@ package com.towers.huellacarbonobackend.service.data;
 import com.towers.huellacarbonobackend.dto.DataDto;
 import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface DataService {
@@ -19,4 +20,6 @@ public interface DataService {
     DatosGenerales getByArchivoAndAnio(Long empresa, Long archivo, Integer anio);
 
     void deleteById(Long id);
+
+    List<DatosGenerales> getByAnioAndEmpresa(Integer anio, Long id);
 }
