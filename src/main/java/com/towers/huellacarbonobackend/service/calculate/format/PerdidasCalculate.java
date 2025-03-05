@@ -1,8 +1,10 @@
-package com.towers.huellacarbonobackend.service.calculate;
+package com.towers.huellacarbonobackend.service.calculate.format;
 
 import com.towers.huellacarbonobackend.entity.calculate.FactorEmisionPerdidas;
 import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
 import com.towers.huellacarbonobackend.entity.data.Detalle;
+import com.towers.huellacarbonobackend.service.calculate.FactorEmisionPerdidasService;
+import com.towers.huellacarbonobackend.service.calculate.PCGCombustibleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PerdidasCalculate {
     private final FactorEmisionPerdidasService factorEmisionPerdidasService;
-    private final PotencialCalentamientoGlobalService potencialCalentamientoGlobalService;
+    private final PCGCombustibleService pcgCombustibleService;
 
     public double calculate(DatosGenerales datosGenerales) {
         double total = 0;
@@ -19,9 +21,9 @@ public class PerdidasCalculate {
         double feCO2 = factorEmisionPerdidas.getCo2();
         double feCH4 = factorEmisionPerdidas.getCh4() * 1000;
         double feN2O = factorEmisionPerdidas.getN2o() * 1000;
-        double pcgCO2 = potencialCalentamientoGlobalService.getByNombre("Dióxido de carbono").getValor();
-        double pcgCH4 = potencialCalentamientoGlobalService.getByNombre("Metano - fósil").getValor();
-        double pcgN2O = potencialCalentamientoGlobalService.getByNombre("Óxido nitroso").getValor();
+        double pcgCO2 = pcgCombustibleService.getByNombre("Dióxido de carbono").getValor();
+        double pcgCH4 = pcgCombustibleService.getByNombre("Metano - fósil").getValor();
+        double pcgN2O = pcgCombustibleService.getByNombre("Óxido nitroso").getValor();
         for (Detalle detalle : datosGenerales.getDetalles()) {
             double perdidas = getPerdidas(detalle);
             double consumo = perdidas * factorConversion;
