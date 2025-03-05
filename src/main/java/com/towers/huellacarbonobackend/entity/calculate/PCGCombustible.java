@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "potencial_calentamiento_global")
-public class PotencialCalentamientoGlobal {
+@Table(name = "pcg_combustible")
+public class PCGCombustible {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

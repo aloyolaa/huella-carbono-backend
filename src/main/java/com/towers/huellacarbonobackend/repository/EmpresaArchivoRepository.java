@@ -12,4 +12,7 @@ public interface EmpresaArchivoRepository extends JpaRepository<EmpresaArchivo, 
 
     @Query("select (count(e) > 0) from EmpresaArchivo e where e.empresa.id = ?1")
     boolean existsByEmpresa(Long id);
+
+    @Query("select distinct(e.anio) from EmpresaArchivo e where e.empresa.id = ?1")
+    List<Integer> findAniosByEmpresa(Long id);
 }

@@ -1,33 +1,38 @@
-package com.towers.huellacarbonobackend.service.calculate;
+package com.towers.huellacarbonobackend.service.calculate.format;
 
-import com.towers.huellacarbonobackend.entity.calculate.FactorEmisionConsumo;
+import com.towers.huellacarbonobackend.entity.calculate.FactorConversionCombustible;
+import com.towers.huellacarbonobackend.entity.calculate.FactorEmisionCombustible;
 import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
 import com.towers.huellacarbonobackend.entity.data.Detalle;
+import com.towers.huellacarbonobackend.service.calculate.FactorConversionCombustibleService;
+import com.towers.huellacarbonobackend.service.calculate.FactorEmisionCombustibleService;
+import com.towers.huellacarbonobackend.service.calculate.PCGCombustibleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ConsumoElectricidadCalculate {
-    private final FactorEmisionConsumoService factorEmisionConsumoService;
-    private final PotencialCalentamientoGlobalService potencialCalentamientoGlobalService;
+public class FuentesMovilesYRefinacionCalculate {
+    private final FactorConversionCombustibleService factorConversionCombustibleService;
+    private final FactorEmisionCombustibleService factorEmisionCombustibleService;
+    private final PCGCombustibleService pcgCombustibleService;
 
     public double calculate(DatosGenerales datosGenerales) {
         double total = 0;
-        FactorEmisionConsumo factorEmisionConsumo = factorEmisionConsumoService.getByAnio(datosGenerales.getAnio());
-        double factorConversion = 1000 / 3.6;
-        double feCO2 = factorEmisionConsumo.getCo2();
-        double feCH4 = factorEmisionConsumo.getCh4() * 1000;
-        double feN2O = factorEmisionConsumo.getN2o() * 1000;
-        double pcgCO2 = potencialCalentamientoGlobalService.getByNombre("Dióxido de carbono").getValor();
-        double pcgCH4 = potencialCalentamientoGlobalService.getByNombre("Metano - fósil").getValor();
-        double pcgN2O = potencialCalentamientoGlobalService.getByNombre("Óxido nitroso").getValor();
+        double pcgCO2 = pcgCombustibleService.getByNombre("Dióxido de carbono").getValor();
+        double pcgCH4 = pcgCombustibleService.getByNombre("Metano - fósil").getValor();
+        double pcgN2O = pcgCombustibleService.getByNombre("Óxido nitroso").getValor();
         for (Detalle detalle : datosGenerales.getDetalles()) {
-            double consumoElectricidad = getConsumo(detalle);
-            double consumo = consumoElectricidad * factorConversion;
-            double emisionCO2 = consumoElectricidad * feCO2 / 1000;
-            double emisionCH4 = consumoElectricidad * feCH4 / 1000000;
-            double emisionN2O = consumoElectricidad * feN2O / 1000000;
+            double consumo = getConsumo(detalle);
+            FactorConversionCombustible factorConversion = factorConversionCombustibleService.getByTipoCombustible(detalle.getTipoCombustible().getId());
+            FactorEmisionCombustible factorEmision = factorEmisionCombustibleService.getByTipoCombustible(detalle.getTipoCombustible().getId());
+            consumo = consumo * factorConversion.getValor();
+            double feCO2 = factorEmision.getCo2();
+            double feCH4 = factorEmision.getCh4();
+            double feN2O = factorEmision.getN2o();
+            double emisionCO2 = consumo * feCO2 / 1000;
+            double emisionCH4 = consumo * feCH4 / 1000;
+            double emisionN2O = consumo * feN2O / 1000;
             double emision = (emisionCO2 * pcgCO2) + (emisionCH4 * pcgCH4) + (emisionN2O * pcgN2O);
             total += emision;
         }

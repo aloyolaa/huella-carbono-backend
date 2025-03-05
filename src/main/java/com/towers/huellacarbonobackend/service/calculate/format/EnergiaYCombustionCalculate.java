@@ -1,24 +1,27 @@
-package com.towers.huellacarbonobackend.service.calculate;
+package com.towers.huellacarbonobackend.service.calculate.format;
 
 import com.towers.huellacarbonobackend.entity.calculate.FactorConversionCombustible;
 import com.towers.huellacarbonobackend.entity.calculate.FactorEmisionCombustible;
 import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
 import com.towers.huellacarbonobackend.entity.data.Detalle;
+import com.towers.huellacarbonobackend.service.calculate.FactorConversionCombustibleService;
+import com.towers.huellacarbonobackend.service.calculate.FactorEmisionCombustibleService;
+import com.towers.huellacarbonobackend.service.calculate.PCGCombustibleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class GeneracionYOtraEnergiaCalculate {
+public class EnergiaYCombustionCalculate {
     private final FactorConversionCombustibleService factorConversionCombustibleService;
     private final FactorEmisionCombustibleService factorEmisionCombustibleService;
-    private final PotencialCalentamientoGlobalService potencialCalentamientoGlobalService;
+    private final PCGCombustibleService pcgCombustibleService;
 
     public double calculate(DatosGenerales datosGenerales) {
         double total = 0;
-        double pcgCO2 = potencialCalentamientoGlobalService.getByNombre("Dióxido de carbono").getValor();
-        double pcgCH4 = potencialCalentamientoGlobalService.getByNombre("Metano - fósil").getValor();
-        double pcgN2O = potencialCalentamientoGlobalService.getByNombre("Óxido nitroso").getValor();
+        double pcgCO2 = pcgCombustibleService.getByNombre("Dióxido de carbono").getValor();
+        double pcgCH4 = pcgCombustibleService.getByNombre("Metano - fósil").getValor();
+        double pcgN2O = pcgCombustibleService.getByNombre("Óxido nitroso").getValor();
         for (Detalle detalle : datosGenerales.getDetalles()) {
             double consumo = getConsumo(detalle);
             FactorConversionCombustible factorConversion = factorConversionCombustibleService.getByTipoCombustible(detalle.getTipoCombustible().getId());

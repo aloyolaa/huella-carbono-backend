@@ -10,4 +10,6 @@ public interface EmpresaArchivoService {
     List<ArchivoDto> getArchivosByAnio(Long id, Integer anio);
 
     boolean existsByEmpresa(Long id);
+
+    List<Integer> getAniosByEmpresa(Long id);
 }

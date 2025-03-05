@@ -6,9 +6,7 @@ import com.towers.huellacarbonobackend.entity.data.Archivo;
 import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
 import com.towers.huellacarbonobackend.entity.data.Empresa;
 import com.towers.huellacarbonobackend.entity.data.GanadoData;
-import com.towers.huellacarbonobackend.service.calculate.ConsumoElectricidadCalculate;
-import com.towers.huellacarbonobackend.service.calculate.GeneracionYOtraEnergiaCalculate;
-import com.towers.huellacarbonobackend.service.calculate.PerdidasCalculate;
+import com.towers.huellacarbonobackend.service.calculate.format.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +14,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DataMapper {
     private final DetalleMapper detalleMapper;
-    private final GeneracionYOtraEnergiaCalculate generacionYOtraEnergiaCalculate;
+    private final EnergiaYCombustionCalculate energiaYCombustionCalculate;
+    private final FuentesMovilesYRefinacionCalculate fuentesMovilesYRefinacionCalculate;
+    private final RefrigerantesCalculate refrigerantesCalculate;
+    private final FugasSF6Calculate fugasSF6Calculate;
+    private final PFCCalculate pfcCalculate;
     private final ConsumoElectricidadCalculate consumoElectricidadCalculate;
     private final PerdidasCalculate perdidasCalculate;
 
@@ -56,7 +58,11 @@ public class DataMapper {
 
     private double getEmision(DatosGenerales datosGenerales) {
         return switch (datosGenerales.getArchivo().getId().intValue()) {
-            case 1, 21 -> generacionYOtraEnergiaCalculate.calculate(datosGenerales);
+            case 1, 2, 21 -> energiaYCombustionCalculate.calculate(datosGenerales);
+            case 3 -> fuentesMovilesYRefinacionCalculate.calculate(datosGenerales); // TODO falta agregar factor de conversión y factor de emisión
+            case 8 -> refrigerantesCalculate.calculate(datosGenerales);
+            case 9 -> fugasSF6Calculate.calculate(datosGenerales);
+            case 10 -> pfcCalculate.calculate(datosGenerales);
             case 18 -> consumoElectricidadCalculate.calculate(datosGenerales);
             case 19, 20 -> perdidasCalculate.calculate(datosGenerales);
             default -> 0.0;
