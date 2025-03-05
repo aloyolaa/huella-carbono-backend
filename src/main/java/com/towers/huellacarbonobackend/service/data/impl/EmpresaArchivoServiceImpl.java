@@ -48,4 +48,10 @@ public class EmpresaArchivoServiceImpl implements EmpresaArchivoService {
     public boolean existsByEmpresa(Long id) {
         return empresaArchivoRepository.existsByEmpresa(id);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Integer> getAniosByEmpresa(Long id) {
+        return empresaArchivoRepository.findAniosByEmpresa(id);
+    }
 }

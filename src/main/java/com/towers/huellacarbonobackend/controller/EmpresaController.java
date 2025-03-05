@@ -64,4 +64,16 @@ public class EmpresaController {
                 HttpStatus.OK
         );
     }
+
+    @GetMapping("/anios/{id}")
+    @PreAuthorize("hasAuthority('REGISTER')")
+    public ResponseEntity<ResponseDto> getAniosByEmpresa(@PathVariable Long id) {
+        List<Integer> aniosByEmpresa = empresaArchivoService.getAniosByEmpresa(id);
+        return new ResponseEntity<>(
+                new ResponseDto(
+                        aniosByEmpresa
+                        , true),
+                HttpStatus.OK
+        );
+    }
 }
