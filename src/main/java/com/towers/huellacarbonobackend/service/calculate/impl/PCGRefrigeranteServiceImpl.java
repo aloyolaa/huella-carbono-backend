@@ -17,6 +17,6 @@ public class PCGRefrigeranteServiceImpl implements PCGRefrigeranteService {
     @Transactional(readOnly = true)
     public PCGRefrigerante getByTipoRefrigerante(Long id) {
         return pcgRefrigeranteRepository.findByTipoRefrigerante(id)
-                .orElseThrow(() -> new EntityNotFoundException("No hay Potencial de Calentamiento global registrado para " + id));
+                .orElse(null);
     }
 }

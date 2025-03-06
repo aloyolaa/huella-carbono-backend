@@ -17,6 +17,6 @@ public class FactorEmisionCombustibleServiceImpl implements FactorEmisionCombust
     @Transactional(readOnly = true)
     public FactorEmisionCombustible getByTipoCombustible(Long id) {
         return factorEmisionCombustibleRepository.findByTipoCombustible(id)
-                .orElseThrow(() -> new EntityNotFoundException("No hay Factores de Emisión registrados para el combustible con el ID " + id));
+                .orElse(null);
     }
 }

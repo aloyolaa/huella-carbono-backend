@@ -13,18 +13,18 @@ public class RefrigerantesCalculate {
     public double calculate(DatosGenerales datosGenerales) {
         double total = 0;
         for (Detalle detalle : datosGenerales.getDetalles()) {
-            RefrigeranteInstalacion refrigeranteInstalacion = detalle.getRefrigeranteInstalacion();
-            RefrigeranteOperacion refrigeranteOperacion = detalle.getRefrigeranteOperacion();
-            RefrigeranteDisposicion refrigeranteDisposicion = detalle.getRefrigeranteDisposicion();
-            double instalacion = refrigeranteInstalacion != null ? refrigeranteInstalacion.getNumeroEquipos() * refrigeranteInstalacion.getCapacidadCarga() * refrigeranteInstalacion.getFugaInstalacion() : 0.0;
-            double operacion = refrigeranteOperacion != null ? refrigeranteOperacion.getNumeroEquipos() * refrigeranteOperacion.getCapacidadCarga() * refrigeranteOperacion.getAnio() * refrigeranteOperacion.getFugaUso() : 0.0;
-            double disposicion = refrigeranteDisposicion != null ? refrigeranteDisposicion.getNumeroEquipos() * refrigeranteDisposicion.getCapacidadCarga() * refrigeranteDisposicion.getFraccionRefrigeranteDisposicion() * refrigeranteDisposicion.getFraccionRefrigeranteRecuperado() : 0.0;
-            double pcgI = refrigeranteInstalacion != null ? pcgRefrigeranteService.getByTipoRefrigerante(refrigeranteInstalacion.getTipoRefrigerante().getId()).getValor() : 0.0;
-            double pcgO = refrigeranteOperacion != null ? pcgRefrigeranteService.getByTipoRefrigerante(refrigeranteOperacion.getTipoRefrigerante().getId()).getValor() : 0.0;
-            double pcgD = refrigeranteDisposicion != null ? pcgRefrigeranteService.getByTipoRefrigerante(refrigeranteDisposicion.getTipoRefrigerante().getId()).getValor() : 0.0;
-            double perdidaTotal = instalacion + operacion + disposicion;
-            double emision = ((instalacion * pcgI) + (operacion * pcgO) + (disposicion * pcgD)) / 1000;
-            total += emision;
+            RefrigeranteInstalacion rI = detalle.getRefrigeranteInstalacion();
+            RefrigeranteOperacion rO = detalle.getRefrigeranteOperacion();
+            RefrigeranteDisposicion rD = detalle.getRefrigeranteDisposicion();
+            double i = rI != null ? rI.getNumeroEquipos() * rI.getCapacidadCarga() * rI.getFugaInstalacion() : 0.0;
+            double o = rO != null ? rO.getNumeroEquipos() * rO.getCapacidadCarga() * rO.getAnio() * rO.getFugaUso() : 0.0;
+            double d = rD != null ? rD.getNumeroEquipos() * rD.getCapacidadCarga() * rD.getFraccionRefrigeranteDisposicion() * rD.getFraccionRefrigeranteRecuperado() : 0.0;
+            double pcgI = rI != null ? pcgRefrigeranteService.getByTipoRefrigerante(rI.getTipoRefrigerante().getId()).getValor() : 0.0;
+            double pcgO = rO != null ? pcgRefrigeranteService.getByTipoRefrigerante(rO.getTipoRefrigerante().getId()).getValor() : 0.0;
+            double pcgD = rD != null ? pcgRefrigeranteService.getByTipoRefrigerante(rD.getTipoRefrigerante().getId()).getValor() : 0.0;
+            double perdidaTotal = i + o + d;
+            double e = ((i * pcgI) + (o * pcgO) + (d * pcgD)) / 1000;
+            total += e;
         }
 
         return total;

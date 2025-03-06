@@ -40,6 +40,9 @@ public class DatosGenerales {
     @Column(name = "anio")
     private Integer anio;
 
+    @Column(name = "emision")
+    private Double emision;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;

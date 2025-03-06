@@ -17,6 +17,6 @@ public class FactorEmisionConsumoServiceImpl implements FactorEmisionConsumoServ
     @Transactional(readOnly = true)
     public FactorEmisionConsumo getByAnio(Integer anio) {
         return factorEmisionConsumoRepository.findByAnio(anio)
-                .orElseThrow(() -> new EntityNotFoundException("No hay Factores de Emisión de Consumo para el año " + anio));
+                .orElse(null);
     }
 }

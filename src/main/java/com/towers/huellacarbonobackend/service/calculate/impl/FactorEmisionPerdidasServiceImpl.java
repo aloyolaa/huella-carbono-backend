@@ -17,6 +17,6 @@ public class FactorEmisionPerdidasServiceImpl implements FactorEmisionPerdidasSe
     @Transactional(readOnly = true)
     public FactorEmisionPerdidas getByAnio(Integer anio) {
         return factorEmisionPerdidasRepository.findByAnio(anio)
-                .orElseThrow(() -> new EntityNotFoundException("No hay Factores de Emisión de Pérdidas para el año " + anio));
+                .orElse(null);
     }
 }

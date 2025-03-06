@@ -17,6 +17,6 @@ public class FactorConversionCombustibleServiceImpl implements FactorConversionC
     @Transactional(readOnly = true)
     public FactorConversionCombustible getByTipoCombustible(Long id) {
         return factorConversionCombustibleRepository.findByTipoCombustible(id)
-                .orElseThrow(() -> new EntityNotFoundException("No hay Factor de Conversion para el combustible con el ID " + id));
+                .orElse(null);
     }
 }
