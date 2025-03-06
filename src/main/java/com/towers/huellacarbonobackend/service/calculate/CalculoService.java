@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -15,9 +16,9 @@ public class CalculoService {
 
     public CalculateDto getCalculos(Long empresa, Integer anio) {
         List<DatosGenerales> data = dataService.getByAnioAndEmpresa(anio, empresa);
-        Double alcance1 = calcularAlcance1(data.stream().filter(d -> d.getArchivo().getAlcance().getId() == 1).toList());
-        Double alcance2 = calcularAlcance2(data.stream().filter(d -> d.getArchivo().getAlcance().getId() == 2).toList());
-        Double alcance3 = calcularAlcance3(data.stream().filter(d -> d.getArchivo().getAlcance().getId() == 3).toList());
+        double alcance1 = calcularAlcance(data, 1L);
+        double alcance2 = calcularAlcance(data, 2L);
+        double alcance3 = calcularAlcance(data, 3L);
         return new CalculateDto(
                 alcance1,
                 alcance2,
@@ -26,15 +27,9 @@ public class CalculoService {
         );
     }
 
-    private Double calcularAlcance1(List<DatosGenerales> data) {
-        return 0.0;
-    }
-
-    private Double calcularAlcance2(List<DatosGenerales> data) {
-        return 0.0;
-    }
-
-    private Double calcularAlcance3(List<DatosGenerales> data) {
-        return 0.0;
+    private double calcularAlcance(List<DatosGenerales> data, Long alcance) {
+        System.out.println(alcance);
+        return data.stream().filter(d -> Objects.equals(d.getArchivo().getAlcance().getId(), alcance)).toList()
+                .stream().mapToDouble(DatosGenerales::getEmision).sum();
     }
 }

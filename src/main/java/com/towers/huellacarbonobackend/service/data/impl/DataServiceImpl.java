@@ -26,6 +26,8 @@ public class DataServiceImpl implements DataService {
     private final PFCCalculate pfcCalculate;
     private final ConsumoElectricidadCalculate consumoElectricidadCalculate;
     private final PerdidasCalculate perdidasCalculate;
+    private final TransporteAereoCalculate transporteAereoCalculate;
+    private final TransporteTerrestreCalculate transporteTerrestreCalculate;
 
     @Override
     @Transactional
@@ -90,6 +92,8 @@ public class DataServiceImpl implements DataService {
             case 10 -> pfcCalculate.calculate(datosGenerales);
             case 18 -> consumoElectricidadCalculate.calculate(datosGenerales);
             case 19, 20 -> perdidasCalculate.calculate(datosGenerales);
+            case 24 -> transporteAereoCalculate.calculate(datosGenerales);
+            case 25 -> transporteTerrestreCalculate.calculate(datosGenerales);
             default -> 0.0;
         };
     }
