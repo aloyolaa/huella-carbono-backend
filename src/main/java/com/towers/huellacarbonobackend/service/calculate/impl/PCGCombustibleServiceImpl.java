@@ -17,6 +17,6 @@ public class PCGCombustibleServiceImpl implements PCGCombustibleService {
     @Transactional(readOnly = true)
     public PCGCombustible getByNombre(String nombre) {
         return pcgCombustibleRepository.findByNombre(nombre)
-                .orElseThrow(() -> new EntityNotFoundException("No hay Potencial de Calentamiento global registrado para " + nombre));
+                .orElse(null);
     }
 }

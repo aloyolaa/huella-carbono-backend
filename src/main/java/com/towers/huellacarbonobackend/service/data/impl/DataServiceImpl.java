@@ -4,6 +4,7 @@ import com.towers.huellacarbonobackend.dto.DataDto;
 import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
 import com.towers.huellacarbonobackend.mapper.DataMapper;
 import com.towers.huellacarbonobackend.repository.DatosGeneralesRepository;
+import com.towers.huellacarbonobackend.service.calculate.format.*;
 import com.towers.huellacarbonobackend.service.data.DataService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,17 +19,27 @@ import java.util.Optional;
 public class DataServiceImpl implements DataService {
     private final DatosGeneralesRepository datosGeneralesRepository;
     private final DataMapper dataMapper;
+    private final EnergiaYCombustionCalculate energiaYCombustionCalculate;
+    private final FuentesMovilesYRefinacionCalculate fuentesMovilesYRefinacionCalculate;
+    private final RefrigerantesCalculate refrigerantesCalculate;
+    private final FugasSF6Calculate fugasSF6Calculate;
+    private final PFCCalculate pfcCalculate;
+    private final ConsumoElectricidadCalculate consumoElectricidadCalculate;
+    private final PerdidasCalculate perdidasCalculate;
 
     @Override
     @Transactional
     public DatosGenerales save(DatosGenerales datosGenerales) {
+        datosGenerales.setEmision(getEmision(datosGenerales));
         return datosGeneralesRepository.save(datosGenerales);
     }
 
     @Override
     @Transactional
     public void save(DataDto dataDto, Long empresa, Long archivo) {
-        datosGeneralesRepository.save(dataMapper.toDatosGenerales(dataDto, empresa, archivo));
+        DatosGenerales datosGenerales = dataMapper.toDatosGenerales(dataDto, empresa, archivo);
+        datosGenerales.setEmision(getEmision(datosGenerales));
+        datosGeneralesRepository.save(datosGenerales);
     }
 
     @Override
@@ -68,5 +79,18 @@ public class DataServiceImpl implements DataService {
     @Transactional(readOnly = true)
     public List<DatosGenerales> getByAnioAndEmpresa(Integer anio, Long id) {
         return datosGeneralesRepository.findByAnioAndEmpresa(anio, id);
+    }
+
+    private double getEmision(DatosGenerales datosGenerales) {
+        return switch (datosGenerales.getArchivo().getId().intValue()) {
+            case 1, 2, 21 -> energiaYCombustionCalculate.calculate(datosGenerales);
+            case 3 -> fuentesMovilesYRefinacionCalculate.calculate(datosGenerales); // TODO falta agregar factor de conversión y factor de emisión
+            case 8 -> refrigerantesCalculate.calculate(datosGenerales);
+            case 9 -> fugasSF6Calculate.calculate(datosGenerales);
+            case 10 -> pfcCalculate.calculate(datosGenerales);
+            case 18 -> consumoElectricidadCalculate.calculate(datosGenerales);
+            case 19, 20 -> perdidasCalculate.calculate(datosGenerales);
+            default -> 0.0;
+        };
     }
 }

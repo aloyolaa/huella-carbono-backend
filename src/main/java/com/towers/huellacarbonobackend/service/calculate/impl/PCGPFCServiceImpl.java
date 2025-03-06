@@ -17,6 +17,6 @@ public class PCGPFCServiceImpl implements PCGPFCService {
     @Transactional(readOnly = true)
     public PCGPFC getByTipoPFC(Long id) {
         return pcgpfcRepository.findByTipoPFC(id)
-                .orElseThrow(() -> new EntityNotFoundException("No hay Potencial de Calentamiento global registrado para " + id));
+                .orElse(null);
     }
 }
