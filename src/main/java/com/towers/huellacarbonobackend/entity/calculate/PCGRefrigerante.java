@@ -21,7 +21,7 @@ public class PCGRefrigerante {
     @Column(name = "valor", nullable = false)
     private Double valor;
 
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false, orphanRemoval = true)
     @JoinColumn(name = "tipo_refrigerante_id", nullable = false)
     private TipoRefrigerante tipoRefrigerante;
 }

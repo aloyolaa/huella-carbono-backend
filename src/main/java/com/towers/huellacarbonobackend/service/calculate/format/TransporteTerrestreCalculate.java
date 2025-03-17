@@ -28,17 +28,17 @@ public class TransporteTerrestreCalculate {
                     .collect(Collectors.groupingBy(detalle -> detalle.getTransporteVehiculo().getTipoTransporte().getId()));
             for (Long transporte : collect.keySet()) {
                 FEVehiculo fe = feVehiculoService.getByTipoTransporte(transporte);
+                double subtotal = 0;
                 List<Detalle> detalles = collect.get(transporte);
-                int personas = detalles.stream()
-                        .mapToInt(d -> d.getTransporteVehiculo().getPersonasViajando()).sum();
-                double distancia = detalles.stream()
-                        .mapToDouble(d -> d.getTransporteVehiculo().getDistanciaRecorrida() * d.getTransporteVehiculo().getVecesRecorrido()).sum();
-                double recorrido = personas * distancia;
-                double co2 = recorrido * fe.getCo2();
-                double ch4 = recorrido * fe.getCh4();
-                double n2o = recorrido * fe.getN2o();
-                double e = ((co2 * pcgCO2) + (ch4 * pcgCH4) + (n2o * pcgN2O)) / 1000;
-                total += e;
+                for (Detalle detalle : detalles) {
+                    double recorrido = detalle.getTransporteVehiculo().getPersonasViajando() * detalle.getTransporteVehiculo().getDistanciaRecorrida() * detalle.getTransporteVehiculo().getVecesRecorrido();
+                    double co2 = recorrido * fe.getCo2();
+                    double ch4 = recorrido * fe.getCh4();
+                    double n2o = recorrido * fe.getN2o();
+                    double e = ((co2 * pcgCO2) + (ch4 * pcgCH4) + (n2o * pcgN2O)) / 1000;
+                    subtotal += e;
+                }
+                total += subtotal;
             }
             return total;
         } catch (NullPointerException e) {

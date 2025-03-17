@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.towers.huellacarbonobackend.service.file.excel.Commons.*;
 
@@ -39,7 +40,15 @@ public class GeneracionResiduosFormat implements ImportOperation, ExportOperatio
             if (row == null) {
                 break;
             }
-            Integer anio = readIntegerCell(row, 1);
+
+            Integer anio = 0;
+            if (rowIndex < 36) {
+                anio = readIntegerCell(row, 1);
+            } else {
+                String texto = Objects.requireNonNull(readCell(row, 1));
+                String ultimo = texto.substring(texto.length() - 4);
+                anio = Integer.parseInt(ultimo);
+            }
             if (anio == null) {
                 break;
             }
