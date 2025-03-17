@@ -1,6 +1,6 @@
 package com.towers.huellacarbonobackend.entity.calculate;
 
-import com.towers.huellacarbonobackend.entity.data.TipoPFC;
+import com.towers.huellacarbonobackend.entity.data.TipoVehiculo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,20 +8,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "pcg_pfc")
-public class PCGPFC {
+@Table(name = "fe_material")
+public class FEMaterial {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "formula", nullable = false)
-    private String formula;
-
     @Column(name = "valor", nullable = false)
     private Double valor;
 
-    @OneToOne(optional = false, orphanRemoval = true)
-    @JoinColumn(name = "tipo_pfc_id", nullable = false)
-    private TipoPFC tipoPFC;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "tipo_vehiculo_id", nullable = false)
+    private TipoVehiculo tipoVehiculo;
 }

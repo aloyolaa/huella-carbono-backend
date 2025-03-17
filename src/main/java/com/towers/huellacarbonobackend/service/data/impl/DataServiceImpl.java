@@ -26,8 +26,14 @@ public class DataServiceImpl implements DataService {
     private final PFCCalculate pfcCalculate;
     private final ConsumoElectricidadCalculate consumoElectricidadCalculate;
     private final PerdidasCalculate perdidasCalculate;
+    private final TransporteMaterialCalculate transporteMaterialCalculate;
     private final TransporteAereoCalculate transporteAereoCalculate;
     private final TransporteTerrestreCalculate transporteTerrestreCalculate;
+    private final TransporteCasaTrabajoCalculate transporteCasaTrabajoCalculate;
+    private final ConsumoAguaCalculate consumoAguaCalculate;
+    private final ConsumoPapelCalculate consumoPapelCalculate;
+    private final GeneracionIndirectaNF3Calculate generacionIndirectaNF3Calculate;
+    private final GeneracionResiduosCalculate generacionResiduosCalculate;
 
     @Override
     @Transactional
@@ -86,14 +92,20 @@ public class DataServiceImpl implements DataService {
     private double getEmision(DatosGenerales datosGenerales) {
         return switch (datosGenerales.getArchivo().getId().intValue()) {
             case 1, 2, 21 -> energiaYCombustionCalculate.calculate(datosGenerales);
-            case 3 -> fuentesMovilesYRefinacionCalculate.calculate(datosGenerales); // TODO falta agregar factor de conversión y factor de emisión
+            case 3 -> fuentesMovilesYRefinacionCalculate.calculate(datosGenerales);
             case 8 -> refrigerantesCalculate.calculate(datosGenerales);
             case 9 -> fugasSF6Calculate.calculate(datosGenerales);
             case 10 -> pfcCalculate.calculate(datosGenerales);
             case 18 -> consumoElectricidadCalculate.calculate(datosGenerales);
             case 19, 20 -> perdidasCalculate.calculate(datosGenerales);
+            case 22, 23 -> transporteMaterialCalculate.calculate(datosGenerales);
             case 24 -> transporteAereoCalculate.calculate(datosGenerales);
             case 25 -> transporteTerrestreCalculate.calculate(datosGenerales);
+            case 26 -> transporteCasaTrabajoCalculate.calculate(datosGenerales);
+            case 27 -> consumoAguaCalculate.calculate(datosGenerales);
+            case 28 -> consumoPapelCalculate.calculate(datosGenerales);
+            case 29 -> generacionIndirectaNF3Calculate.calculate(datosGenerales);
+            case 30 -> generacionResiduosCalculate.calculate(datosGenerales);
             default -> 0.0;
         };
     }

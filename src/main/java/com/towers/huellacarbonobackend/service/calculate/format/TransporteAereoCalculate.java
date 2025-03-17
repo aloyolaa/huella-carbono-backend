@@ -1,6 +1,5 @@
 package com.towers.huellacarbonobackend.service.calculate.format;
 
-import com.towers.huellacarbonobackend.entity.calculate.FactorEmisionConsumo;
 import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
 import com.towers.huellacarbonobackend.entity.data.Detalle;
 import lombok.RequiredArgsConstructor;
@@ -33,12 +32,14 @@ public class TransporteAereoCalculate {
     }
 
     private double calculateByGrupo(List<Detalle> detalle, double fe) {
-        int personas = detalle.stream()
-                .mapToInt(d -> d.getTransporteVehiculo().getPersonasViajando()).sum();
-        double distancia = detalle.stream()
-                .mapToDouble(d -> d.getTransporteVehiculo().getDistanciaRecorrida() * d.getTransporteVehiculo().getVecesRecorrido()).sum();
-        double recorrido = personas * distancia;
-        double e = fe * recorrido;
-        return e / 1000;
+        double subtotal = 0;
+        for (Detalle d : detalle) {
+            double recorrido = d.getTransporteVehiculo().getPersonasViajando() * d.getTransporteVehiculo().getDistanciaRecorrida() * d.getTransporteVehiculo().getVecesRecorrido();
+            double e = fe * recorrido;
+            double gei = e / 1000;
+            subtotal += gei;
+        }
+
+        return subtotal;
     }
 }
