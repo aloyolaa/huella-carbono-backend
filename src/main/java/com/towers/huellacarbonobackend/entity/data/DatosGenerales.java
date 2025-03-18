@@ -40,6 +40,9 @@ public class DatosGenerales {
     @Column(name = "anio")
     private Integer anio;
 
+    @Column(name = "mes")
+    private Integer mes;
+
     @Column(name = "emision")
     private Double emision;
 

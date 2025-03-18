@@ -13,11 +13,11 @@ public interface DataService {
 
     DatosGenerales getById(Long id);
 
-    Optional<DatosGenerales> getOptionalByEmpresaAndAnio(Long empresaId, Long archivo, Integer anio);
+    Optional<DatosGenerales> getOptionalByEmpresaAndAnio(Long empresaId, Long archivo, Integer anio, Integer mes);
 
-    DataDto getByEmpresaAndAnio(Long empresaId, Long archivo, Integer anio);
+    DataDto getByEmpresaAndAnio(Long empresaId, Long archivo, Integer anio, Integer mes);
 
-    DatosGenerales getByArchivoAndAnio(Long empresa, Long archivo, Integer anio);
+    DatosGenerales getByArchivoAndAnio(Long empresa, Long archivo, Integer anio, Integer mes);
 
     void deleteById(Long id);
 
