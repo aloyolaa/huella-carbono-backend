@@ -50,9 +50,5 @@ public class Usuario {
     @PrePersist
     public void prePersist() {
         this.habilitado = true;
-        this.esNuevo = true;
-        Role r = new Role();
-        r.setId(1L);
-        this.role = r;
     }
 }

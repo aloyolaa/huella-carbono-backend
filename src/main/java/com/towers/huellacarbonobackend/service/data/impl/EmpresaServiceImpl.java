@@ -43,29 +43,31 @@ public class EmpresaServiceImpl implements EmpresaService {
     @Override
     @Transactional
     public void registrarEmpresa(EmpresaDto empresaDto) {
+        if (empresaRepository.existsByRazonSocial(empresaDto.ruc())) {
+            throw new DataAccessExceptionImpl("Ya existe una empresa con la Razón Social: " + empresaDto.razonSocial());
+        }
+
         if (empresaRepository.existsByRuc(empresaDto.ruc())) {
-            throw new DataAccessExceptionImpl("Ya existe una empresa con este RUC");
+            throw new DataAccessExceptionImpl("Ya existe una empresa con el RUC: " + empresaDto.ruc());
         }
 
         if (empresaRepository.existsByCorreo(empresaDto.correo())) {
-            throw new DataAccessExceptionImpl("Ya existe una empresa con este correo");
+            throw new DataAccessExceptionImpl("Ya existe una empresa con el correo: " + empresaDto.correo());
         }
 
         Empresa empresa = new Empresa();
-        empresa.setRazonSocial(empresaDto.razonSocial());
-        empresa.setRuc(empresaDto.ruc());
-        empresa.setDireccion(empresaDto.direccion());
+        empresa.setRazonSocial(empresaDto.razonSocial().trim().toUpperCase());
+        empresa.setRuc(empresaDto.ruc().trim());
+        empresa.setDireccion(empresaDto.direccion().trim().toUpperCase());
         empresa.setTelefono(empresaDto.telefono());
-        empresa.setCorreo(empresaDto.correo());
+        empresa.setCorreo(empresaDto.correo().trim().toUpperCase());
 
         empresaRepository.save(empresa);
 
         String password = generarPasswordAleatorio();
 
-        // Creamos el usuario asociado a la empresa
-        Usuario usuario = usuarioService.crearUsuarioParaEmpresa(empresa, password);
+        Usuario usuario = usuarioService.saveByEmpresa(empresa, password);
 
-        // Enviamos el correo de confirmación
         emailService.enviarCorreoRestablecimiento(usuario, password);
     }
 

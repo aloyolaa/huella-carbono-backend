@@ -10,4 +10,7 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
 
     @Query("select (count(e) > 0) from Empresa e where e.correo = ?1")
     boolean existsByCorreo(String correo);
+
+    @Query("select (count(e) > 0) from Empresa e where e.razonSocial = ?1")
+    boolean existsByRazonSocial(String razonSocial);
 }

@@ -19,7 +19,7 @@ public class PasswordController {
 
     @PostMapping("/reset")
     public ResponseEntity<ResponseDto> resetPassword(@RequestBody PasswordResetDto resetDTO) {
-        boolean password = usuarioService.actualizarPassword(
+        boolean password = usuarioService.updatePassword(
                 resetDTO.token(),
                 resetDTO.passwordAnterior(),
                 resetDTO.passwordNuevo());

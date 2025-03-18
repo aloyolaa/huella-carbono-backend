@@ -1,9 +1,12 @@
 package com.towers.huellacarbonobackend.service.security.impl;
 
+import com.towers.huellacarbonobackend.dto.UsuarioRegisterDto;
 import com.towers.huellacarbonobackend.entity.data.Empresa;
+import com.towers.huellacarbonobackend.entity.data.Role;
 import com.towers.huellacarbonobackend.entity.data.TokenRestablecimiento;
 import com.towers.huellacarbonobackend.entity.data.Usuario;
 import com.towers.huellacarbonobackend.exception.DataAccessExceptionImpl;
+import com.towers.huellacarbonobackend.mapper.UsuarioMapper;
 import com.towers.huellacarbonobackend.repository.TokenRestablecimientoRepository;
 import com.towers.huellacarbonobackend.repository.UsuarioRepository;
 import com.towers.huellacarbonobackend.service.security.UsuarioService;
@@ -26,6 +29,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioMapper usuarioMapper;
     private final TokenRestablecimientoRepository tokenRestablecimientoRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -53,17 +57,33 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional
-    public Usuario crearUsuarioParaEmpresa(Empresa empresa, String password) {
+    public Usuario saveByEmpresa(Empresa empresa, String password) {
         String username = generarUsername(empresa);
 
-        // Creamos el usuario
+        if (usuarioRepository.existsByUsername(username)) {
+            throw new DataAccessExceptionImpl("Ya existe un usuario con el username: " + username);
+        }
+
         Usuario usuario = new Usuario();
         usuario.setUsername(username);
         usuario.setPassword(passwordEncoder.encode(password));
         usuario.setEsNuevo(true);
         usuario.setEmpresa(empresa);
+        usuario.setEsNuevo(true);
+
+        Role admin = new Role();
+        admin.setId(2L);
+        usuario.setRole(admin);
 
         return usuarioRepository.save(usuario);
+    }
+
+    @Override
+    @Transactional
+    public void save(UsuarioRegisterDto usuarioRegisterDto) {
+        Usuario usuario = usuarioMapper.toUsuario(usuarioRegisterDto);
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        usuarioRepository.save(usuario);
     }
 
     private String generarUsername(Empresa empresa) {
@@ -75,16 +95,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional
-    public String generarTokenRestablecimiento(Usuario usuario) {
+    public String generateTokenRestablecimiento(Usuario usuario) {
         tokenRestablecimientoRepository.deleteByUsuario(usuario);
-
-        // Creamos un nuevo token
         String token = UUID.randomUUID().toString();
 
         TokenRestablecimiento tokenRestablecimiento = new TokenRestablecimiento();
         tokenRestablecimiento.setToken(token);
         tokenRestablecimiento.setUsuario(usuario);
-        // El token expirará en 24 horas
         tokenRestablecimiento.setFechaExpiracion(LocalDateTime.now().plusHours(24));
 
         tokenRestablecimientoRepository.save(tokenRestablecimiento);
@@ -94,28 +111,23 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional
-    public boolean actualizarPassword(String token, String passwordAnterior, String passwordNuevo) {
+    public boolean updatePassword(String token, String passwordAnterior, String passwordNuevo) {
         Optional<TokenRestablecimiento> tokenOptional = tokenRestablecimientoRepository.findByToken(token);
 
         if (tokenOptional.isPresent()) {
             TokenRestablecimiento tokenRestablecimiento = tokenOptional.orElseThrow();
 
-            // Verificamos que el token no haya expirado
             if (tokenRestablecimiento.getFechaExpiracion().isAfter(LocalDateTime.now())) {
                 Usuario usuario = tokenRestablecimiento.getUsuario();
 
                 if (!passwordEncoder.matches(passwordAnterior, usuario.getPassword())) {
-                    return false; // Contraseña antigua incorrecta
+                    return false;
                 }
 
-                // Actualizamos la contraseña
                 usuario.setPassword(passwordEncoder.encode(passwordNuevo));
-                // Marcamos que el usuario ya no es nuevo
                 usuario.setEsNuevo(false);
-
                 usuarioRepository.save(usuario);
 
-                // Eliminamos el token usado
                 tokenRestablecimientoRepository.delete(tokenRestablecimiento);
 
                 return true;

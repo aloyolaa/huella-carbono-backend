@@ -1,5 +1,6 @@
 package com.towers.huellacarbonobackend.service.security;
 
+import com.towers.huellacarbonobackend.dto.UsuarioRegisterDto;
 import com.towers.huellacarbonobackend.entity.data.Empresa;
 import com.towers.huellacarbonobackend.entity.data.Usuario;
 
@@ -8,9 +9,11 @@ public interface UsuarioService {
 
     String getUsernameFromSecurityContext();
 
-    Usuario crearUsuarioParaEmpresa(Empresa empresa, String password);
+    Usuario saveByEmpresa(Empresa empresa, String password);
 
-    String generarTokenRestablecimiento(Usuario usuario);
+    void save(UsuarioRegisterDto usuarioRegisterDto);
 
-    boolean actualizarPassword(String token, String passwordAnterior, String passwordNuevo);
+    String generateTokenRestablecimiento(Usuario usuario);
+
+    boolean updatePassword(String token, String passwordAnterior, String passwordNuevo);
 }
