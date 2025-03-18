@@ -23,6 +23,7 @@ public class DataMapper {
         datosGenerales.setLocacion(dataDto.locacion());
         datosGenerales.setComentarios(dataDto.comentarios());
         datosGenerales.setAnio(dataDto.anio());
+        datosGenerales.setMes(dataDto.mes());
         datosGenerales.setGanadoData(dataDto.ganadoData() != null ?
                 new GanadoData(dataDto.ganadoData().id(), dataDto.ganadoData().temperatura(), datosGenerales) : null);
         datosGenerales.setArchivo(new Archivo(archivo));
@@ -41,6 +42,7 @@ public class DataMapper {
                 datosGenerales.getLocacion(),
                 datosGenerales.getComentarios(),
                 datosGenerales.getAnio(),
+                datosGenerales.getMes(),
                 datosGenerales.getEmision() != null ? datosGenerales.getEmision() : 0.0,
                 datosGenerales.getGanadoData() != null ?
                         new GanadoDataDto(datosGenerales.getGanadoData().getId(), datosGenerales.getGanadoData().getTemperatura()) : null,

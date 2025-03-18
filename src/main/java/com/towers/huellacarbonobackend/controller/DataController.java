@@ -18,7 +18,7 @@ public class DataController {
 
     @PostMapping("/save/{empresa}/{archivo}")
     @PreAuthorize("hasAuthority('REGISTER')")
-    public ResponseEntity<ResponseDto> getAll(@Valid @RequestBody DataDto dataDto, @PathVariable Long empresa, @PathVariable Long archivo) {
+    public ResponseEntity<ResponseDto> save(@Valid @RequestBody DataDto dataDto, @PathVariable Long empresa, @PathVariable Long archivo) {
         dataService.save(dataDto, empresa, archivo);
         return new ResponseEntity<>(
                 new ResponseDto("Datos guardados correctamente.", true)
@@ -26,10 +26,10 @@ public class DataController {
         );
     }
 
-    @GetMapping("/{empresa}/{archivo}/{anio}")
+    @GetMapping("/{empresa}/{archivo}/{anio}/{mes}")
     @PreAuthorize("hasAuthority('REGISTER')")
-    public ResponseEntity<ResponseDto> get(@PathVariable Long empresa, @PathVariable Long archivo, @PathVariable Integer anio) {
-        DataDto byEmpresaAndAnio = dataService.getByEmpresaAndAnio(empresa, archivo, anio);
+    public ResponseEntity<ResponseDto> get(@PathVariable Long empresa, @PathVariable Long archivo, @PathVariable Integer anio, @PathVariable Integer mes) {
+        DataDto byEmpresaAndAnio = dataService.getByEmpresaAndAnio(empresa, archivo, anio, mes);
         return new ResponseEntity<>(
                 new ResponseDto(byEmpresaAndAnio, true)
                 , HttpStatus.OK

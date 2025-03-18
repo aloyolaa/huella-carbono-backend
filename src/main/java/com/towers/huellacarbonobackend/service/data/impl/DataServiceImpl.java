@@ -58,22 +58,22 @@ public class DataServiceImpl implements DataService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<DatosGenerales> getOptionalByEmpresaAndAnio(Long empresaId, Long archivo, Integer anio) {
-        return datosGeneralesRepository.findByEmpresaAndAnio(anio, empresaId, archivo);
+    public Optional<DatosGenerales> getOptionalByEmpresaAndAnio(Long empresaId, Long archivo, Integer anio, Integer mes) {
+        return datosGeneralesRepository.findByEmpresaAndAnio(anio, mes, empresaId, archivo);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public DataDto getByEmpresaAndAnio(Long empresaId, Long archivo, Integer anio) {
-        return getOptionalByEmpresaAndAnio(empresaId, archivo, anio)
+    public DataDto getByEmpresaAndAnio(Long empresaId, Long archivo, Integer anio, Integer mes) {
+        return getOptionalByEmpresaAndAnio(empresaId, archivo, anio, mes)
                 .map(dataMapper::toDataDto)
-                .orElseThrow(() -> new EntityNotFoundException("No hay datos registrados para el año " + anio));
+                .orElseThrow(() -> new EntityNotFoundException("No hay datos registrados para el año " + anio + " del mes " + mes));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public DatosGenerales getByArchivoAndAnio(Long empresa, Long archivo, Integer anio) {
-        return datosGeneralesRepository.findByEmpresaAndAnio(anio, empresa, archivo)
+    public DatosGenerales getByArchivoAndAnio(Long empresa, Long archivo, Integer anio, Integer mes) {
+        return datosGeneralesRepository.findByEmpresaAndAnio(anio, mes, empresa, archivo)
                 .orElseThrow(() -> new EntityNotFoundException("No hay datos registrados para el año " + anio));
     }
 
