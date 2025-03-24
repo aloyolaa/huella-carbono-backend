@@ -34,6 +34,7 @@ public class ImportService {
 
         DatosGenerales datosGenerales = new DatosGenerales();
         datosGenerales.setAnio(anio);
+        datosGenerales.setMes(mes);
         datosGenerales.setArchivo(new Archivo(archivoId));
         datosGenerales.setEmpresa(new Empresa(empresaId));
 
