@@ -19,4 +19,22 @@ public class CommonCalculate {
         if (detalle.getMeses().getDiciembre() != null) consumoElectricidad += detalle.getMeses().getDiciembre();
         return consumoElectricidad;
     }
+
+    public static double getConsumoMes(Detalle detalle, int mes) {
+        return switch (mes) {
+            case 1 -> detalle.getMeses().getEnero() != null ? detalle.getMeses().getEnero() : 0;
+            case 2 -> detalle.getMeses().getFebrero() != null ? detalle.getMeses().getFebrero() : 0;
+            case 3 -> detalle.getMeses().getMarzo() != null ? detalle.getMeses().getMarzo() : 0;
+            case 4 -> detalle.getMeses().getAbril() != null ? detalle.getMeses().getAbril() : 0;
+            case 5 -> detalle.getMeses().getMayo() != null ? detalle.getMeses().getMayo() : 0;
+            case 6 -> detalle.getMeses().getJunio() != null ? detalle.getMeses().getJunio() : 0;
+            case 7 -> detalle.getMeses().getJulio() != null ? detalle.getMeses().getJulio() : 0;
+            case 8 -> detalle.getMeses().getAgosto() != null ? detalle.getMeses().getAgosto() : 0;
+            case 9 -> detalle.getMeses().getSeptiembre() != null ? detalle.getMeses().getSeptiembre() : 0;
+            case 10 -> detalle.getMeses().getOctubre() != null ? detalle.getMeses().getOctubre() : 0;
+            case 11 -> detalle.getMeses().getNoviembre() != null ? detalle.getMeses().getNoviembre() : 0;
+            case 12 -> detalle.getMeses().getDiciembre() != null ? detalle.getMeses().getDiciembre() : 0;
+            default -> 0;
+        };
+    }
 }

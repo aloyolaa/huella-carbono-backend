@@ -17,7 +17,7 @@ public record DataDto(
         String comentarios,
         Integer anio,
         Integer mes,
-        Double emision,
+        String emision,
         GanadoDataDto ganadoData,
         List<DetalleDto> detalles
 ) {

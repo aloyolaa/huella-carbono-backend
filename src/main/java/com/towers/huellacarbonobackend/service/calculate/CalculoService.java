@@ -28,7 +28,6 @@ public class CalculoService {
     }
 
     private double calcularAlcance(List<DatosGenerales> data, Long alcance) {
-        System.out.println(alcance);
         return data.stream().filter(d -> Objects.equals(d.getArchivo().getAlcance().getId(), alcance)).toList()
                 .stream().mapToDouble(DatosGenerales::getEmision).sum();
     }

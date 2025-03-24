@@ -9,6 +9,8 @@ import com.towers.huellacarbonobackend.entity.data.GanadoData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static com.towers.huellacarbonobackend.service.util.NumberFormat.formatNumber;
+
 @Service
 @RequiredArgsConstructor
 public class DataMapper {
@@ -43,7 +45,7 @@ public class DataMapper {
                 datosGenerales.getComentarios(),
                 datosGenerales.getAnio(),
                 datosGenerales.getMes(),
-                datosGenerales.getEmision() != null ? datosGenerales.getEmision() : 0.0,
+                formatNumber(datosGenerales.getEmision() != null ? datosGenerales.getEmision() : 0.0),
                 datosGenerales.getGanadoData() != null ?
                         new GanadoDataDto(datosGenerales.getGanadoData().getId(), datosGenerales.getGanadoData().getTemperatura()) : null,
                 datosGenerales.getDetalles().stream().map(detalleMapper::toDetalleDto).toList()
