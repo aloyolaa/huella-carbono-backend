@@ -50,8 +50,8 @@ public class GraficoService {
             case 1, 2, 21 -> energiaYCombustionCalculate.calculateByMes(datosGenerales, mes);
             case 3 -> fuentesMovilesYRefinacionCalculate.calculateByMes(datosGenerales, mes);
             case 4, 5, 6 -> 0;
-            case 18 -> consumoElectricidadCalculate.calculate(datosGenerales);
-            case 19, 20 -> perdidasCalculate.calculate(datosGenerales);
+            case 18 -> consumoElectricidadCalculate.calculateByMes(datosGenerales, mes);
+            case 19, 20 -> perdidasCalculate.calculateByMes(datosGenerales, mes);
             case 27 -> consumoAguaCalculate.calculateByMes(datosGenerales, mes);
             default -> datosGenerales.getEmision();
         };
