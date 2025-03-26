@@ -22,7 +22,7 @@ public class EmpresaController {
     private final EmpresaArchivoService empresaArchivoService;
 
     @GetMapping("/archivo/{id}/{anio}")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getArchivos(@PathVariable Long id, @PathVariable Integer anio) {
         List<ArchivoDto> archivos = empresaArchivoService.getArchivosByAnio(id, anio);
         boolean accesos = !archivos.isEmpty();

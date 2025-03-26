@@ -17,7 +17,7 @@ public class DataController {
     private final DataService dataService;
 
     @PostMapping("/save/{empresa}/{archivo}")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> save(@Valid @RequestBody DataDto dataDto, @PathVariable Long empresa, @PathVariable Long archivo) {
         dataService.save(dataDto, empresa, archivo);
         return new ResponseEntity<>(
@@ -27,7 +27,7 @@ public class DataController {
     }
 
     @GetMapping("/{empresa}/{archivo}/{anio}/{mes}")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> get(@PathVariable Long empresa, @PathVariable Long archivo, @PathVariable Integer anio, @PathVariable Integer mes) {
         DataDto byEmpresaAndAnio = dataService.getByEmpresaAndAnio(empresa, archivo, anio, mes);
         return new ResponseEntity<>(

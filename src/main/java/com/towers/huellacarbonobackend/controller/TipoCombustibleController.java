@@ -21,7 +21,7 @@ public class TipoCombustibleController {
     private final TipoCombustibleService tipoCombustibleService;
 
     @GetMapping("/{archivo}")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll(@PathVariable Long archivo) {
         List<TipoCombustibleDto> all = tipoCombustibleService.getAllByArchivo(archivo);
         return new ResponseEntity<>(

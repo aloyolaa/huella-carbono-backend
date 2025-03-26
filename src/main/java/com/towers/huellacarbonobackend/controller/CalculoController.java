@@ -20,7 +20,7 @@ public class CalculoController {
     private final GraficoService graficoService;
 
     @GetMapping("/{empresa}/{anio}")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getCalculos(@PathVariable Long empresa, @PathVariable Integer anio) {
         CalculateDto calculos = calculoService.getCalculos(empresa, anio);
         return new ResponseEntity<>(
@@ -32,7 +32,7 @@ public class CalculoController {
     }
 
     @GetMapping("/statistics/{empresa}/{anio}")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getStatistics(@PathVariable Long empresa, @PathVariable Integer anio) {
         StatisticsDto grafico = graficoService.getGrafico(empresa, anio);
         return new ResponseEntity<>(

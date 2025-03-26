@@ -20,7 +20,7 @@ public class TipoRefrigeranteController {
     private final TipoRefrigeranteService tipoRefrigeranteService;
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll() {
         List<TipoRefrigerante> all = tipoRefrigeranteService.getAll();
         return new ResponseEntity<>(

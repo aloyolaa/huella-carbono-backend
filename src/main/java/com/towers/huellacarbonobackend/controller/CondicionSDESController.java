@@ -20,7 +20,7 @@ public class CondicionSDESController {
     private final CondicionSEDSService condicionSEDSService;
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll() {
         List<CondicionSEDS> all = condicionSEDSService.getAll();
         return new ResponseEntity<>(

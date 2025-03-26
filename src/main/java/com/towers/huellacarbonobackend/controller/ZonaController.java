@@ -20,7 +20,7 @@ public class ZonaController {
     private final ZonaService zonaService;
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll() {
         List<Zona> all = zonaService.getAll();
         return new ResponseEntity<>(

@@ -20,7 +20,7 @@ public class ArchivoController {
     private final ArchivoService archivoService;
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll() {
         List<ArchivoDto> archivos = archivoService.getAll();
         return new ResponseEntity<>(

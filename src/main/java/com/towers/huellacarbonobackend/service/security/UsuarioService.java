@@ -9,7 +9,7 @@ public interface UsuarioService {
 
     String getUsernameFromSecurityContext();
 
-    Usuario saveByEmpresa(Empresa empresa, String password);
+    Usuario saveByEmpresa(Empresa empresa, String username, String password);
 
     void save(UsuarioRegisterDto usuarioRegisterDto);
 

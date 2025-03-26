@@ -20,7 +20,7 @@ public class ResiduoAgricolaController {
     private final ResiduoAgricolaService residuoAgricolaService;
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll() {
         List<ResiduoAgricola> all = residuoAgricolaService.getAll();
         return new ResponseEntity<>(

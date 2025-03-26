@@ -21,7 +21,7 @@ public class ActividadController {
     private final ActividadService actividadService;
 
     @GetMapping("/{archivo}")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll(@PathVariable Long archivo) {
         List<ActividadDto> all = actividadService.getAllByArchivo(archivo);
         return new ResponseEntity<>(

@@ -1,12 +1,9 @@
 package com.towers.huellacarbonobackend.service.data.impl;
 
-import com.towers.huellacarbonobackend.dto.ArchivoDto;
 import com.towers.huellacarbonobackend.dto.EmpresaDto;
 import com.towers.huellacarbonobackend.entity.data.Empresa;
 import com.towers.huellacarbonobackend.entity.data.Usuario;
 import com.towers.huellacarbonobackend.exception.DataAccessExceptionImpl;
-import com.towers.huellacarbonobackend.mapper.ArchivoMapper;
-import com.towers.huellacarbonobackend.repository.EmpresaArchivoRepository;
 import com.towers.huellacarbonobackend.repository.EmpresaRepository;
 import com.towers.huellacarbonobackend.service.data.EmpresaService;
 import com.towers.huellacarbonobackend.service.security.EmailService;
@@ -18,8 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -43,7 +38,7 @@ public class EmpresaServiceImpl implements EmpresaService {
     @Override
     @Transactional
     public void registrarEmpresa(EmpresaDto empresaDto) {
-        if (empresaRepository.existsByRazonSocial(empresaDto.ruc())) {
+        if (empresaRepository.existsByRazonSocial(empresaDto.razonSocial())) {
             throw new DataAccessExceptionImpl("Ya existe una empresa con la Razón Social: " + empresaDto.razonSocial());
         }
 
@@ -60,13 +55,13 @@ public class EmpresaServiceImpl implements EmpresaService {
         empresa.setRuc(empresaDto.ruc().trim());
         empresa.setDireccion(empresaDto.direccion().trim().toUpperCase());
         empresa.setTelefono(empresaDto.telefono());
-        empresa.setCorreo(empresaDto.correo().trim().toUpperCase());
+        empresa.setCorreo(empresaDto.correo().trim().toLowerCase());
 
         empresaRepository.save(empresa);
 
         String password = generarPasswordAleatorio();
 
-        Usuario usuario = usuarioService.saveByEmpresa(empresa, password);
+        Usuario usuario = usuarioService.saveByEmpresa(empresa, empresaDto.username(), password);
 
         emailService.enviarCorreoRestablecimiento(usuario, password);
     }

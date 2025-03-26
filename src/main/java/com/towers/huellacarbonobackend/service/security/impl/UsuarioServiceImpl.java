@@ -21,7 +21,6 @@ import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.Year;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,22 +56,21 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional
-    public Usuario saveByEmpresa(Empresa empresa, String password) {
-        String username = generarUsername(empresa);
-
+    public Usuario saveByEmpresa(Empresa empresa, String username, String password) {
         if (usuarioRepository.existsByUsername(username)) {
             throw new DataAccessExceptionImpl("Ya existe un usuario con el username: " + username);
         }
 
         Usuario usuario = new Usuario();
-        usuario.setUsername(username);
+        usuario.setUsername(username.toUpperCase());
         usuario.setPassword(passwordEncoder.encode(password));
+        usuario.setCorreo(empresa.getCorreo());
         usuario.setEsNuevo(true);
         usuario.setEmpresa(empresa);
         usuario.setEsNuevo(true);
 
         Role admin = new Role();
-        admin.setId(2L);
+        admin.setId(1L);
         usuario.setRole(admin);
 
         return usuarioRepository.save(usuario);
@@ -82,15 +80,17 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional
     public void save(UsuarioRegisterDto usuarioRegisterDto) {
         Usuario usuario = usuarioMapper.toUsuario(usuarioRegisterDto);
+
+        if (usuarioRepository.existsByUsername(usuario.getUsername())) {
+            throw new DataAccessExceptionImpl("Ya existe un usuario con el username: " + usuario.getUsername());
+        }
+
+        if (usuarioRepository.existsByCorreo(usuario.getCorreo())) {
+            throw new DataAccessExceptionImpl("Ya existe un usuario con el correo: " + usuario.getCorreo());
+        }
+
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         usuarioRepository.save(usuario);
-    }
-
-    private String generarUsername(Empresa empresa) {
-        String letrasEmpresa = empresa.getRazonSocial().substring(0, 2).toUpperCase();
-        String letrasRuc = empresa.getRuc().substring(0, 2);
-        int anio = Year.now().getValue();
-        return letrasEmpresa + letrasRuc + anio;
     }
 
     @Override
