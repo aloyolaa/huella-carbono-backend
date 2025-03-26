@@ -7,10 +7,13 @@ import com.towers.huellacarbonobackend.entity.data.Detalle;
 import com.towers.huellacarbonobackend.service.calculate.FactorConversionCombustibleService;
 import com.towers.huellacarbonobackend.service.calculate.FactorEmisionCombustibleService;
 import com.towers.huellacarbonobackend.service.calculate.PCGCombustibleService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static com.towers.huellacarbonobackend.service.calculate.format.CommonCalculate.getConsumo;
+import java.util.List;
+
+import static com.towers.huellacarbonobackend.service.calculate.format.CommonCalculate.getConsumoMes;
 
 @Component
 @RequiredArgsConstructor
@@ -19,16 +22,41 @@ public class EnergiaYCombustionCalculate {
     private final FactorEmisionCombustibleService factorEmisionCombustibleService;
     private final PCGCombustibleService pcgCombustibleService;
 
+    private List<FactorConversionCombustible> fcData;
+    private List<FactorEmisionCombustible> feData;
+    private double pcgCO2;
+    private double pcgCH4;
+    private double pcgN2O;
+
+    @PostConstruct
+    private void init() {
+        this.fcData = factorConversionCombustibleService.getAll();
+        this.feData = factorEmisionCombustibleService.getAll();
+        this.pcgCO2 = pcgCombustibleService.getByNombre("Dióxido de carbono").getValor();
+        this.pcgCH4 = pcgCombustibleService.getByNombre("Metano - fósil").getValor();
+        this.pcgN2O = pcgCombustibleService.getByNombre("Óxido nitroso").getValor();
+    }
+
     public double calculate(DatosGenerales datosGenerales) {
         try {
             double total = 0;
-            double pcgCO2 = pcgCombustibleService.getByNombre("Dióxido de carbono").getValor();
-            double pcgCH4 = pcgCombustibleService.getByNombre("Metano - fósil").getValor();
-            double pcgN2O = pcgCombustibleService.getByNombre("Óxido nitroso").getValor();
+            for (int mes = 1; mes <= 12; mes++) {
+                total += calculateByMes(datosGenerales, mes);
+            }
+
+            return total;
+        } catch (NullPointerException e) {
+            return 0;
+        }
+    }
+
+    public double calculateByMes(DatosGenerales datosGenerales, int mes) {
+        try {
+            double total = 0;
             for (Detalle detalle : datosGenerales.getDetalles()) {
-                double consumo = getConsumo(detalle);
-                FactorConversionCombustible fc = factorConversionCombustibleService.getByTipoCombustible(detalle.getTipoCombustible().getId());
-                FactorEmisionCombustible fe = factorEmisionCombustibleService.getByTipoCombustible(detalle.getTipoCombustible().getId());
+                double consumo = getConsumoMes(detalle, mes);
+                FactorConversionCombustible fc = fcData.stream().filter(f -> f.getTipoCombustible().getId().equals(detalle.getTipoCombustible().getId())).findFirst().orElseThrow();
+                FactorEmisionCombustible fe = feData.stream().filter(f -> f.getTipoCombustible().getId().equals(detalle.getTipoCombustible().getId())).findFirst().orElseThrow();
                 consumo = consumo * fc.getValor();
                 double feCO2 = fe.getCo2();
                 double feCH4 = fe.getCh4();
@@ -39,7 +67,6 @@ public class EnergiaYCombustionCalculate {
                 double e = (co2 * pcgCO2) + (ch4 * pcgCH4) + (n2o * pcgN2O);
                 total += e;
             }
-
             return total;
         } catch (NullPointerException e) {
             return 0;

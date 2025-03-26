@@ -27,8 +27,8 @@ public class ExportService {
     private final FtpFileStorageService ftpFileStorageService;
     private final Map<Long, ExportOperation> exportOperations;
 
-    public ExportDto handleExcelExport(Long empresaId, Long archivoId, Integer anio) {
-        DatosGenerales datosGenerales = dataService.getByArchivoAndAnio(empresaId, archivoId, anio);
+    public ExportDto handleExcelExport(Long empresaId, Long archivoId, Integer anio, Integer mes) {
+        DatosGenerales datosGenerales = dataService.getByArchivoAndAnio(empresaId, archivoId, anio, mes);
         Archivo archivo = datosGenerales.getArchivo();
         String fileName = archivo.getFichero();
 
