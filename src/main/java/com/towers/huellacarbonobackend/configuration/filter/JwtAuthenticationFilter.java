@@ -25,8 +25,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.towers.huellacarbonobackend.configuration.TokenJwtConfig.*;
 

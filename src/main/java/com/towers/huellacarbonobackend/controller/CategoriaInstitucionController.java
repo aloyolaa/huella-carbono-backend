@@ -20,7 +20,7 @@ public class CategoriaInstitucionController {
     private final CategoriaInstitucionService categoriaInstitucionService;
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll() {
         List<CategoriaInstitucion> all = categoriaInstitucionService.getAll();
         return new ResponseEntity<>(

@@ -20,7 +20,7 @@ public class TipoAnimalController {
     private final TipoAnimalService tipoAnimalService;
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll() {
         List<TipoAnimal> all = tipoAnimalService.getAll();
         return new ResponseEntity<>(

@@ -20,7 +20,7 @@ public class TipoPFCController {
     private final TipoPFCService tipoPFCService;
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll() {
         List<TipoPFC> all = tipoPFCService.getAll();
         return new ResponseEntity<>(

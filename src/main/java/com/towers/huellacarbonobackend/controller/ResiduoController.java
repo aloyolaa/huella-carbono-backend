@@ -20,7 +20,7 @@ public class ResiduoController {
     private final ResiduoService residuoService;
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll() {
         List<Residuo> all = residuoService.getAll();
         return new ResponseEntity<>(

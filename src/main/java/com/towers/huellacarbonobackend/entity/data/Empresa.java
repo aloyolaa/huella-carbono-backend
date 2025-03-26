@@ -34,9 +34,6 @@ public class Empresa {
     @Column(name = "correo", nullable = false)
     private String correo;
 
-    @OneToOne(mappedBy = "empresa", cascade = CascadeType.ALL)
-    private Usuario usuario;
-
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<EmpresaArchivo> empresaArchivos = new LinkedHashSet<>();
 

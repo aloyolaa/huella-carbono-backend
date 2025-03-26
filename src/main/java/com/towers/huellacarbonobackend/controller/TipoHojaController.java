@@ -20,7 +20,7 @@ public class TipoHojaController {
     private final TipoHojaService tipoHojaService;
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll() {
         List<TipoHoja> all = tipoHojaService.getAll();
         return new ResponseEntity<>(

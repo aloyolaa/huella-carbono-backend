@@ -7,6 +7,7 @@ import com.towers.huellacarbonobackend.service.file.excel.exp.ExportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +19,7 @@ public class FileController {
     private final ImportService importService;
 
     @GetMapping("/export/{empresa}/{archivo}/{anio}/{mes}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> exportToExcel(@PathVariable Long empresa, @PathVariable Long archivo, @PathVariable Integer anio, @PathVariable Integer mes) {
         ExportDto exportDto = exportService.handleExcelExport(empresa, archivo, anio, mes);
         return new ResponseEntity<>(
@@ -27,6 +29,7 @@ public class FileController {
     }
 
     @PostMapping("/import/{empresa}/{archivo}/{anio}/{mes}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> importExcel(@RequestParam MultipartFile file, @PathVariable Long empresa, @PathVariable Long archivo, @PathVariable Integer anio, @PathVariable Integer mes) {
         importService.handleExcelImport(empresa, archivo, anio, mes, file);
         return new ResponseEntity<>(

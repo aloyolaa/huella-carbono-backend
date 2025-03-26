@@ -20,7 +20,7 @@ public class TipoSueloController {
     private final TipoSueloService tipoSueloService;
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll() {
         List<TipoSuelo> all = tipoSueloService.getAll();
         return new ResponseEntity<>(

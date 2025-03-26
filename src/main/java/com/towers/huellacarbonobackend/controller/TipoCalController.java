@@ -20,7 +20,7 @@ public class TipoCalController {
     private final TipoCalService tipoCalService;
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAll() {
         List<TipoCal> all = tipoCalService.getAll();
         return new ResponseEntity<>(

@@ -18,13 +18,11 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
     private final UsuarioService usuarioService;
     private final TemplateEngine templateEngine;
-    private final PasswordEncoder passwordEncoder;
     @Value("${app.front.url}")
     private String appFrontUrl;
 
     public void enviarCorreoRestablecimiento(Usuario usuario, String password) {
-        // Generamos un token de restablecimiento
-        String token = usuarioService.generarTokenRestablecimiento(usuario);
+        String token = usuarioService.generateTokenRestablecimiento(usuario);
 
         MimeMessage mensaje = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = null;

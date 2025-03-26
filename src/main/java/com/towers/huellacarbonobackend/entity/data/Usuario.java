@@ -43,16 +43,12 @@ public class Usuario {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;
 
     @PrePersist
     public void prePersist() {
         this.habilitado = true;
-        this.esNuevo = true;
-        Role r = new Role();
-        r.setId(1L);
-        this.role = r;
     }
 }

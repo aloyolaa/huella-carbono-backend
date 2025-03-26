@@ -2,6 +2,7 @@ package com.towers.huellacarbonobackend.controller;
 
 import com.towers.huellacarbonobackend.dto.ErrorResponse;
 import com.towers.huellacarbonobackend.dto.ResponseDto;
+import com.towers.huellacarbonobackend.exception.DataAccessExceptionImpl;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -24,6 +25,16 @@ public class ExceptionController {
         String errorMessage = "EntityNotFoundException: " + e.getMessage();
         log.error(errorMessage);
         ErrorResponse errorResponse = new ErrorResponse("Fallo en Búsqueda de Datos", e.getMessage());
+        return new ResponseEntity<>(
+                new ResponseDto(errorResponse, false)
+                , HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DataAccessExceptionImpl.class)
+    public ResponseEntity<ResponseDto> dataAccessExceptionImpl(DataAccessExceptionImpl e) {
+        String errorMessage = "DataAccessExceptionImpl: " + e.getMessage();
+        log.error(errorMessage);
+        ErrorResponse errorResponse = new ErrorResponse("Fallo al Acceder a los datos", e.getMessage());
         return new ResponseEntity<>(
                 new ResponseDto(errorResponse, false)
                 , HttpStatus.INTERNAL_SERVER_ERROR);
