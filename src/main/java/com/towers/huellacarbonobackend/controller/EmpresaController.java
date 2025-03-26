@@ -35,7 +35,7 @@ public class EmpresaController {
     }
 
     @PostMapping("/archivo/save/{id}/{anio}")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> saveArchivos(@RequestBody List<Integer> archivos, @PathVariable Long id, @PathVariable Integer anio) {
         empresaArchivoService.save(archivos, id, anio);
         return new ResponseEntity<>(
@@ -54,7 +54,7 @@ public class EmpresaController {
     }
 
     @GetMapping("/exists/{id}")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> existsByEmpresa(@PathVariable Long id) {
         boolean existsArchivos = empresaArchivoService.existsByEmpresa(id);
         return new ResponseEntity<>(
@@ -66,7 +66,7 @@ public class EmpresaController {
     }
 
     @GetMapping("/anios/{id}")
-    @PreAuthorize("hasAuthority('REGISTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getAniosByEmpresa(@PathVariable Long id) {
         List<Integer> aniosByEmpresa = empresaArchivoService.getAniosByEmpresa(id);
         return new ResponseEntity<>(
