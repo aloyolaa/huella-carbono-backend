@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -27,12 +28,16 @@ public class ExportService {
     private final FtpFileStorageService ftpFileStorageService;
     private final Map<Long, ExportOperation> exportOperations;
 
+    @Value("${ftp.fna}")
+    private String ftpRemoteDir;
+
+
     public ExportDto handleExcelExport(Long empresaId, Long archivoId, Integer anio, Integer mes) {
         DatosGenerales datosGenerales = dataService.getByArchivoAndAnio(empresaId, archivoId, anio, mes);
         Archivo archivo = datosGenerales.getArchivo();
         String fileName = archivo.getFichero();
 
-        try (InputStream inputStream = new ByteArrayInputStream(ftpFileStorageService.loadFileAsResource(fileName));
+        try (InputStream inputStream = new ByteArrayInputStream(ftpFileStorageService.loadFileAsResource(fileName, ftpRemoteDir));
              Workbook workbook = new XSSFWorkbook(inputStream);
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.getSheetAt(0);
