@@ -7,7 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "factor_emision_perdidas")
+@Table(name = "factor_emision_perdidas", indexes = {
+        @Index(name = "idx_factoremisionperdidas", columnList = "anio")
+})
 public class FactorEmisionPerdidas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,7 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "fcm_condicion")
+@Table(name = "fcm_condicion", indexes = {
+        @Index(name = "idx_fcmcondicion", columnList = "condicion_seds_id")
+})
 public class FCMCondicion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
