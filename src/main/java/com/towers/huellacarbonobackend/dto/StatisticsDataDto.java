@@ -1,8 +1,12 @@
 package com.towers.huellacarbonobackend.dto;
 
-public record StatisticsDataDto(
-        Integer time,
-        Double value,
-        String valueStr
-) {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class StatisticsDataDto {
+    private Integer time;
+    private Double value;
+    private String valueStr;
 }
