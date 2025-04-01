@@ -11,7 +11,10 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "datos_generales")
+@Table(name = "datos_generales", indexes = {
+        @Index(name = "idx_datosgenerales_anio", columnList = "anio, empresa_id"),
+        @Index(name = "idx_datosgenerales_anio_mes", columnList = "anio, mes, empresa_id, archivo_id")
+})
 public class DatosGenerales {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

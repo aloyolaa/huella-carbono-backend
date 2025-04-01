@@ -7,7 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "logo")
+@Table(name = "logo", indexes = {
+        @Index(name = "idx_logo_empresa_id", columnList = "empresa_id")
+})
 public class Logo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
