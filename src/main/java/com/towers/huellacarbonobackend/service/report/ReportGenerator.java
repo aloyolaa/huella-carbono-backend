@@ -4,9 +4,12 @@ import com.towers.huellacarbonobackend.dto.CalculateDto;
 import com.towers.huellacarbonobackend.dto.StatisticsDataDto;
 import com.towers.huellacarbonobackend.dto.StatisticsDto;
 import com.towers.huellacarbonobackend.dto.StatisticsReportDataDto;
+import com.towers.huellacarbonobackend.entity.data.Empresa;
 import com.towers.huellacarbonobackend.exception.ReportGeneratorException;
 import com.towers.huellacarbonobackend.service.calculate.CalculoService;
 import com.towers.huellacarbonobackend.service.calculate.GraficoService;
+import com.towers.huellacarbonobackend.service.data.EmpresaService;
+import com.towers.huellacarbonobackend.service.data.LogoService;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -22,62 +25,40 @@ import java.util.*;
 public class ReportGenerator {
     private final CalculoService calculoService;
     private final GraficoService graficoService;
+    private final EmpresaService empresaService;
+    private final LogoService logoService;
     private final ResourceLoader resourceLoader;
 
-    public String generateReport(Long empresa, Integer anio) {
+    public String generateReport(Long empresaId, Integer anio) {
         try {
-            //LocalDate date = dateFilter.isBefore(LocalDate.now()) ? dateFilter : dateFilter.minusDays(1);
+            Resource reportFile = resourceLoader.getResource("classpath:templates/report/Blank_A4.jasper");
 
-            Resource reportFile = resourceLoader.getResource("classpath:templates/report/ChcReport.jasper");
+            CalculateDto calculo = calculoService.getCalculos(empresaId, anio);
+            StatisticsDto grafico = graficoService.getGrafico(empresaId, anio);
+            Empresa empresa = empresaService.getById(empresaId);
 
-            //Resource logo = resourceLoader.getResource("classpath:static/images/logo.png");
-
-            /*ConsumptionDto arConsumption = consumptionService.getConsumption("AR", dateFilter);
-            ConsumptionDto cqConsumption = consumptionService.getConsumption("CQ", dateFilter);
-            ConsumptionDto dcConsumption = consumptionService.getConsumption("DC", dateFilter);
-            ConsumptionDto gqConsumption = consumptionService.getConsumption("GQ", dateFilter);*/
-
-            CalculateDto calculo = calculoService.getCalculos(empresa, anio);
-            StatisticsDto grafico = graficoService.getGrafico(empresa, anio);
-            /*StatisticsDto cqStatistics = statisticsService.getStatistics("CQ", dateFilter);
-            StatisticsDto dcStatistics = statisticsService.getStatistics("DC", dateFilter);
-            StatisticsDto gqStatistics = statisticsService.getStatistics("GQ", dateFilter);*/
-
-            JRBeanCollectionDataSource arDataSource = new JRBeanCollectionDataSource(getAnnualStatistics(arStatistics.annualConsumption(), arStatistics.annualConsumptionLastYear()));
+            JRBeanCollectionDataSource graficoDataSource =
+                    new JRBeanCollectionDataSource(getAnnualStatistics(grafico.alcance1(), grafico.alcance2(), grafico.alcance3()));
 
             Map<String, Object> reportParameters = new HashMap<>();
 
-            reportParameters.put("logo", logo.getInputStream());
+            reportParameters.put("logo", logoService.getByEmpresa(empresaId).logoFile());
+            reportParameters.put("razonSocial", empresa.getRazonSocial());
+            reportParameters.put("anio", anio);
 
-            reportParameters.put("dateFilter", date.toString());
+            reportParameters.put("alcance1Nombre", "Alcance 1");
+            reportParameters.put("alcance2Nombre", "Alcance 2");
+            reportParameters.put("alcance3Nombre", "Alcance 3");
 
-            reportParameters.put("uploadDateOptima", uploadHistoryService.getLastUploadDate("OPTIMA").toLocalDate().toString());
-            reportParameters.put("uploadDateDonation", uploadHistoryService.getLastUploadDate("DONATION").toLocalDate().toString());
+            reportParameters.put("alcance1", calculo.alcance1Str());
+            reportParameters.put("alcance2", calculo.alcance2Str());
+            reportParameters.put("alcance3", calculo.alcance3Str());
+            reportParameters.put("total", calculo.totalStr());
+            reportParameters.put("alcance1Porcentaje", calculo.alcance1PorcentajeStr());
+            reportParameters.put("alcance2Porcentaje", calculo.alcance2PorcentajeStr());
+            reportParameters.put("alcance3Porcentaje", calculo.alcance3PorcentajeStr());
 
-            reportParameters.put("arDailyConsumption", arConsumption.dailyConsumptionStr());
-            reportParameters.put("arWeeklyConsumption", arConsumption.weeklyConsumptionStr());
-            reportParameters.put("arMonthlyConsumption", arConsumption.monthlyConsumptionStr());
-            reportParameters.put("arAnnualConsumption", arConsumption.annualConsumptionStr());
-
-            reportParameters.put("arCurrentYearLegend", date.getYear());
-            reportParameters.put("arLastYearLegend", date.minusYears(1).getYear());
-
-            reportParameters.put("arDataSource", arDataSource);
-
-            reportParameters.put("cqCurrentYearLegend", date.getYear());
-            reportParameters.put("cqLastYearLegend", date.minusYears(1).getYear());
-
-            reportParameters.put("cqDataSource", cqDataSource);
-
-            reportParameters.put("dcCurrentYearLegend", date.getYear());
-            reportParameters.put("dcLastYearLegend", date.minusYears(1).getYear());
-
-            reportParameters.put("dcDataSource", dcDataSource);
-
-            reportParameters.put("gqCurrentYearLegend", date.getYear());
-            reportParameters.put("gqLastYearLegend", date.minusYears(1).getYear());
-
-            reportParameters.put("gqDataSource", gqDataSource);
+            //reportParameters.put("graficoDataSource", graficoDataSource);
 
             JasperReport report = (JasperReport) JRLoader.loadObject(reportFile.getInputStream());
 
@@ -87,7 +68,7 @@ public class ReportGenerator {
 
             return Base64.getEncoder().encodeToString(reportPdf);
         } catch (Exception e) {
-            throw new ReportGeneratorException("No se puedo generar el reporte. Inténtelo más tarde." + e.getMessage());
+            throw new ReportGeneratorException("No se puedo generar el reporte. Inténtelo más tarde. " + e.getLocalizedMessage());
         }
     }
 

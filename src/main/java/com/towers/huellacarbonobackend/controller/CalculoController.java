@@ -45,7 +45,7 @@ public class CalculoController {
         );
     }
 
-    @GetMapping("/{empresa}/{anio}")
+    @GetMapping("/report/{empresa}/{anio}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
     public ResponseEntity<ResponseDto> getReport(@PathVariable Long empresa, @PathVariable Integer anio) {
         String report = reportGenerator.generateReport(empresa, anio);
