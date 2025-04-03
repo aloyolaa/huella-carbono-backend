@@ -2,6 +2,7 @@ package com.towers.huellacarbonobackend.service.data.impl;
 
 import com.towers.huellacarbonobackend.dto.DataDto;
 import com.towers.huellacarbonobackend.entity.data.DatosGenerales;
+import com.towers.huellacarbonobackend.entity.data.Detalle;
 import com.towers.huellacarbonobackend.mapper.DataMapper;
 import com.towers.huellacarbonobackend.repository.DatosGeneralesRepository;
 import com.towers.huellacarbonobackend.service.calculate.format.*;
@@ -46,6 +47,23 @@ public class DataServiceImpl implements DataService {
     @Transactional
     public void save(DataDto dataDto, Long empresa, Long archivo) {
         DatosGenerales datosGenerales = dataMapper.toDatosGenerales(dataDto, empresa, archivo);
+
+        Optional<DatosGenerales> existingDatosGeneralesOpt = datosGeneralesRepository.findById(datosGenerales.getId());
+        if (existingDatosGeneralesOpt.isPresent()) {
+            DatosGenerales existingDatosGenerales = existingDatosGeneralesOpt.orElseThrow();
+
+            for (Detalle detalle : datosGenerales.getDetalles()) {
+                if (detalle.getId() != null) {
+                    existingDatosGenerales.getDetalles().removeIf(d -> d.getId().equals(detalle.getId()));
+                    existingDatosGenerales.getDetalles().add(detalle);
+                } else {
+                    existingDatosGenerales.getDetalles().add(detalle);
+                }
+            }
+
+            datosGenerales.setDetalles(existingDatosGenerales.getDetalles());
+        }
+
         datosGenerales.setEmision(getEmision(datosGenerales));
         datosGeneralesRepository.save(datosGenerales);
     }

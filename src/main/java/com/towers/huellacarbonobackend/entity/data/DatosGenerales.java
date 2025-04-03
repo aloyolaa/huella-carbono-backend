@@ -57,10 +57,10 @@ public class DatosGenerales {
     @JoinColumn(name = "archivo_id", nullable = false)
     private Archivo archivo;
 
-    @OneToOne(mappedBy = "datosGenerales", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "datosGenerales", cascade = CascadeType.ALL)
     private GanadoData ganadoData;
 
-    @OneToMany(mappedBy = "datosGenerales", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "datosGenerales", cascade = CascadeType.ALL)
     @OrderBy
     private List<Detalle> detalles = new ArrayList<>();
 }
