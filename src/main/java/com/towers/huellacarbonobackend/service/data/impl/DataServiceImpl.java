@@ -48,20 +48,22 @@ public class DataServiceImpl implements DataService {
     public void save(DataDto dataDto, Long empresa, Long archivo) {
         DatosGenerales datosGenerales = dataMapper.toDatosGenerales(dataDto, empresa, archivo);
 
-        Optional<DatosGenerales> existingDatosGeneralesOpt = datosGeneralesRepository.findById(datosGenerales.getId());
-        if (existingDatosGeneralesOpt.isPresent()) {
-            DatosGenerales existingDatosGenerales = existingDatosGeneralesOpt.orElseThrow();
+        if (datosGenerales.getId() != null) {
+            Optional<DatosGenerales> existingDatosGeneralesOpt = datosGeneralesRepository.findById(datosGenerales.getId());
+            if (existingDatosGeneralesOpt.isPresent()) {
+                DatosGenerales existingDatosGenerales = existingDatosGeneralesOpt.orElseThrow();
 
-            for (Detalle detalle : datosGenerales.getDetalles()) {
-                if (detalle.getId() != null) {
-                    existingDatosGenerales.getDetalles().removeIf(d -> d.getId().equals(detalle.getId()));
-                    existingDatosGenerales.getDetalles().add(detalle);
-                } else {
-                    existingDatosGenerales.getDetalles().add(detalle);
+                for (Detalle detalle : datosGenerales.getDetalles()) {
+                    if (detalle.getId() != null) {
+                        existingDatosGenerales.getDetalles().removeIf(d -> d.getId().equals(detalle.getId()));
+                        existingDatosGenerales.getDetalles().add(detalle);
+                    } else {
+                        existingDatosGenerales.getDetalles().add(detalle);
+                    }
                 }
-            }
 
-            datosGenerales.setDetalles(existingDatosGenerales.getDetalles());
+                datosGenerales.setDetalles(existingDatosGenerales.getDetalles());
+            }
         }
 
         datosGenerales.setEmision(getEmision(datosGenerales));
