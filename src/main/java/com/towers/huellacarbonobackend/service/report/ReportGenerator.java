@@ -31,7 +31,7 @@ public class ReportGenerator {
 
     public String generateReport(Long empresaId, Integer anio) {
         try {
-            Resource reportFile = resourceLoader.getResource("classpath:templates/report/Blank_A4.jasper");
+            Resource reportFile = resourceLoader.getResource("classpath:templates/report/HCReport.jasper");
 
             CalculateDto calculo = calculoService.getCalculos(empresaId, anio);
             StatisticsDto grafico = graficoService.getGrafico(empresaId, anio);
@@ -46,9 +46,9 @@ public class ReportGenerator {
             reportParameters.put("razonSocial", empresa.getRazonSocial());
             reportParameters.put("anio", anio);
 
-            reportParameters.put("alcance1Nombre", "Alcance 1");
+            /*reportParameters.put("alcance1Nombre", "Alcance 1");
             reportParameters.put("alcance2Nombre", "Alcance 2");
-            reportParameters.put("alcance3Nombre", "Alcance 3");
+            reportParameters.put("alcance3Nombre", "Alcance 3");*/
 
             reportParameters.put("alcance1", calculo.alcance1Str());
             reportParameters.put("alcance2", calculo.alcance2Str());
@@ -58,7 +58,7 @@ public class ReportGenerator {
             reportParameters.put("alcance2Porcentaje", calculo.alcance2PorcentajeStr());
             reportParameters.put("alcance3Porcentaje", calculo.alcance3PorcentajeStr());
 
-            //reportParameters.put("graficoDataSource", graficoDataSource);
+            reportParameters.put("graficoDataSource", graficoDataSource);
 
             JasperReport report = (JasperReport) JRLoader.loadObject(reportFile.getInputStream());
 
@@ -80,14 +80,19 @@ public class ReportGenerator {
         for (int i = 0; i < alcance1.size(); i++) {
             data.add(new StatisticsReportDataDto(
                     meses[alcance1.get(i).getTime() - 1],
-                    alcance1.get(i).getValue(),
                     meses[alcance2.get(i).getTime() - 1],
-                    alcance2.get(i).getValue(),
                     meses[alcance3.get(i).getTime() - 1],
-                    alcance3.get(i).getValue()
+                    alcance1.get(i).getValue() != null ? alcance1.get(i).getValue() : 0.0,
+                    alcance2.get(i).getValue() != null ? alcance2.get(i).getValue() : 0.0,
+                    alcance3.get(i).getValue() != null ? alcance3.get(i).getValue() : 0.0
                     ));
         }
+
+        // Log para verificar los datos generados
+        System.out.println(meses[0]);
+        System.out.println("Datos generados para el gráfico: " + data);
 
         return data;
     }
 }
+
