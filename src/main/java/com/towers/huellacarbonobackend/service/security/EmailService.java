@@ -7,10 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
+import java.io.UnsupportedEncodingException;
 
 @Service
 @RequiredArgsConstructor
@@ -39,10 +40,11 @@ public class EmailService {
 
         try {
             helper = new MimeMessageHelper(mensaje, true, "UTF-8");
+            helper.setFrom("soporte@towers-consulting.com", "Towers Consulting");
             helper.setTo(usuario.getEmpresa().getCorreo());
             helper.setSubject("Configuración de contraseña - Huella de Carbono");
             helper.setText(contenidoHtml, true);
-        } catch (MessagingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
 
