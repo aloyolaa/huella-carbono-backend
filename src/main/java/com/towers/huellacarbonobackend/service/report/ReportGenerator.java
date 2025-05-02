@@ -1,9 +1,6 @@
 package com.towers.huellacarbonobackend.service.report;
 
-import com.towers.huellacarbonobackend.dto.CalculateDto;
-import com.towers.huellacarbonobackend.dto.StatisticsDataDto;
-import com.towers.huellacarbonobackend.dto.StatisticsDto;
-import com.towers.huellacarbonobackend.dto.StatisticsReportDataDto;
+import com.towers.huellacarbonobackend.dto.*;
 import com.towers.huellacarbonobackend.entity.data.Empresa;
 import com.towers.huellacarbonobackend.exception.ReportGeneratorException;
 import com.towers.huellacarbonobackend.service.calculate.CalculoService;
@@ -40,6 +37,18 @@ public class ReportGenerator {
             JRBeanCollectionDataSource graficoDataSource =
                     new JRBeanCollectionDataSource(getAnnualStatistics(grafico.alcance1(), grafico.alcance2(), grafico.alcance3()));
 
+            JRBeanCollectionDataSource pieDataSource = new JRBeanCollectionDataSource(
+                    List.of(
+                            new PieData("Alcance 1", calculo.alcance1Porcentaje()),
+                            new PieData("Alcance 2", calculo.alcance2Porcentaje()),
+                            new PieData("Alcance 3", calculo.alcance3Porcentaje())
+                    )
+            );
+
+            // Log para verificar los datos generados
+            //System.out.println(meses[0]);
+            System.out.println("Datos generados para el gráfico: " + graficoDataSource.getData());
+
             Map<String, Object> reportParameters = new HashMap<>();
 
             reportParameters.put("logo", logoService.getByEmpresa(empresaId).logoFile());
@@ -59,6 +68,7 @@ public class ReportGenerator {
             reportParameters.put("alcance3Porcentaje", calculo.alcance3PorcentajeStr());
 
             reportParameters.put("graficoDataSource", graficoDataSource);
+            reportParameters.put("pieDataSource", pieDataSource);
 
             JasperReport report = (JasperReport) JRLoader.loadObject(reportFile.getInputStream());
 
@@ -68,7 +78,8 @@ public class ReportGenerator {
 
             return Base64.getEncoder().encodeToString(reportPdf);
         } catch (Exception e) {
-            throw new ReportGeneratorException("No se puedo generar el reporte. Inténtelo más tarde. " + e.getLocalizedMessage());
+            e.printStackTrace();
+            throw new ReportGeneratorException("No se puedo generar el reporte. Inténtelo más tarde. " + e.getMessage());
         }
     }
 
@@ -87,10 +98,6 @@ public class ReportGenerator {
                     alcance3.get(i).getValue() != null ? alcance3.get(i).getValue() : 0.0
                     ));
         }
-
-        // Log para verificar los datos generados
-        System.out.println(meses[0]);
-        System.out.println("Datos generados para el gráfico: " + data);
 
         return data;
     }
