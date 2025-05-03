@@ -15,7 +15,6 @@ import net.sf.dynamicreports.report.builder.component.Components;
 import net.sf.dynamicreports.report.builder.datatype.DataTypes;
 import net.sf.dynamicreports.report.builder.style.StyleBuilder;
 import net.sf.dynamicreports.report.constant.*;
-import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.stereotype.Service;
 
@@ -95,7 +94,7 @@ public class ReportGenerator {
 
             // Create report
             JasperReportBuilder report = createReportDesign(
-                    logoService.getByEmpresa(empresaId).logoFile(),
+                    logoService.getByEmpresa(empresaId),
                     empresa.getRazonSocial(),
                     anio,
                     calculo,
@@ -116,7 +115,7 @@ public class ReportGenerator {
     }
 
     private JasperReportBuilder createReportDesign(
-            String logoBase64,
+            LogoDto logo,
             String razonSocial,
             Integer anio,
             CalculateDto calculo,
@@ -131,9 +130,11 @@ public class ReportGenerator {
 
         // Title section
         report.title(
-                Components.image(new ByteArrayInputStream(Base64.getDecoder().decode(logoBase64)))
+                logo != null && !logo.logoFile().isEmpty()
+                        ? Components.image(new ByteArrayInputStream(Base64.getDecoder().decode(logo.logoFile())))
                         .setFixedDimension(130, 50)
-                        .setHorizontalAlignment(HorizontalAlignment.RIGHT),
+                        .setHorizontalAlignment(HorizontalAlignment.RIGHT)
+                        : Components.verticalGap(20),
                 Components.text("REPORTE HUELLA DE CARBONO").setStyle(titleStyle).setFixedWidth(555).setFixedHeight(20),
                 Components.text(razonSocial).setStyle(normalTextStyle).setFixedWidth(555).setFixedHeight(20),
                 Components.text(anio.toString()).setStyle(normalTextStyle).setFixedWidth(555).setFixedHeight(20),
