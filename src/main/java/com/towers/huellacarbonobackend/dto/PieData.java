@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class StatisticsDataDto {
-    private Integer time;
-    private Double value;
-    private String valueStr;
+public class PieData{
+    private String alcance;
+    private Double porcentaje;
 }

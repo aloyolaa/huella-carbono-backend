@@ -3,6 +3,7 @@ package com.towers.huellacarbonobackend.controller;
 import com.towers.huellacarbonobackend.dto.*;
 import com.towers.huellacarbonobackend.service.calculate.CalculoService;
 import com.towers.huellacarbonobackend.service.calculate.GraficoService;
+import com.towers.huellacarbonobackend.service.report.ReportGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CalculoController {
     private final CalculoService calculoService;
     private final GraficoService graficoService;
+    private final ReportGenerator reportGenerator;
 
     @GetMapping("/{empresa}/{anio}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
@@ -38,6 +40,18 @@ public class CalculoController {
         return new ResponseEntity<>(
                 new ResponseDto(
                         grafico
+                        , true),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/report/{empresa}/{anio}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'REGISTER')")
+    public ResponseEntity<ResponseDto> getReport(@PathVariable Long empresa, @PathVariable Integer anio) {
+        String report = reportGenerator.generateReport(empresa, anio);
+        return new ResponseEntity<>(
+                new ResponseDto(
+                        report
                         , true),
                 HttpStatus.OK
         );
