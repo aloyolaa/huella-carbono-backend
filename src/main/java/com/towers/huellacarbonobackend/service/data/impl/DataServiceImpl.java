@@ -7,7 +7,9 @@ import com.towers.huellacarbonobackend.mapper.DataMapper;
 import com.towers.huellacarbonobackend.repository.DatosGeneralesRepository;
 import com.towers.huellacarbonobackend.service.calculate.format.*;
 import com.towers.huellacarbonobackend.service.data.DataService;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +38,9 @@ public class DataServiceImpl implements DataService {
     private final GeneracionIndirectaNF3Calculate generacionIndirectaNF3Calculate;
     private final GeneracionResiduosCalculate generacionResiduosCalculate;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Override
     @Transactional
     public DatosGenerales save(DatosGenerales datosGenerales) {
@@ -55,7 +60,9 @@ public class DataServiceImpl implements DataService {
 
                 for (Detalle detalle : datosGenerales.getDetalles()) {
                     if (detalle.getId() != null) {
-                        existingDatosGenerales.getDetalles().removeIf(d -> d.getId().equals(detalle.getId()));
+                        Detalle finalDetalle = detalle;
+                        existingDatosGenerales.getDetalles().removeIf(d -> d.getId().equals(finalDetalle.getId()));
+                        detalle = entityManager.merge(detalle);
                         existingDatosGenerales.getDetalles().add(detalle);
                     } else {
                         existingDatosGenerales.getDetalles().add(detalle);
