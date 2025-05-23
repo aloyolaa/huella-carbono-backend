@@ -324,15 +324,15 @@ public class DetalleMapper {
                         detalle.getClinker().getContenidoCaOClinker(),
                         detalle.getClinker().getContenidoCaOCaCO3()
                 ) : null,
-                detalle.getRefrigeranteInstalacion() != null ? new RefrigeranteDto(
-                        new RefrigeranteInstalacionDto(
+                detalle.getRefrigeranteInstalacion() != null || detalle.getRefrigeranteOperacion() != null || detalle.getRefrigeranteDisposicion() != null ? new RefrigeranteDto(
+                        detalle.getRefrigeranteInstalacion() != null ? new RefrigeranteInstalacionDto(
                                 detalle.getRefrigeranteInstalacion().getId(),
                                 detalle.getRefrigeranteInstalacion().getTipoEquipo().getId(),
                                 detalle.getRefrigeranteInstalacion().getTipoRefrigerante().getId(),
                                 detalle.getRefrigeranteInstalacion().getNumeroEquipos(),
                                 detalle.getRefrigeranteInstalacion().getCapacidadCarga(),
                                 detalle.getRefrigeranteInstalacion().getFugaInstalacion()
-                        ),
+                        ) : null,
                         detalle.getRefrigeranteOperacion() != null ? new RefrigeranteOperacionDto(
                                 detalle.getRefrigeranteOperacion().getId(),
                                 detalle.getRefrigeranteOperacion().getTipoEquipo().getId(),
@@ -352,14 +352,14 @@ public class DetalleMapper {
                                 detalle.getRefrigeranteDisposicion().getFraccionRefrigeranteRecuperado()
                         ) : null
                 ) : null,
-                detalle.getFugaInstalacion() != null ? new FugaDto(
-                        new FugaInstalacionDto(
+                detalle.getFugaInstalacion() != null || detalle.getFugaOperacion() != null || detalle.getFugaDisposicion() != null ? new FugaDto(
+                        detalle.getFugaInstalacion() != null ? new FugaInstalacionDto(
                                 detalle.getFugaInstalacion().getId(),
                                 detalle.getFugaInstalacion().getDescripcionEquipo(),
                                 detalle.getFugaInstalacion().getNumeroEquipos(),
                                 detalle.getFugaInstalacion().getCapacidadCarga(),
                                 detalle.getFugaInstalacion().getFugaInstalacion()
-                        ),
+                        ) : null,
                         detalle.getFugaOperacion() != null ? new FugaOperacionDto(
                                 detalle.getFugaOperacion().getId(),
                                 detalle.getFugaOperacion().getDescripcionEquipo(),
@@ -377,15 +377,15 @@ public class DetalleMapper {
                                 detalle.getFugaDisposicion().getFraccionSF6Recuperado()
                         ) : null
                 ) : null,
-                detalle.getPfcInstalacion() != null ? new PFCDto(
-                        new PFCInstalacionDto(
+                detalle.getPfcInstalacion() != null || detalle.getPfcOperacion() != null || detalle.getPfcDisposicion() != null ? new PFCDto(
+                        detalle.getPfcInstalacion() != null ? new PFCInstalacionDto(
                                 detalle.getPfcInstalacion().getId(),
                                 detalle.getPfcInstalacion().getDescripcionEquipo(),
                                 detalle.getPfcInstalacion().getTipoPFC().getId(),
                                 detalle.getPfcInstalacion().getNumeroEquipos(),
                                 detalle.getPfcInstalacion().getCapacidadCarga(),
                                 detalle.getPfcInstalacion().getFugaInstalacion()
-                        ),
+                        ) : null,
                         detalle.getPfcOperacion() != null ? new PFCOperacionDto(
                                 detalle.getPfcOperacion().getId(),
                                 detalle.getPfcOperacion().getDescripcionEquipo(),
