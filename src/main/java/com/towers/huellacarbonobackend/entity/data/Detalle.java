@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -119,4 +120,16 @@ public class Detalle {
 
     @OneToMany(mappedBy = "detalle", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransporteCasaTrabajo> transporteCasaTrabajos = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Detalle detalle = (Detalle) o;
+        return Objects.equals(id, detalle.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }
