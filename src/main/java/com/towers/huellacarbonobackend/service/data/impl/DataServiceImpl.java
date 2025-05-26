@@ -61,7 +61,7 @@ public class DataServiceImpl implements DataService {
                 for (Detalle detalle : datosGenerales.getDetalles()) {
                     if (detalle.getId() != null) {
                         Detalle finalDetalle = detalle;
-                        existingDatosGenerales.getDetalles().removeIf(d -> d.getId().equals(finalDetalle.getId()));
+                        existingDatosGenerales.getDetalles().removeIf(d -> d.equals(finalDetalle));
                         detalle = entityManager.merge(detalle);
                         existingDatosGenerales.getDetalles().add(detalle);
                     } else {
