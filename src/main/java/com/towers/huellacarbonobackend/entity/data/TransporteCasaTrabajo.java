@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @Entity
@@ -40,4 +42,16 @@ public class TransporteCasaTrabajo {
     @ManyToOne(optional = false)
     @JoinColumn(name = "detalle_id", nullable = false)
     private Detalle detalle;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TransporteCasaTrabajo transporteCasaTrabajo = (TransporteCasaTrabajo) o;
+        return Objects.equals(id, transporteCasaTrabajo.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }
