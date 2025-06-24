@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,10 @@ import java.util.Optional;
 public class DetalleManagementService {
     @PersistenceContext
     private EntityManager entityManager;
+
+    private Session getSession() {
+        return entityManager.unwrap(Session.class);
+    }
 
     @Transactional
     public void updateDetalles(DatosGenerales existingDatosGenerales, List<Detalle> newDetalles) {
@@ -227,7 +232,7 @@ public class DetalleManagementService {
     private void addNewDetalle(DatosGenerales existingDatosGenerales, Detalle newDetalle) {
         try {
             newDetalle.setDatosGenerales(existingDatosGenerales);
-            Detalle managedDetalle = entityManager.merge(newDetalle);
+            Detalle managedDetalle = getSession().merge(newDetalle);
             existingDatosGenerales.getDetalles().add(managedDetalle);
         } catch (Exception e) {
             log.error("Error al insertar nuevo detalle con entityManager", e);
