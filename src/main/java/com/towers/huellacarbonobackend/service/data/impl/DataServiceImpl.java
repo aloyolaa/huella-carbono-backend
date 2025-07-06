@@ -94,7 +94,7 @@ public class DataServiceImpl implements DataService {
     public DataDto getByEmpresaAndAnio(Long empresaId, Long archivo, Integer anio, Integer mes) {
         return getOptionalByEmpresaAndAnio(empresaId, archivo, anio, mes)
                 .map(dataMapper::toDataDto)
-                .orElseThrow(() -> new EntityNotFoundException("No hay datos registrados para el año " + anio + " del mes " + mes));
+                .orElseThrow(() -> new EntityNotFoundException("No hay datos registrados para el año " + anio + " del mes " + mes + "."));
     }
 
     @Override
